@@ -25,7 +25,14 @@
       "react-app",
       "react-app/jest",
       "htmlacademy/react-typescript"
-    ]
+    ],
+    "settings": {
+      "import/resolver": {
+        "node": {
+          "paths": ["src"]
+        }
+      }
+    }
   },
   "browserslist": {
     "production": [

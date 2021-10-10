@@ -1,7 +1,7 @@
 import Card from '../card/card';
 
 interface MainPageProps {
-  availableApartments: number;
+  availableApartments?: number;
 }
 
 function MainPage({ availableApartments }: MainPageProps): JSX.Element {

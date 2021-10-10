@@ -1,10 +1,11 @@
 import { Route, Redirect } from 'react-router-dom';
 import { RouteProps } from 'react-router-dom';
-import { AppRoute, AuthorizationStatus } from '../../constants';
+import { AppRoute } from 'config/AppRoute';
+import { UserStatus } from 'config/UserStatus';
 
 type PrivateRouteProps = RouteProps & {
   render: () => JSX.Element;
-  authorizationStatus: AuthorizationStatus;
+  authorizationStatus: UserStatus;
 };
 
 function PrivateRoute(props: PrivateRouteProps): JSX.Element {
@@ -13,15 +14,12 @@ function PrivateRoute(props: PrivateRouteProps): JSX.Element {
     <Route
       exact={exact}
       path={path}
-      render={
-        () =>
-          authorizationStatus === AuthorizationStatus.Auth ? (
-            render()
-          ) : (
-            <Redirect to={AppRoute.Login} />
-          )
-        // eslint-disable-next-line react/jsx-curly-newline
-      }
+      render={() => {
+        if (authorizationStatus === UserStatus.Auth) {
+          return render();
+        }
+        return <Redirect to={AppRoute.Login} />;
+      }}
     />
   );
 }

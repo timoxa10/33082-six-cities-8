@@ -3,8 +3,3 @@ export enum AppRoute {
   Login = '/login',
   Favorites = '/favorites',
 }
-
-export enum AuthorizationStatus {
-  Auth = 'AUTH',
-  NoAuth = 'NO_AUTH',
-}

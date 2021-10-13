@@ -1,25 +1,40 @@
-function Card(): JSX.Element {
+/* eslint-disable camelcase */
+import { Link } from 'react-router-dom';
+import { CardProps } from 'elements/card/types';
+
+function Card({
+  is_premium,
+  images,
+  price,
+  title,
+  type,
+  id,
+}: CardProps): JSX.Element {
+  const [mainImage] = images;
+
   return (
     <article className="cities__place-card place-card">
-      <div className="place-card__mark">
-        <span>Premium</span>
-      </div>
+      {is_premium && (
+        <div className="place-card__mark">
+          <span>Premium</span>
+        </div>
+      )}
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <a href="#">
+        <Link to={`/offer/${id}/`}>
           <img
             className="place-card__image"
-            src="img/apartment-01.jpg"
+            src={mainImage}
             width={260}
             height={200}
-            alt="Place image"
+            alt="Place interior"
           />
-        </a>
+        </Link>
       </div>
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">€120</b>
-            <span className="place-card__price-text">/&nbsp;night</span>
+            <b className="place-card__price-value">{price}</b>
+            <span className="place-card__price-text">/ night</span>
           </div>
           <button className="place-card__bookmark-button button" type="button">
             <svg className="place-card__bookmark-icon" width={18} height={19}>
@@ -35,9 +50,9 @@ function Card(): JSX.Element {
           </div>
         </div>
         <h2 className="place-card__name">
-          <a href="#">Beautiful &amp; luxurious apartment at great location</a>
+          <Link to={`/offer/${id}/`}>{title}</Link>
         </h2>
-        <p className="place-card__type">Apartment</p>
+        <p className="place-card__type">{type}</p>
       </div>
     </article>
   );

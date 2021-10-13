@@ -1,8 +1,28 @@
-import Logo from '../../elements/logo/logo';
+/* eslint-disable camelcase */
+import Logo from 'elements/logo/logo';
+import { CardProps } from 'elements/card/types';
+import ReviewPageForm from 'components/offer-page-form/offer-page-form';
 
-function PropertyPage(): JSX.Element {
+function CardOffer({
+  is_premium,
+  bedrooms,
+  max_adults,
+  goods,
+  host,
+  price,
+  rating,
+  title,
+  type,
+  id,
+}: CardProps): JSX.Element {
+  const { is_pro, name } = host;
   return (
     <>
+      <meta charSet="utf-8" />
+      <meta httpEquiv="X-UA-Compatible" content="IE=edge" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>6 cities: property</title>
+      <link rel="stylesheet" href="../project/public/css/main.css" />
       <div style={{ display: 'none' }}>
         <svg xmlns="http://www.w3.org/2000/svg">
           <symbol id="icon-arrow-select" viewBox="0 0 7 4">
@@ -38,7 +58,7 @@ function PropertyPage(): JSX.Element {
                       className="header__nav-link header__nav-link--profile"
                       href="#"
                     >
-                      <div className="header__avatar-wrapper user__avatar-wrapper"></div>
+                      <div className="header__avatar-wrapper user__avatar-wrapper" />
                       <span className="header__user-name user__name">
                         Oliver.conner@gmail.com
                       </span>
@@ -62,55 +82,55 @@ function PropertyPage(): JSX.Element {
                   <img
                     className="property__image"
                     src="img/room.jpg"
-                    alt="Photo studio"
+                    alt="Place studio"
                   />
                 </div>
                 <div className="property__image-wrapper">
                   <img
                     className="property__image"
                     src="img/apartment-01.jpg"
-                    alt="Photo studio"
+                    alt="Place studio"
                   />
                 </div>
                 <div className="property__image-wrapper">
                   <img
                     className="property__image"
                     src="img/apartment-02.jpg"
-                    alt="Photo studio"
+                    alt="Place studio"
                   />
                 </div>
                 <div className="property__image-wrapper">
                   <img
                     className="property__image"
                     src="img/apartment-03.jpg"
-                    alt="Photo studio"
+                    alt="Place studio"
                   />
                 </div>
                 <div className="property__image-wrapper">
                   <img
                     className="property__image"
                     src="img/studio-01.jpg"
-                    alt="Photo studio"
+                    alt="Place studio"
                   />
                 </div>
                 <div className="property__image-wrapper">
                   <img
                     className="property__image"
                     src="img/apartment-01.jpg"
-                    alt="Photo studio"
+                    alt="Place studio"
                   />
                 </div>
               </div>
             </div>
             <div className="property__container container">
               <div className="property__wrapper">
-                <div className="property__mark">
-                  <span>Premium</span>
-                </div>
+                {is_premium && (
+                  <div className="property__mark">
+                    <span>Premium</span>
+                  </div>
+                )}
                 <div className="property__name-wrapper">
-                  <h1 className="property__name">
-                    Beautiful &amp; luxurious studio at great location
-                  </h1>
+                  <h1 className="property__name">{title}</h1>
                   <button
                     className="property__bookmark-button button"
                     type="button"
@@ -131,43 +151,44 @@ function PropertyPage(): JSX.Element {
                     <span className="visually-hidden">Rating</span>
                   </div>
                   <span className="property__rating-value rating__value">
-                    4.8
+                    {rating}
                   </span>
                 </div>
                 <ul className="property__features">
                   <li className="property__feature property__feature--entire">
-                    Apartment
+                    {type}
                   </li>
                   <li className="property__feature property__feature--bedrooms">
-                    3 Bedrooms
+                    {`${bedrooms} Bedrooms`}
                   </li>
                   <li className="property__feature property__feature--adults">
-                    Max 4 adults
+                    {`Max ${max_adults} adults`}
                   </li>
                 </ul>
                 <div className="property__price">
-                  <b className="property__price-value">€120</b>
+                  <b className="property__price-value">{`€${price}`}</b>
                   <span className="property__price-text">&nbsp;night</span>
                 </div>
                 <div className="property__inside">
                   <h2 className="property__inside-title">What&apos;s inside</h2>
                   <ul className="property__inside-list">
-                    <li className="property__inside-item">Wi-Fi</li>
-                    <li className="property__inside-item">Washing machine</li>
-                    <li className="property__inside-item">Towels</li>
-                    <li className="property__inside-item">Heating</li>
-                    <li className="property__inside-item">Coffee machine</li>
-                    <li className="property__inside-item">Baby seat</li>
-                    <li className="property__inside-item">Kitchen</li>
-                    <li className="property__inside-item">Dishwasher</li>
-                    <li className="property__inside-item">Cabel TV</li>
-                    <li className="property__inside-item">Fridge</li>
+                    {goods &&
+                      goods.map((item, index) => (
+                        <li className="property__inside-item" key={item}>
+                          {item}
+                        </li>
+                      ))}
                   </ul>
                 </div>
                 <div className="property__host">
                   <h2 className="property__host-title">Meet the host</h2>
                   <div className="property__host-user user">
-                    <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
+                    <div
+                      className="
+      property__avatar-wrapper property__avatar-wrapper--pro
+      user__avatar-wrapper
+    "
+                    >
                       <img
                         className="property__avatar user__avatar"
                         src="img/avatar-angelina.jpg"
@@ -176,8 +197,10 @@ function PropertyPage(): JSX.Element {
                         alt="Host avatar"
                       />
                     </div>
-                    <span className="property__user-name">Angelina</span>
-                    <span className="property__user-status">Pro</span>
+                    <span className="property__user-name"> {name} </span>
+                    {is_pro && (
+                      <span className="property__user-status"> Pro </span>
+                    )}
                   </div>
                   <div className="property__description">
                     <p className="property__text">
@@ -209,7 +232,7 @@ function PropertyPage(): JSX.Element {
                             alt="Reviews avatar"
                           />
                         </div>
-                        <span className="reviews__user-name">Max</span>
+                        <span className="reviews__user-name"> Max </span>
                       </div>
                       <div className="reviews__info">
                         <div className="reviews__rating rating">
@@ -229,138 +252,7 @@ function PropertyPage(): JSX.Element {
                       </div>
                     </li>
                   </ul>
-                  <form className="reviews__form form" action="#" method="post">
-                    <label
-                      className="reviews__label form__label"
-                      htmlFor="review"
-                    >
-                      Your review
-                    </label>
-                    <div className="reviews__rating-form form__rating">
-                      <input
-                        className="form__rating-input visually-hidden"
-                        name="rating"
-                        defaultValue={5}
-                        id="5-stars"
-                        type="radio"
-                      />
-                      <label
-                        htmlFor="5-stars"
-                        className="reviews__rating-label form__rating-label"
-                        title="perfect"
-                      >
-                        <svg
-                          className="form__star-image"
-                          width={37}
-                          height={33}
-                        >
-                          <use xlinkHref="#icon-star" />
-                        </svg>
-                      </label>
-                      <input
-                        className="form__rating-input visually-hidden"
-                        name="rating"
-                        defaultValue={4}
-                        id="4-stars"
-                        type="radio"
-                      />
-                      <label
-                        htmlFor="4-stars"
-                        className="reviews__rating-label form__rating-label"
-                        title="good"
-                      >
-                        <svg
-                          className="form__star-image"
-                          width={37}
-                          height={33}
-                        >
-                          <use xlinkHref="#icon-star" />
-                        </svg>
-                      </label>
-                      <input
-                        className="form__rating-input visually-hidden"
-                        name="rating"
-                        defaultValue={3}
-                        id="3-stars"
-                        type="radio"
-                      />
-                      <label
-                        htmlFor="3-stars"
-                        className="reviews__rating-label form__rating-label"
-                        title="not bad"
-                      >
-                        <svg
-                          className="form__star-image"
-                          width={37}
-                          height={33}
-                        >
-                          <use xlinkHref="#icon-star" />
-                        </svg>
-                      </label>
-                      <input
-                        className="form__rating-input visually-hidden"
-                        name="rating"
-                        defaultValue={2}
-                        id="2-stars"
-                        type="radio"
-                      />
-                      <label
-                        htmlFor="2-stars"
-                        className="reviews__rating-label form__rating-label"
-                        title="badly"
-                      >
-                        <svg
-                          className="form__star-image"
-                          width={37}
-                          height={33}
-                        >
-                          <use xlinkHref="#icon-star" />
-                        </svg>
-                      </label>
-                      <input
-                        className="form__rating-input visually-hidden"
-                        name="rating"
-                        defaultValue={1}
-                        id="1-star"
-                        type="radio"
-                      />
-                      <label
-                        htmlFor="1-star"
-                        className="reviews__rating-label form__rating-label"
-                        title="terribly"
-                      >
-                        <svg
-                          className="form__star-image"
-                          width={37}
-                          height={33}
-                        >
-                          <use xlinkHref="#icon-star" />
-                        </svg>
-                      </label>
-                    </div>
-                    <textarea
-                      className="reviews__textarea form__textarea"
-                      id="review"
-                      name="review"
-                      placeholder="Tell how was your stay, what you like and what can be improved"
-                      defaultValue={''}
-                    />
-                    <div className="reviews__button-wrapper">
-                      <p className="reviews__help">
-                        To submit review please make sure to set{' '}
-                        <span className="reviews__star">rating</span> and
-                        describe your stay with at least{' '}
-                        <b className="reviews__text-amount">50 characters</b>.
-                      </p>
-                      <button
-                        className="reviews__submit form__submit button"
-                        type="submit"
-                        disabled
-                      >
-                        Submit
-                      </button>
-                    </div>
-                  </form>
+                  <ReviewPageForm />
                 </section>
               </div>
             </div>
@@ -393,7 +285,11 @@ function PropertyPage(): JSX.Element {
                         </span>
                       </div>
                       <button
-                        className="place-card__bookmark-button place-card__bookmark-button--active button"
+                        className="
+                    place-card__bookmark-button
+                    place-card__bookmark-button--active
+                    button
+                  "
                         type="button"
                       >
                         <svg
@@ -519,4 +415,4 @@ function PropertyPage(): JSX.Element {
   );
 }
 
-export default PropertyPage;
+export default CardOffer;

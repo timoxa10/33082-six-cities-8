@@ -1,5 +1,5 @@
 import { useState, ChangeEvent } from 'react';
-import Input from '../../elements/input/input';
+import Input from 'elements/input/input';
 
 interface Data {
   rating: number;
@@ -27,7 +27,7 @@ function OfferPageForm(): JSX.Element {
           .map((element, index) => (
             <Input
               key={element}
-              id={index}
+              id={index + 1}
               onChange={({
                 target: { value },
               }: ChangeEvent<HTMLInputElement>) => {

@@ -6,19 +6,18 @@ interface InputProps {
 }
 
 function Input({ id, onChange }: InputProps): JSX.Element {
-  const number = id + 1;
   return (
     <>
       <input
         className="form__rating-input visually-hidden"
         name="rating"
-        id={`${number}-stars`}
+        id={`${id}-stars`}
         type="radio"
-        value={number}
+        value={id}
         onChange={onChange}
       />
       <label
-        htmlFor={`${number}-stars`}
+        htmlFor={`${id}-stars`}
         className="reviews__rating-label form__rating-label"
         title="perfect"
       >

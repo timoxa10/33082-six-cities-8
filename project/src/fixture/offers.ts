@@ -1,7 +1,8 @@
 /* eslint-disable camelcase */
-import { CardProps } from '../elements/card/types';
+import type { CardListProps } from 'types/card-list-props';
+import camelcaseKeys from 'camelcase-keys';
 
-export const cardList: CardProps[] = [
+const initialCardList = [
   {
     bedrooms: 3,
     city: {
@@ -147,3 +148,9 @@ export const cardList: CardProps[] = [
     type: 'apartment',
   },
 ];
+
+const CardList: CardListProps[] = camelcaseKeys(initialCardList, {
+  deep: true,
+});
+
+export default CardList;

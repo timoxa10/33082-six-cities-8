@@ -1,18 +1,17 @@
 import { useState } from 'react';
-import Logo from '../../elements/logo/logo';
-import Card from '../../elements/card/card';
-import { CardProps } from 'elements/card/types';
+import type { CardListProps } from 'types/card-list-props';
+import Logo from 'elements/logo/logo';
+import Card from 'elements/card/card';
 
 interface MainPageProps {
   availableApartments?: number;
-  cardList: CardProps[];
+  cardList: CardListProps[];
 }
 
 function MainPage({
   availableApartments,
   cardList,
 }: MainPageProps): JSX.Element {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [activeCard, ,] = useState({
     mark: 'Premium',
     src: 'img/apartment-01.jpg',
@@ -121,6 +120,7 @@ function MainPage({
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
                 <b className="places__found">312 places to stay in Amsterdam</b>
+                <div data-id={activeCard.id} />
                 <form
                   className="places__sorting"
                   action="#"
@@ -153,7 +153,7 @@ function MainPage({
                   </ul>
                 </form>
                 <div className="cities__places-list places__list tabs__content">
-                  {cardList.map((card) => (
+                  {cardList?.map((card) => (
                     <Card {...card} key={card.id} />
                   ))}
                 </div>

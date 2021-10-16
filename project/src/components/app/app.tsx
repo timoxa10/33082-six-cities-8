@@ -1,7 +1,7 @@
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
-import { CardProps } from 'elements/card/types';
+import type { CardListProps } from 'types/card-list-props';
 import CardOffer from 'elements/card-offer/card-offer';
 import MainPage from '../main-page/main-page';
 import LoginPage from '../login-page/login-page';
@@ -11,7 +11,7 @@ import NotFoundPage from '../not-found-page/not-found-page';
 
 type AppProps = {
   availableApartments?: number;
-  cardList: CardProps[];
+  cardList: CardListProps[];
 };
 
 function App({ availableApartments, cardList }: AppProps): JSX.Element {
@@ -30,8 +30,10 @@ function App({ availableApartments, cardList }: AppProps): JSX.Element {
           path={AppRoute.RoomOffer}
           render={({ match }) => {
             const { id } = match.params;
-            const card = cardList.filter((item) => +item.id === +id);
-            return <CardOffer {...card[0]} />;
+            const card = cardList.find((item) => +item.id === +id);
+            if (card) {
+              return <CardOffer card={card} cardList={cardList} />;
+            }
           }}
         />
         <PrivateRoute

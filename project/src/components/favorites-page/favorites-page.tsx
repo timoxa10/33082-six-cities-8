@@ -1,9 +1,9 @@
-import Logo from '../../elements/logo/logo';
-import { CardProps } from 'elements/card/types';
-import FavoriteCard from '../../elements/card-favorite/card-favorite';
+import type { CardListProps } from 'types/card-list-props';
+import Logo from 'elements/logo/logo';
+import CardFavorite from 'elements/card-favorite/card-favorite';
 
 interface FavoritesPageProps {
-  cardList: CardProps[];
+  cardList: CardListProps[];
 }
 
 function FavoritesPage({ cardList }: FavoritesPageProps): JSX.Element {
@@ -74,8 +74,8 @@ function FavoritesPage({ cardList }: FavoritesPageProps): JSX.Element {
                     </div>
                   </div>
                   <div className="favorites__places">
-                    {cardList.map((card) => (
-                      <FavoriteCard {...card} key={card.id} />
+                    {cardList?.map((card) => (
+                      <CardFavorite {...card} key={card.id} />
                     ))}
                   </div>
                 </li>
@@ -88,8 +88,8 @@ function FavoritesPage({ cardList }: FavoritesPageProps): JSX.Element {
                     </div>
                   </div>
                   <div className="favorites__places">
-                    {cardList.map((card) => (
-                      <FavoriteCard {...card} key={card.id} />
+                    {cardList?.map((card) => (
+                      <CardFavorite {...card} key={card.id} />
                     ))}
                   </div>
                 </li>

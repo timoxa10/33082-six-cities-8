@@ -28,9 +28,11 @@ function OfferPageForm(): JSX.Element {
             <Input
               key={element}
               id={index}
-              onChange={({ target }: ChangeEvent<HTMLInputElement>) => {
-                const value = target.value;
-                setRating(+value);
+              onChange={({
+                target: { value },
+              }: ChangeEvent<HTMLInputElement>) => {
+                const checkedElement = value;
+                setRating(+checkedElement);
               }}
             />
           ))

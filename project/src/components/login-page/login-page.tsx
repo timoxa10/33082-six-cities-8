@@ -1,4 +1,4 @@
-import Logo from '../../elements/logo/logo';
+import Logo from 'elements/logo/logo';
 
 function LoginPage(): JSX.Element {
   return (

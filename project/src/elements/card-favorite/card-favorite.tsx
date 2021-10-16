@@ -1,6 +1,5 @@
-/* eslint-disable camelcase */
+import type { CardListProps } from 'types/card-list-props';
 import { Link } from 'react-router-dom';
-import { CardProps } from 'elements/card/types';
 
 function CardFavorite({
   images,
@@ -8,7 +7,7 @@ function CardFavorite({
   title,
   type,
   id,
-}: CardProps): JSX.Element {
+}: CardListProps): JSX.Element {
   const [mainImage] = images;
 
   return (

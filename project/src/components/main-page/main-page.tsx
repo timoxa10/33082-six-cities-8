@@ -1,10 +1,28 @@
-import Card from '../card/card';
+import { useState } from 'react';
+import type { CardListProps } from 'types/card-list-props';
+import Logo from 'elements/logo/logo';
+import Card from 'elements/card/card';
 
 interface MainPageProps {
   availableApartments?: number;
+  cardList: CardListProps[];
 }
 
-function MainPage({ availableApartments }: MainPageProps): JSX.Element {
+function MainPage({
+  availableApartments,
+  cardList,
+}: MainPageProps): JSX.Element {
+  const [activeCard, ,] = useState({
+    mark: 'Premium',
+    src: 'img/apartment-01.jpg',
+    priceValue: '€120',
+    priceText: '/night',
+    rating: 4.2,
+    name: 'Beautiful luxurious apartment at great location',
+    type: 'Apartment',
+    id: 1,
+  });
+
   return (
     <>
       <div style={{ display: 'none' }}>
@@ -34,18 +52,7 @@ function MainPage({ availableApartments }: MainPageProps): JSX.Element {
           <div className="container">
             <div className="header__wrapper">
               <div className="header__left">
-                <a
-                  className="header__logo-link header__logo-link--active"
-                  href="#"
-                >
-                  <img
-                    className="header__logo"
-                    src="img/logo.svg"
-                    alt="6 cities logo"
-                    width={81}
-                    height={41}
-                  />
-                </a>
+                <Logo />
               </div>
               <nav className="header__nav">
                 <ul className="header__nav-list">
@@ -113,7 +120,13 @@ function MainPage({ availableApartments }: MainPageProps): JSX.Element {
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
                 <b className="places__found">312 places to stay in Amsterdam</b>
-                <form className="places__sorting" action="#" method="get">
+                <div data-id={activeCard.id} />
+                <form
+                  className="places__sorting"
+                  action="#"
+                  method="get"
+                  style={{ display: 'none' }}
+                >
                   <span className="places__sorting-caption">Sort by</span>
                   <span className="places__sorting-type" tabIndex={0}>
                     Popular
@@ -140,11 +153,9 @@ function MainPage({ availableApartments }: MainPageProps): JSX.Element {
                   </ul>
                 </form>
                 <div className="cities__places-list places__list tabs__content">
-                  {Array(availableApartments)
-                    .fill(1)
-                    .map((card) => (
-                      <Card key={card + 1} />
-                    ))}
+                  {cardList?.map((card) => (
+                    <Card {...card} key={card.id} />
+                  ))}
                 </div>
               </section>
               <div className="cities__right-section">

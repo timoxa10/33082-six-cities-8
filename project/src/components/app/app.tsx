@@ -30,9 +30,13 @@ function App({ availableApartments, cardList }: AppProps): JSX.Element {
           path={AppRoute.RoomOffer}
           render={({ match }) => {
             const { id } = match.params;
+
             const card = cardList.find((item) => +item.id === +id);
+
             if (card) {
-              return <CardOffer card={card} cardList={cardList} />;
+              return (
+                <CardOffer card={card} cardList={cardList} currentOffer={+id} />
+              );
             }
           }}
         />

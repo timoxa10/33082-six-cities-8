@@ -2,10 +2,11 @@ import { ChangeEvent } from 'react';
 
 interface InputProps {
   id: number;
+  value: number;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-function Input({ id, onChange }: InputProps): JSX.Element {
+function Input({ id, value, onChange }: InputProps): JSX.Element {
   return (
     <>
       <input
@@ -13,7 +14,7 @@ function Input({ id, onChange }: InputProps): JSX.Element {
         name="rating"
         id={`${id}-stars`}
         type="radio"
-        value={id}
+        value={value}
         onChange={onChange}
       />
       <label

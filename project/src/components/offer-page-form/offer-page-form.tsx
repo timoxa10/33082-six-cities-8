@@ -22,18 +22,13 @@ function OfferPageForm(): JSX.Element {
         Your review
       </label>
       <div className="reviews__rating-form form__rating">
-        {Array(5)
-          .fill(null)
-          .map((element, index) => (
+        {[1, 2, 3, 4, 5]
+          .map((starCount) => (
             <Input
-              key={element}
-              id={index + 1}
-              onChange={({
-                target: { value },
-              }: ChangeEvent<HTMLInputElement>) => {
-                const checkedElement = value;
-                setRating(+checkedElement);
-              }}
+              key={`rating-star-${starCount}`}
+              id={starCount}
+              value={starCount}
+              onChange={() => setRating(starCount)}
             />
           ))
           .reverse()}

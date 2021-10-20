@@ -6,12 +6,28 @@ import CardNearby from 'elements/card-nearby/card-nearby';
 type CardOfferProps = {
   card: CardListProps;
   cardList: CardListProps[];
+  currentOffer: number;
 };
 
-function CardOffer({ card, cardList }: CardOfferProps): JSX.Element {
-  const { isPro, name } = card.host;
+function CardOffer({
+  card,
+  cardList,
+  currentOffer,
+}: CardOfferProps): JSX.Element {
   const { isPremium, title, price, goods, rating, type, bedrooms, maxAdults } =
     card;
+
+  const cardIndex = cardList.findIndex((element) => {
+    if (element.id === currentOffer) {
+      return true;
+    }
+    return null;
+  });
+
+  const newCardList = [
+    ...cardList.slice(0, cardIndex),
+    ...cardList.slice(cardIndex + 1),
+  ];
 
   return (
     <>
@@ -194,8 +210,10 @@ function CardOffer({ card, cardList }: CardOfferProps): JSX.Element {
                         alt="Host avatar"
                       />
                     </div>
-                    <span className="property__user-name"> {name} </span>
-                    {isPro && (
+                    <span className="property__user-name">
+                      {card.host.name}
+                    </span>
+                    {card.host.isPro && (
                       <span className="property__user-status"> Pro </span>
                     )}
                   </div>
@@ -261,7 +279,7 @@ function CardOffer({ card, cardList }: CardOfferProps): JSX.Element {
                 Other places in the neighbourhood
               </h2>
               <div className="near-places__list places__list">
-                {cardList
+                {newCardList
                   ?.slice(0, 3)
                   ?.reverse()
                   ?.map((item) => (

@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import type { CardListProps } from 'types/card-list-props';
+import type { LocationInfo } from 'types/location-info';
 import Logo from 'elements/logo/logo';
 import Card from 'elements/card/card';
+import CitiesMap from '../cities-map/cities-map';
 
 interface MainPageProps {
   availableApartments?: number;
@@ -12,16 +14,14 @@ function MainPage({
   availableApartments,
   cardList,
 }: MainPageProps): JSX.Element {
-  const [activeCard, ,] = useState({
-    mark: 'Premium',
-    src: 'img/apartment-01.jpg',
-    priceValue: '€120',
-    priceText: '/night',
-    rating: 4.2,
-    name: 'Beautiful luxurious apartment at great location',
-    type: 'Apartment',
-    id: 1,
-  });
+  const [selectedPoint, setSelectedPoint] = useState<LocationInfo | undefined>(
+    undefined,
+  );
+
+  const onListItemHover = (location: LocationInfo) => {
+    const currentCard = cardList.find((point) => point.location === location);
+    setSelectedPoint(currentCard?.location);
+  };
 
   return (
     <>
@@ -120,7 +120,6 @@ function MainPage({
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
                 <b className="places__found">312 places to stay in Amsterdam</b>
-                <div data-id={activeCard.id} />
                 <form
                   className="places__sorting"
                   action="#"
@@ -154,12 +153,22 @@ function MainPage({
                 </form>
                 <div className="cities__places-list places__list tabs__content">
                   {cardList?.map((card) => (
-                    <Card {...card} key={card.id} />
+                    <Card
+                      card={card}
+                      key={card.id}
+                      onListItemHover={onListItemHover}
+                    />
                   ))}
                 </div>
               </section>
               <div className="cities__right-section">
-                <section className="cities__map map" />
+                <section className="cities__map map">
+                  <CitiesMap
+                    city={cardList.map(({ city }) => city)[0]}
+                    points={cardList.map(({ location }) => location)}
+                    selectedPoint={selectedPoint!}
+                  />
+                </section>
               </div>
             </div>
           </div>

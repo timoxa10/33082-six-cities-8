@@ -22,16 +22,14 @@ function OfferPageForm(): JSX.Element {
         Your review
       </label>
       <div className="reviews__rating-form form__rating">
-        {[1, 2, 3, 4, 5]
-          .map((starCount) => (
-            <Input
-              key={`rating-star-${starCount}`}
-              id={starCount}
-              value={starCount}
-              onChange={() => setRating(starCount)}
-            />
-          ))
-          .reverse()}
+        {[5, 4, 3, 2, 1].map((starCount) => (
+          <Input
+            key={`rating-star-${starCount}`}
+            id={starCount}
+            value={starCount}
+            onChange={() => setRating(starCount)}
+          />
+        ))}
       </div>
       <textarea
         className="reviews__textarea form__textarea"

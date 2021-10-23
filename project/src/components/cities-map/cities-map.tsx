@@ -5,10 +5,8 @@ import useMap from 'hooks/useMap';
 import type { CityCoordinates } from 'types/city-coordinates';
 import type { LocationInfo } from 'types/location-info';
 
-const URL_MARKER_DEFAULT =
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/pin.svg';
-const URL_MARKER_CURRENT =
-  'https://assets.htmlacademy.ru/content/intensive/javascript-1/demo/interactive-map/main-pin.svg';
+const URL_MARKER_DEFAULT = 'img/pin.svg';
+const URL_MARKER_CURRENT = 'img/pin-active.svg';
 
 interface CitiesMapProps {
   city: CityCoordinates;

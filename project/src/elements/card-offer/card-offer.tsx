@@ -1,18 +1,25 @@
+import { useState } from 'react';
 import type { CardListProps } from 'types/card-list-props';
+import type { ReviewListProps } from 'types/review-list-props';
+import type { LocationInfo } from 'types/location-info';
 import Logo from 'elements/logo/logo';
 import ReviewPageForm from 'components/offer-page-form/offer-page-form';
-import CardNearby from 'elements/card-nearby/card-nearby';
+import Card from 'elements/card/card';
+import ReviewsList from 'components/reviews-list/reviews-list';
+import CitiesMap from 'components/cities-map/cities-map';
 
 type CardOfferProps = {
   card: CardListProps;
   cardList: CardListProps[];
   currentOffer: number;
+  reviewList: ReviewListProps[];
 };
 
 function CardOffer({
   card,
   cardList,
   currentOffer,
+  reviewList,
 }: CardOfferProps): JSX.Element {
   const { isPremium, title, price, goods, rating, type, bedrooms, maxAdults } =
     card;
@@ -28,6 +35,13 @@ function CardOffer({
     ...cardList.slice(0, cardIndex),
     ...cardList.slice(cardIndex + 1),
   ];
+
+  const [selectedPoint, setSelectedPoint] = useState<LocationInfo>();
+
+  const onListItemHover = (location: LocationInfo) => {
+    const currentCard = cardList?.find((point) => point.location === location);
+    setSelectedPoint(currentCard?.location);
+  };
 
   return (
     <>
@@ -232,46 +246,18 @@ function CardOffer({
                   </div>
                 </div>
                 <section className="property__reviews reviews">
-                  <h2 className="reviews__title">
-                    Reviews · <span className="reviews__amount">1</span>
-                  </h2>
-                  <ul className="reviews__list">
-                    <li className="reviews__item">
-                      <div className="reviews__user user">
-                        <div className="reviews__avatar-wrapper user__avatar-wrapper">
-                          <img
-                            className="reviews__avatar user__avatar"
-                            src="img/avatar-max.jpg"
-                            width={54}
-                            height={54}
-                            alt="Reviews avatar"
-                          />
-                        </div>
-                        <span className="reviews__user-name"> Max </span>
-                      </div>
-                      <div className="reviews__info">
-                        <div className="reviews__rating rating">
-                          <div className="reviews__stars rating__stars">
-                            <span style={{ width: '80%' }} />
-                            <span className="visually-hidden">Rating</span>
-                          </div>
-                        </div>
-                        <p className="reviews__text">
-                          A quiet cozy and picturesque that hides behind a a
-                          river by the unique lightness of Amsterdam. The
-                          building is green and from 18th century.
-                        </p>
-                        <time className="reviews__time" dateTime="2019-04-24">
-                          April 2019
-                        </time>
-                      </div>
-                    </li>
-                  </ul>
+                  <ReviewsList list={reviewList} />
                   <ReviewPageForm />
                 </section>
               </div>
             </div>
-            <section className="property__map map" />
+            <section className="property__map map">
+              <CitiesMap
+                city={newCardList.slice(0, 3).map(({ city }) => city)[0]}
+                points={newCardList.slice(0, 3).map(({ location }) => location)}
+                selectedPoint={selectedPoint!}
+              />
+            </section>
           </section>
           <div className="container">
             <section className="near-places places">
@@ -283,7 +269,12 @@ function CardOffer({
                   ?.slice(0, 3)
                   ?.reverse()
                   ?.map((item) => (
-                    <CardNearby {...item} key={item.id} />
+                    <Card
+                      card={item}
+                      key={item.id}
+                      onListItemHover={onListItemHover}
+                      className="near-places__card"
+                    />
                   ))}
               </div>
             </section>

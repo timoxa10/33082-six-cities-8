@@ -8,9 +8,10 @@ import type { LocationInfo } from 'types/location-info';
 type CardProps = {
   card: CardListProps;
   onListItemHover: (location: LocationInfo) => void;
+  className: string;
 };
 
-function Card({ card, onListItemHover }: CardProps): JSX.Element {
+function Card({ card, onListItemHover, className }: CardProps): JSX.Element {
   const [mainImage] = card.images;
 
   const listItemHoverHandler = (event: MouseEvent<HTMLDivElement>) => {
@@ -20,7 +21,7 @@ function Card({ card, onListItemHover }: CardProps): JSX.Element {
 
   return (
     <article
-      className="cities__place-card place-card"
+      className={`${className} place-card`}
       onMouseEnter={listItemHoverHandler}
     >
       {card.isPremium && (

@@ -23,6 +23,15 @@ function MainPage({
     setSelectedPoint(currentCard?.location);
   };
 
+  const defaultCity = {
+    location: {
+      latitude: 52.3909553943508,
+      longitude: 4.85309666406198,
+      zoom: 10,
+    },
+    name: 'Amsterdam',
+  };
+
   return (
     <>
       <div style={{ display: 'none' }}>
@@ -154,9 +163,10 @@ function MainPage({
                 <div className="cities__places-list places__list tabs__content">
                   {cardList?.map((card) => (
                     <Card
-                      card={card}
                       key={card.id}
+                      card={card}
                       onListItemHover={onListItemHover}
+                      className="cities__place-card"
                     />
                   ))}
                 </div>
@@ -164,7 +174,7 @@ function MainPage({
               <div className="cities__right-section">
                 <section className="cities__map map">
                   <CitiesMap
-                    city={cardList.map(({ city }) => city)[0]}
+                    city={defaultCity}
                     points={cardList.map(({ location }) => location)}
                     selectedPoint={selectedPoint!}
                   />

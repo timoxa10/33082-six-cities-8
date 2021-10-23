@@ -2,6 +2,7 @@ import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
 import type { CardListProps } from 'types/card-list-props';
+import type { ReviewListProps } from 'types/review-list-props';
 import CardOffer from 'elements/card-offer/card-offer';
 import MainPage from '../main-page/main-page';
 import LoginPage from '../login-page/login-page';
@@ -12,9 +13,14 @@ import NotFoundPage from '../not-found-page/not-found-page';
 type AppProps = {
   availableApartments?: number;
   cardList: CardListProps[];
+  reviewList: ReviewListProps[];
 };
 
-function App({ availableApartments, cardList }: AppProps): JSX.Element {
+function App({
+  availableApartments,
+  cardList,
+  reviewList,
+}: AppProps): JSX.Element {
   return (
     <BrowserRouter>
       <Switch>
@@ -35,7 +41,12 @@ function App({ availableApartments, cardList }: AppProps): JSX.Element {
 
             if (card) {
               return (
-                <CardOffer card={card} cardList={cardList} currentOffer={+id} />
+                <CardOffer
+                  card={card}
+                  cardList={cardList}
+                  currentOffer={+id}
+                  reviewList={reviewList}
+                />
               );
             }
           }}

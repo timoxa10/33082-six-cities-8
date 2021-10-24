@@ -54,7 +54,7 @@ function App({
         <PrivateRoute
           exact
           path={AppRoute.Favorites}
-          render={() => <FavoritesPage cardList={cardList} />}
+          component={() => <FavoritesPage cardList={cardList} />}
           authorizationStatus={UserStatus.Auth}
         />
         <Route component={NotFoundPage} />

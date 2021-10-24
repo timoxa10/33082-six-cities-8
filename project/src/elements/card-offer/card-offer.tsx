@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useState } from 'react';
 import type { CardListProps } from 'types/card-list-props';
 import type { ReviewListProps } from 'types/review-list-props';
@@ -23,18 +24,6 @@ function CardOffer({
 }: CardOfferProps): JSX.Element {
   const { isPremium, title, price, goods, rating, type, bedrooms, maxAdults } =
     card;
-
-  const cardIndex = cardList.findIndex((element) => {
-    if (element.id === currentOffer) {
-      return true;
-    }
-    return null;
-  });
-
-  const newCardList = [
-    ...cardList.slice(0, cardIndex),
-    ...cardList.slice(cardIndex + 1),
-  ];
 
   const [selectedPoint, setSelectedPoint] = useState<LocationInfo>();
 
@@ -253,8 +242,16 @@ function CardOffer({
             </div>
             <section className="property__map map">
               <CitiesMap
-                city={newCardList.slice(0, 3).map(({ city }) => city)[0]}
-                points={newCardList.slice(0, 3).map(({ location }) => location)}
+                city={
+                  cardList
+                    .filter((item) => item.id !== currentOffer)
+                    .slice(0, 3)
+                    .map(({ city }) => city)[0]
+                }
+                points={cardList
+                  .filter((item) => item.id !== currentOffer)
+                  .slice(0, 3)
+                  .map(({ location }) => location)}
                 selectedPoint={selectedPoint!}
               />
             </section>
@@ -265,9 +262,9 @@ function CardOffer({
                 Other places in the neighbourhood
               </h2>
               <div className="near-places__list places__list">
-                {newCardList
+                {cardList
+                  .filter((item) => item.id !== currentOffer)
                   ?.slice(0, 3)
-                  ?.reverse()
                   ?.map((item) => (
                     <Card
                       card={item}

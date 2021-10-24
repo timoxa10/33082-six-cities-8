@@ -35,7 +35,7 @@ function CitiesMap({
   const map = useMap(mapRef, city);
 
   useEffect(() => {
-    if (map) {
+    if (map && points?.length > 0) {
       points.forEach((point) => {
         const marker = new Marker({
           lat: point.latitude,

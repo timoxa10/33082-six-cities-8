@@ -42,18 +42,16 @@ function CitiesMap({
           lng: point.longitude,
         });
 
-        marker
-          .setIcon(
-            selectedPoint !== undefined && point === selectedPoint
-              ? currentCustomIcon
-              : defaultCustomIcon,
-          )
-          .addTo(map);
+        if (selectedPoint !== undefined && point === selectedPoint) {
+          marker.setIcon(currentCustomIcon).addTo(map);
+        } else {
+          marker.setIcon(defaultCustomIcon).addTo(map);
+        }
       });
     }
   }, [map, points, selectedPoint]);
 
-  return <div style={{ height: '500px' }} ref={mapRef}></div>;
+  return <div style={{ height: '100%' }} ref={mapRef}></div>;
 }
 
 export default CitiesMap;

@@ -5,7 +5,7 @@ type UserProps = {
   name: string;
 };
 
-interface ReviewListProps {
+interface ReviewProps {
   comment: string;
   date: string;
   id: number;
@@ -13,4 +13,6 @@ interface ReviewListProps {
   user: UserProps;
 }
 
-export type { ReviewListProps };
+type ReviewsProps = ReviewProps[];
+
+export type { ReviewProps, ReviewsProps };

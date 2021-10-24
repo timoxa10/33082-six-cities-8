@@ -1,12 +1,12 @@
 /* eslint-disable camelcase */
-import type { ReviewListProps } from 'types/review-list-props';
-import camelcaseKeys from 'camelcase-keys';
+import type { ReviewsProps } from 'types/review-list-props';
+import camelСaseKeys from 'camelcase-keys';
 
 const initialReviewList = [
   {
     comment:
       'A quiet cozy and picturesque that hides behind a a river by the unique lightness of Amsterdam.',
-    date: '2019-05-08T14:13:56.569Z',
+    date: '2020-01-08T14:13:56.569Z',
     id: 1,
     rating: 4,
     user: {
@@ -18,11 +18,11 @@ const initialReviewList = [
   },
   {
     comment: 'Great location and stuff!',
-    date: '2019-05-08T14:13:56.569Z',
+    date: '2018-05-08T14:13:56.569Z',
     id: 2,
     rating: 3,
     user: {
-      avatar_url: 'img/avatar-angelina.jpg',
+      avatar_url: '',
       id: 4,
       is_pro: false,
       name: 'Ann',
@@ -30,7 +30,7 @@ const initialReviewList = [
   },
   {
     comment: 'good value for money, affordable price and good breakfast',
-    date: '2019-05-08T14:13:56.569Z',
+    date: '2017-12-08T14:13:56.569Z',
     id: 3,
     rating: 4,
     user: {
@@ -42,7 +42,7 @@ const initialReviewList = [
   },
 ];
 
-const ReviewsList: ReviewListProps[] = camelcaseKeys(initialReviewList, {
+const ReviewsList: ReviewsProps = camelСaseKeys(initialReviewList, {
   deep: true,
 });
 

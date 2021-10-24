@@ -1,19 +1,22 @@
-import type { ReviewListProps } from 'types/review-list-props';
+import type { ReviewsProps } from 'types/review-list-props';
 import ReviewsListItem from './reviews-list-item';
 
 type ReviewsListProps = {
-  list: ReviewListProps[];
+  reviews: ReviewsProps;
 };
 
-function ReviewsList({ list }: ReviewsListProps): JSX.Element {
+function ReviewsList({ reviews }: ReviewsListProps): JSX.Element {
+  const reviewsAmount = !reviews ? 0 : reviews?.length;
   return (
     <>
       <h2 className="reviews__title">
-        Reviews · <span className="reviews__amount">{list?.length}</span>
+        Reviews · <span className="reviews__amount">{reviewsAmount}</span>
       </h2>
       <ul className="reviews__list">
-        {list?.map((item) => (
-          <ReviewsListItem itemList={item} key={item.id} />
+        {reviews?.map((review) => (
+          <li className="reviews__item" key={review.id}>
+            <ReviewsListItem review={review} />
+          </li>
         ))}
       </ul>
     </>

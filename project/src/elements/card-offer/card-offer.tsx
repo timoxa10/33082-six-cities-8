@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 import { useState } from 'react';
 import type { CardListProps } from 'types/card-list-props';
-import type { ReviewListProps } from 'types/review-list-props';
+import type { ReviewsProps } from 'types/review-list-props';
 import type { LocationInfo } from 'types/location-info';
 import Logo from 'elements/logo/logo';
 import ReviewPageForm from 'components/offer-page-form/offer-page-form';
@@ -13,7 +13,7 @@ type CardOfferProps = {
   card: CardListProps;
   cardList: CardListProps[];
   currentOffer: number;
-  reviewList: ReviewListProps[];
+  reviewList: ReviewsProps;
 };
 
 function CardOffer({
@@ -25,11 +25,26 @@ function CardOffer({
   const { isPremium, title, price, goods, rating, type, bedrooms, maxAdults } =
     card;
 
+  const nearbyOffers = cardList
+    .filter((item) => item.id !== currentOffer)
+    .slice(0, 3);
+
   const [selectedPoint, setSelectedPoint] = useState<LocationInfo>();
+
+  const [activeCity, ,] = useState({
+    location: {
+      latitude: 52.3909553943508,
+      longitude: 4.85309666406198,
+      zoom: 10,
+    },
+    name: 'Amsterdam',
+  });
 
   const onListItemHover = (location: LocationInfo) => {
     const currentCard = cardList?.find((point) => point.location === location);
-    setSelectedPoint(currentCard?.location);
+    if (currentCard) {
+      setSelectedPoint(currentCard.location);
+    }
   };
 
   return (
@@ -235,23 +250,15 @@ function CardOffer({
                   </div>
                 </div>
                 <section className="property__reviews reviews">
-                  <ReviewsList list={reviewList} />
+                  <ReviewsList reviews={reviewList} />
                   <ReviewPageForm />
                 </section>
               </div>
             </div>
             <section className="property__map map">
               <CitiesMap
-                city={
-                  cardList
-                    .filter((item) => item.id !== currentOffer)
-                    .slice(0, 3)
-                    .map(({ city }) => city)[0]
-                }
-                points={cardList
-                  .filter((item) => item.id !== currentOffer)
-                  .slice(0, 3)
-                  .map(({ location }) => location)}
+                city={activeCity}
+                points={nearbyOffers.map(({ location }) => location)}
                 selectedPoint={selectedPoint!}
               />
             </section>
@@ -262,17 +269,14 @@ function CardOffer({
                 Other places in the neighbourhood
               </h2>
               <div className="near-places__list places__list">
-                {cardList
-                  .filter((item) => item.id !== currentOffer)
-                  ?.slice(0, 3)
-                  ?.map((item) => (
-                    <Card
-                      card={item}
-                      key={item.id}
-                      onListItemHover={onListItemHover}
-                      className="near-places__card"
-                    />
-                  ))}
+                {nearbyOffers.map((item) => (
+                  <Card
+                    card={item}
+                    key={item.id}
+                    onListItemHover={onListItemHover}
+                    className="near-places__card"
+                  />
+                ))}
               </div>
             </section>
           </div>

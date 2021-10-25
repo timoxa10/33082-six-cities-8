@@ -25,7 +25,7 @@ function CardOffer({
   const { isPremium, title, price, goods, rating, type, bedrooms, maxAdults } =
     card;
 
-  const nearbyOffers = cardList
+  const filteredItems = cardList
     .filter((item) => item.id !== currentOffer)
     .slice(0, 3);
 
@@ -258,8 +258,8 @@ function CardOffer({
             <section className="property__map map">
               <CitiesMap
                 city={activeCity}
-                points={nearbyOffers.map(({ location }) => location)}
-                selectedPoint={selectedPoint!}
+                points={filteredItems.map(({ location }) => location)}
+                selectedPoint={selectedPoint}
               />
             </section>
           </section>
@@ -269,7 +269,7 @@ function CardOffer({
                 Other places in the neighbourhood
               </h2>
               <div className="near-places__list places__list">
-                {nearbyOffers.map((item) => (
+                {filteredItems.map((item) => (
                   <Card
                     card={item}
                     key={item.id}

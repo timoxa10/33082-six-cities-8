@@ -1,30 +1,14 @@
-import { useRef, useEffect } from 'react';
-import { Icon, Marker } from 'leaflet';
+import { useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import useMap from 'hooks/useMap';
 import type { CityCoordinates } from 'types/city-coordinates';
 import type { LocationInfo } from 'types/location-info';
 
-const URL_MARKER_DEFAULT = 'img/pin.svg';
-const URL_MARKER_CURRENT = 'img/pin-active.svg';
-
 interface CitiesMapProps {
   city: CityCoordinates;
   points: LocationInfo[];
-  selectedPoint: LocationInfo;
+  selectedPoint: LocationInfo | undefined;
 }
-
-const defaultCustomIcon = new Icon({
-  iconUrl: URL_MARKER_DEFAULT,
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
-});
-
-const currentCustomIcon = new Icon({
-  iconUrl: URL_MARKER_CURRENT,
-  iconSize: [40, 40],
-  iconAnchor: [20, 40],
-});
 
 function CitiesMap({
   city,
@@ -32,26 +16,9 @@ function CitiesMap({
   selectedPoint,
 }: CitiesMapProps): JSX.Element {
   const mapRef = useRef(null);
-  const map = useMap(mapRef, city);
+  useMap(mapRef, city, points, selectedPoint);
 
-  useEffect(() => {
-    if (map && points?.length > 0) {
-      points.forEach((point) => {
-        const marker = new Marker({
-          lat: point.latitude,
-          lng: point.longitude,
-        });
-
-        if (selectedPoint !== undefined && point === selectedPoint) {
-          marker.setIcon(currentCustomIcon).addTo(map);
-        } else {
-          marker.setIcon(defaultCustomIcon).addTo(map);
-        }
-      });
-    }
-  }, [map, points, selectedPoint]);
-
-  return <div style={{ height: '100%' }} ref={mapRef}></div>;
+  return <div style={{ height: '100%' }} ref={mapRef} />;
 }
 
 export default CitiesMap;

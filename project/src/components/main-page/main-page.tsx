@@ -178,7 +178,7 @@ function MainPage({
                   <CitiesMap
                     city={activeCity}
                     points={cardList.map(({ location }) => location)}
-                    selectedPoint={selectedPoint!}
+                    selectedPoint={selectedPoint}
                   />
                 </section>
               </div>

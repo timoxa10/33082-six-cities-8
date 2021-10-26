@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import type { CardListProps } from 'types/card-list-props';
-import camelcaseKeys from 'camelcase-keys';
+import camelСaseKeys from 'camelcase-keys';
 
 const initialCardList = [
   {
@@ -36,7 +36,7 @@ const initialCardList = [
     location: {
       latitude: 52.3909553943508,
       longitude: 4.85309666406198,
-      zoom: 4,
+      zoom: 10,
     },
     max_adults: 4,
     preview_image: 'img/1.png',
@@ -51,7 +51,7 @@ const initialCardList = [
       location: {
         latitude: 52.369553943508,
         longitude: 4.85309666406198,
-        zoom: 4,
+        zoom: 10,
       },
       name: 'Amsterdam',
     },
@@ -70,7 +70,7 @@ const initialCardList = [
     location: {
       latitude: 52.3909553943508,
       longitude: 4.929309666406198,
-      zoom: 4,
+      zoom: 10,
     },
     max_adults: 4,
     preview_image: 'img/1.png',
@@ -85,7 +85,7 @@ const initialCardList = [
       location: {
         latitude: 52.3809553943508,
         longitude: 4.939309666406198,
-        zoom: 4,
+        zoom: 10,
       },
       name: 'Amsterdam',
     },
@@ -104,7 +104,7 @@ const initialCardList = [
     location: {
       latitude: 52.35514938496378,
       longitude: 4.673877537499948,
-      zoom: 8,
+      zoom: 10,
     },
     max_adults: 4,
     preview_image: 'img/1.png',
@@ -138,7 +138,7 @@ const initialCardList = [
     location: {
       latitude: 52.3809553943508,
       longitude: 4.939309666406198,
-      zoom: 8,
+      zoom: 10,
     },
     max_adults: 4,
     preview_image: 'img/1.png',
@@ -172,7 +172,7 @@ const initialCardList = [
     location: {
       latitude: 52.35514938496378,
       longitude: 4.673877537499948,
-      zoom: 8,
+      zoom: 10,
     },
     max_adults: 4,
     preview_image: 'img/1.png',
@@ -183,7 +183,7 @@ const initialCardList = [
   },
 ];
 
-const CardList: CardListProps[] = camelcaseKeys(initialCardList, {
+const CardList: CardListProps[] = camelСaseKeys(initialCardList, {
   deep: true,
 });
 

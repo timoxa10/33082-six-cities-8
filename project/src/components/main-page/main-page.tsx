@@ -18,9 +18,20 @@ function MainPage({
     undefined,
   );
 
+  const [activeCity, ,] = useState({
+    location: {
+      latitude: 52.3909553943508,
+      longitude: 4.85309666406198,
+      zoom: 10,
+    },
+    name: 'Amsterdam',
+  });
+
   const onListItemHover = (location: LocationInfo) => {
     const currentCard = cardList.find((point) => point.location === location);
-    setSelectedPoint(currentCard?.location);
+    if (currentCard) {
+      setSelectedPoint(currentCard.location);
+    }
   };
 
   return (
@@ -154,9 +165,10 @@ function MainPage({
                 <div className="cities__places-list places__list tabs__content">
                   {cardList?.map((card) => (
                     <Card
-                      card={card}
                       key={card.id}
+                      card={card}
                       onListItemHover={onListItemHover}
+                      className="cities__place-card"
                     />
                   ))}
                 </div>
@@ -164,9 +176,9 @@ function MainPage({
               <div className="cities__right-section">
                 <section className="cities__map map">
                   <CitiesMap
-                    city={cardList.map(({ city }) => city)[0]}
+                    city={activeCity}
                     points={cardList.map(({ location }) => location)}
-                    selectedPoint={selectedPoint!}
+                    selectedPoint={selectedPoint}
                   />
                 </section>
               </div>

@@ -2,6 +2,7 @@ import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
 import type { CardListProps } from 'types/card-list-props';
+import type { ReviewsProps } from 'types/review-list-props';
 import CardOffer from 'elements/card-offer/card-offer';
 import MainPage from '../main-page/main-page';
 import LoginPage from '../login-page/login-page';
@@ -12,9 +13,14 @@ import NotFoundPage from '../not-found-page/not-found-page';
 type AppProps = {
   availableApartments?: number;
   cardList: CardListProps[];
+  reviewList: ReviewsProps;
 };
 
-function App({ availableApartments, cardList }: AppProps): JSX.Element {
+function App({
+  availableApartments,
+  cardList,
+  reviewList,
+}: AppProps): JSX.Element {
   return (
     <BrowserRouter>
       <Switch>
@@ -29,13 +35,18 @@ function App({ availableApartments, cardList }: AppProps): JSX.Element {
           exact
           path={AppRoute.RoomOffer}
           render={({ match }) => {
-            const { id } = match.params;
+            const id = Number(match.params.id);
 
-            const card = cardList.find((item) => +item.id === +id);
+            const card = cardList.find((item) => item.id === id);
 
             if (card) {
               return (
-                <CardOffer card={card} cardList={cardList} currentOffer={+id} />
+                <CardOffer
+                  card={card}
+                  cardList={cardList}
+                  currentOffer={id}
+                  reviewList={reviewList}
+                />
               );
             }
           }}
@@ -43,7 +54,7 @@ function App({ availableApartments, cardList }: AppProps): JSX.Element {
         <PrivateRoute
           exact
           path={AppRoute.Favorites}
-          render={() => <FavoritesPage cardList={cardList} />}
+          component={() => <FavoritesPage cardList={cardList} />}
           authorizationStatus={UserStatus.Auth}
         />
         <Route component={NotFoundPage} />

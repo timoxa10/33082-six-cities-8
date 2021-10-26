@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
+import clsx from 'clsx';
 import { MouseEvent } from 'react';
 import type { CardListProps } from 'types/card-list-props';
 import { Link } from 'react-router-dom';
@@ -8,9 +9,12 @@ import type { LocationInfo } from 'types/location-info';
 type CardProps = {
   card: CardListProps;
   onListItemHover: (location: LocationInfo) => void;
+  className: string;
 };
 
-function Card({ card, onListItemHover }: CardProps): JSX.Element {
+function Card({ card, onListItemHover, ...props }: CardProps): JSX.Element {
+  const { className } = props;
+
   const [mainImage] = card.images;
 
   const listItemHoverHandler = (event: MouseEvent<HTMLDivElement>) => {
@@ -20,7 +24,7 @@ function Card({ card, onListItemHover }: CardProps): JSX.Element {
 
   return (
     <article
-      className="cities__place-card place-card"
+      className={clsx(['place-card', className])}
       onMouseEnter={listItemHoverHandler}
     >
       {card.isPremium && (

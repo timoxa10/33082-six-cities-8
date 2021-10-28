@@ -2,17 +2,18 @@
 /* eslint-disable no-console */
 import clsx from 'clsx';
 import { MouseEvent } from 'react';
-import type { CardListProps } from 'types/card-list-props';
+import type { CardProps } from 'types/card-props';
 import { Link } from 'react-router-dom';
 import type { LocationInfo } from 'types/location-info';
+import capitalizeFirstLetter from 'utils/capitalizeFirstLetter';
 
-type CardProps = {
-  card: CardListProps;
+type MainCardProps = {
+  card: CardProps;
   onListItemHover: (location: LocationInfo) => void;
   className: string;
 };
 
-function Card({ card, onListItemHover, ...props }: CardProps): JSX.Element {
+function Card({ card, onListItemHover, ...props }: MainCardProps): JSX.Element {
   const { className } = props;
 
   const [mainImage] = card.images;
@@ -65,7 +66,7 @@ function Card({ card, onListItemHover, ...props }: CardProps): JSX.Element {
         <h2 className="place-card__name">
           <Link to={`/offer/${card.id}/`}>{card.title}</Link>
         </h2>
-        <p className="place-card__type">{card.type}</p>
+        <p className="place-card__type">{capitalizeFirstLetter(card.type)}</p>
       </div>
     </article>
   );

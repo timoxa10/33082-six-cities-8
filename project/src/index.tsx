@@ -1,20 +1,19 @@
+/* eslint-disable no-console */
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore } from 'redux';
+import { Provider } from 'react-redux';
+import { composeWithDevTools } from 'redux-devtools-extension';
 import App from './components/app/app';
-import cardList from 'fixture/offers';
-import reviewList from 'fixture/reviews';
+import { reducer } from 'store/reducer';
 
-const Setting = {
-  AVAILABLE_OFFERS: 3,
-};
+const store = createStore(reducer, composeWithDevTools());
 
 ReactDOM.render(
   <React.StrictMode>
-    <App
-      availableApartments={Setting.AVAILABLE_OFFERS}
-      cardList={cardList}
-      reviewList={reviewList}
-    />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root'),
 );

@@ -1,34 +1,38 @@
+/* eslint-disable no-console */
 import { useState } from 'react';
-import type { CardListProps } from 'types/card-list-props';
+import { Dispatch } from 'redux';
+import { connect, ConnectedProps } from 'react-redux';
 import type { LocationInfo } from 'types/location-info';
+import type { State } from 'types/state';
+import type { Actions } from 'types/action';
+import { getListOfOffersAction } from 'store/action';
 import Logo from 'elements/logo/logo';
+import TabsList from 'components/tabs-list/tabs-list';
 import Card from 'elements/card/card';
 import CitiesMap from '../cities-map/cities-map';
 
-interface MainPageProps {
-  availableApartments?: number;
-  cardList: CardListProps[];
-}
+const mapStateToProps = ({ city, offers, cityCoords }: State) => ({
+  city,
+  cityCoords,
+  offers,
+});
 
-function MainPage({
-  availableApartments,
-  cardList,
-}: MainPageProps): JSX.Element {
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) =>
+  dispatch(getListOfOffersAction());
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function MainPage(props: PropsFromRedux): JSX.Element {
+  const { city, cityCoords, offers } = props;
+
   const [selectedPoint, setSelectedPoint] = useState<LocationInfo | undefined>(
     undefined,
   );
 
-  const [activeCity, ,] = useState({
-    location: {
-      latitude: 52.3909553943508,
-      longitude: 4.85309666406198,
-      zoom: 10,
-    },
-    name: 'Amsterdam',
-  });
-
   const onListItemHover = (location: LocationInfo) => {
-    const currentCard = cardList.find((point) => point.location === location);
+    const currentCard = offers.find((point) => point.location === location);
     if (currentCard) {
       setSelectedPoint(currentCard.location);
     }
@@ -90,47 +94,14 @@ function MainPage({
         </header>
         <main className="page__main page__main--index">
           <h1 className="visually-hidden">Cities</h1>
-          <div className="tabs">
-            <section className="locations container">
-              <ul className="locations__list tabs__list">
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Paris</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Cologne</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Brussels</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item tabs__item--active">
-                    <span>Amsterdam</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Hamburg</span>
-                  </a>
-                </li>
-                <li className="locations__item">
-                  <a className="locations__item-link tabs__item" href="#">
-                    <span>Dusseldorf</span>
-                  </a>
-                </li>
-              </ul>
-            </section>
-          </div>
+          <TabsList />
           <div className="cities">
             <div className="cities__places-container container">
               <section className="cities__places places">
                 <h2 className="visually-hidden">Places</h2>
-                <b className="places__found">312 places to stay in Amsterdam</b>
+                <b className="places__found">
+                  {offers.length} places to stay in {city}
+                </b>
                 <form
                   className="places__sorting"
                   action="#"
@@ -163,7 +134,7 @@ function MainPage({
                   </ul>
                 </form>
                 <div className="cities__places-list places__list tabs__content">
-                  {cardList?.map((card) => (
+                  {offers?.map((card) => (
                     <Card
                       key={card.id}
                       card={card}
@@ -176,8 +147,8 @@ function MainPage({
               <div className="cities__right-section">
                 <section className="cities__map map">
                   <CitiesMap
-                    city={activeCity}
-                    points={cardList.map(({ location }) => location)}
+                    city={cityCoords}
+                    points={offers.map(({ location }) => location)}
                     selectedPoint={selectedPoint}
                   />
                 </section>
@@ -190,4 +161,5 @@ function MainPage({
   );
 }
 
-export default MainPage;
+export { MainPage };
+export default connector(MainPage);

@@ -1,27 +1,41 @@
 /* eslint-disable no-console */
-import { useState } from 'react';
-import type { CardListProps } from 'types/card-list-props';
-import type { ReviewsProps } from 'types/review-list-props';
+import axios from 'axios';
+import { useState, useEffect, useCallback } from 'react';
+import { Dispatch } from 'redux';
+import { connect, ConnectedProps } from 'react-redux';
+import type { CardProps, CardsProps } from 'types/card-props';
+import type { ReviewsProps } from 'types/review-props';
 import type { LocationInfo } from 'types/location-info';
+import type { State } from 'types/state';
+import type { Actions } from 'types/action';
+import { getListOfOffersAction } from 'store/action';
 import Logo from 'elements/logo/logo';
 import ReviewPageForm from 'components/offer-page-form/offer-page-form';
 import Card from 'elements/card/card';
 import ReviewsList from 'components/reviews-list/reviews-list';
 import CitiesMap from 'components/cities-map/cities-map';
 
+const mapStateToProps = ({ cityCoords }: State) => ({
+  cityCoords,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) =>
+  dispatch(getListOfOffersAction());
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+type ConnectedComponentProps = PropsFromRedux & CardOfferProps;
+
 type CardOfferProps = {
-  card: CardListProps;
-  cardList: CardListProps[];
+  card: CardProps;
+  cardList: CardsProps;
   currentOffer: number;
-  reviewList: ReviewsProps;
 };
 
-function CardOffer({
-  card,
-  cardList,
-  currentOffer,
-  reviewList,
-}: CardOfferProps): JSX.Element {
+function CardOffer(props: ConnectedComponentProps): JSX.Element {
+  const { cityCoords, card, cardList, currentOffer } = props;
+
   const { isPremium, title, price, goods, rating, type, bedrooms, maxAdults } =
     card;
 
@@ -31,21 +45,29 @@ function CardOffer({
 
   const [selectedPoint, setSelectedPoint] = useState<LocationInfo>();
 
-  const [activeCity, ,] = useState({
-    location: {
-      latitude: 52.3909553943508,
-      longitude: 4.85309666406198,
-      zoom: 10,
-    },
-    name: 'Amsterdam',
-  });
-
   const onListItemHover = (location: LocationInfo) => {
     const currentCard = cardList?.find((point) => point.location === location);
     if (currentCard) {
       setSelectedPoint(currentCard.location);
     }
   };
+
+  const [reviewData, setReviewData] = useState<ReviewsProps>([]);
+
+  const fetchCardReview = useCallback(async () => {
+    try {
+      const url = `https://8.react.pages.academy/six-cities/comments/${card.id}`;
+      const response = await axios.get(url);
+      setReviewData(response.data);
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Ошибка выполнения fetchCardReview', err);
+    }
+  }, [card.id]);
+
+  useEffect(() => {
+    fetchCardReview();
+  }, [card.id, fetchCardReview]);
 
   return (
     <>
@@ -250,14 +272,14 @@ function CardOffer({
                   </div>
                 </div>
                 <section className="property__reviews reviews">
-                  <ReviewsList reviews={reviewList} />
+                  <ReviewsList reviews={reviewData} />
                   <ReviewPageForm />
                 </section>
               </div>
             </div>
             <section className="property__map map">
               <CitiesMap
-                city={activeCity}
+                city={cityCoords}
                 points={filteredItems.map(({ location }) => location)}
                 selectedPoint={selectedPoint}
               />
@@ -285,5 +307,5 @@ function CardOffer({
     </>
   );
 }
-
-export default CardOffer;
+export { CardOffer };
+export default connector(CardOffer);

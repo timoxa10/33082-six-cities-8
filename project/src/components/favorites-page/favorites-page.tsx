@@ -1,9 +1,9 @@
-import type { CardListProps } from 'types/card-list-props';
+import type { CardsProps } from 'types/card-props';
 import Logo from 'elements/logo/logo';
 import CardFavorite from 'elements/card-favorite/card-favorite';
 
 interface FavoritesPageProps {
-  cardList: CardListProps[];
+  cardList: CardsProps;
 }
 
 function FavoritesPage({ cardList }: FavoritesPageProps): JSX.Element {

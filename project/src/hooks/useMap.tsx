@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState, MutableRefObject } from 'react';
-import { Map, TileLayer } from 'leaflet';
-import { Icon, Marker } from 'leaflet';
+import { Map, TileLayer, Icon, Marker } from 'leaflet';
 import type { CityCoordinates } from 'types/city-coordinates';
 import type { LocationInfo } from 'types/location-info';
 
@@ -19,6 +19,8 @@ const currentCustomIcon = new Icon({
   iconSize: [40, 40],
   iconAnchor: [20, 40],
 });
+
+let prevCity: string | undefined;
 
 function useMap(
   mapRef: MutableRefObject<HTMLElement | null>,
@@ -60,14 +62,23 @@ function useMap(
           lng: point.longitude,
         });
 
-        console.log(selectedPoint, points);
-
         if (selectedPoint !== undefined && point === selectedPoint) {
           marker.setIcon(currentCustomIcon).addTo(map);
         } else {
           marker.setIcon(defaultCustomIcon).addTo(map);
         }
       });
+
+      if (prevCity !== city.name) {
+        map.flyTo(
+          {
+            lat: city.location.latitude,
+            lng: city.location.longitude,
+          },
+          city.location.zoom,
+        );
+        prevCity = city.name;
+      }
     }
   }, [map, points, selectedPoint]);
 

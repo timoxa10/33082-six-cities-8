@@ -1,8 +1,11 @@
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Dispatch } from 'redux';
+import { connect, ConnectedProps } from 'react-redux';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
-import type { CardListProps } from 'types/card-list-props';
-import type { ReviewsProps } from 'types/review-list-props';
+import type { State } from 'types/state';
+import type { Actions } from 'types/action';
+import { getListOfOffersAction } from 'store/action';
 import CardOffer from 'elements/card-offer/card-offer';
 import MainPage from '../main-page/main-page';
 import LoginPage from '../login-page/login-page';
@@ -10,25 +13,25 @@ import FavoritesPage from '../favorites-page/favorites-page';
 import PrivateRoute from '../private-route/private-route';
 import NotFoundPage from '../not-found-page/not-found-page';
 
-type AppProps = {
-  availableApartments?: number;
-  cardList: CardListProps[];
-  reviewList: ReviewsProps;
-};
+const mapStateToProps = ({ offers }: State) => ({
+  offers,
+});
 
-function App({
-  availableApartments,
-  cardList,
-  reviewList,
-}: AppProps): JSX.Element {
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) =>
+  dispatch(getListOfOffersAction());
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function App(props: PropsFromRedux): JSX.Element {
+  const { offers } = props;
+
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path={AppRoute.Root}>
-          <MainPage
-            availableApartments={availableApartments}
-            cardList={cardList}
-          />
+          <MainPage />
         </Route>
         <Route exact path={AppRoute.Login} component={LoginPage} />
         <Route
@@ -37,16 +40,11 @@ function App({
           render={({ match }) => {
             const id = Number(match.params.id);
 
-            const card = cardList.find((item) => item.id === id);
+            const card = offers.find((item) => item.id === id);
 
             if (card) {
               return (
-                <CardOffer
-                  card={card}
-                  cardList={cardList}
-                  currentOffer={id}
-                  reviewList={reviewList}
-                />
+                <CardOffer card={card} cardList={offers} currentOffer={id} />
               );
             }
           }}
@@ -54,7 +52,7 @@ function App({
         <PrivateRoute
           exact
           path={AppRoute.Favorites}
-          component={() => <FavoritesPage cardList={cardList} />}
+          component={() => <FavoritesPage cardList={offers} />}
           authorizationStatus={UserStatus.Auth}
         />
         <Route component={NotFoundPage} />
@@ -62,5 +60,5 @@ function App({
     </BrowserRouter>
   );
 }
-
-export default App;
+export { App };
+export default connector(App);

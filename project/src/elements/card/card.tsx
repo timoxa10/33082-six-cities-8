@@ -5,7 +5,7 @@ import { MouseEvent } from 'react';
 import type { CardProps } from 'types/card-props';
 import { Link } from 'react-router-dom';
 import type { LocationInfo } from 'types/location-info';
-import capitalizeFirstLetter from 'utils/capitalizeFirstLetter';
+import { capitalizeFirstLetter } from 'utils/utils';
 
 type MainCardProps = {
   card: CardProps;

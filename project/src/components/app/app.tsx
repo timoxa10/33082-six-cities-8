@@ -1,11 +1,10 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
-import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
 import type { State } from 'types/state';
-import type { Actions } from 'types/action';
-import { getListOfOffersAction } from 'store/action';
 import CardOffer from 'elements/card-offer/card-offer';
 import MainPage from '../main-page/main-page';
 import LoginPage from '../login-page/login-page';
@@ -13,19 +12,18 @@ import FavoritesPage from '../favorites-page/favorites-page';
 import PrivateRoute from '../private-route/private-route';
 import NotFoundPage from '../not-found-page/not-found-page';
 
-const mapStateToProps = ({ offers }: State) => ({
-  offers,
-});
-
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) =>
-  dispatch(getListOfOffersAction());
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
+const connector = connect(
+  ({ offersByCity, city }: State) => ({
+    offersByCity,
+    city,
+  }),
+  {},
+);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function App(props: PropsFromRedux): JSX.Element {
-  const { offers } = props;
+  const { offersByCity } = props;
 
   return (
     <BrowserRouter>
@@ -40,11 +38,15 @@ function App(props: PropsFromRedux): JSX.Element {
           render={({ match }) => {
             const id = Number(match.params.id);
 
-            const card = offers.find((item) => item.id === id);
+            const card = offersByCity.find((item) => item.id === id);
 
             if (card) {
               return (
-                <CardOffer card={card} cardList={offers} currentOffer={id} />
+                <CardOffer
+                  card={card}
+                  cardList={offersByCity}
+                  currentOffer={id}
+                />
               );
             }
           }}
@@ -52,7 +54,7 @@ function App(props: PropsFromRedux): JSX.Element {
         <PrivateRoute
           exact
           path={AppRoute.Favorites}
-          component={() => <FavoritesPage cardList={offers} />}
+          component={() => <FavoritesPage cardList={offersByCity} />}
           authorizationStatus={UserStatus.Auth}
         />
         <Route component={NotFoundPage} />

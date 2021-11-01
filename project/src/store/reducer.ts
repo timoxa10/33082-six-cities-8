@@ -1,30 +1,32 @@
 import { ActionType, Actions } from 'types/action';
 import type { State } from 'types/state';
-import CardList from 'fixture/offers';
+import { INITIAL_CITY, LOCATION_LIST } from 'config/constants';
 
 const initialState = {
-  city: 'Paris',
-  cityCoords: {
-    name: 'Paris',
-    location: {
-      latitude: 48.85661,
-      longitude: 2.351499,
-      zoom: 13,
-    },
-  },
-  offers: CardList.filter((card) => card.city.name === 'Paris'),
+  city: INITIAL_CITY,
+  offers: [],
+  offersByCity: [],
+  locationsList: LOCATION_LIST,
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
   switch (action.type) {
     case ActionType.GetCurrentCity:
       return { ...state, city: action.payload };
-    case ActionType.GetCurrentCityCoords:
-      return { ...state, cityCoords: action.payload };
     case ActionType.GetListOfOffers:
       return {
         ...state,
-        offers: CardList.filter((card) => card.city.name === state.city),
+        offers: action.payload,
+      };
+    case ActionType.UpdateOffersList:
+      return {
+        ...state,
+        offersByCity: action.payload,
+      };
+    case ActionType.GetListOfCities:
+      return {
+        ...state,
+        locationsList: LOCATION_LIST,
       };
     default:
       return state;

@@ -1,25 +1,26 @@
-/* eslint-disable comma-dangle */
 import type { CityCoordinates } from 'types/city-coordinates';
+import type { CardsProps } from 'types/card-props';
+import { ActionType } from 'types/action';
 
-import {
-  ActionType,
-  GetCurrentCityAction,
-  GetCurrentCityCoordsAction,
-  GetListOfOffersAction,
-} from 'types/action';
+export const getCurrentCityAction = (value: CityCoordinates) =>
+  ({
+    type: ActionType.GetCurrentCity,
+    payload: value,
+  } as const);
 
-export const getCurrentCity = (value: string): GetCurrentCityAction => ({
-  type: ActionType.GetCurrentCity,
-  payload: value,
-});
+export const getListOfOffersAction = (offers: CardsProps) =>
+  ({
+    type: ActionType.GetListOfOffers,
+    payload: offers,
+  } as const);
 
-export const getCurrentCityCoords = (
-  value: CityCoordinates,
-): GetCurrentCityCoordsAction => ({
-  type: ActionType.GetCurrentCityCoords,
-  payload: value,
-});
+export const updateOffersListAction = (offers: CardsProps) =>
+  ({
+    type: ActionType.UpdateOffersList,
+    payload: offers,
+  } as const);
 
-export const getListOfOffersAction = (): GetListOfOffersAction => ({
-  type: ActionType.GetListOfOffers,
-});
+export const getListOfCitiesAction = () =>
+  ({
+    type: ActionType.GetListOfCities,
+  } as const);

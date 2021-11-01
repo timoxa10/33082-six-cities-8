@@ -7,7 +7,7 @@ export const INITIAL_CITY = {
   },
 };
 
-export const LOCATION_LIST = [
+export const LOCATIONS_LIST = [
   {
     name: 'Paris',
     location: {
@@ -57,3 +57,5 @@ export const LOCATION_LIST = [
     },
   },
 ];
+
+export const DEFAULT_SORT_TYPE = 'Popular';

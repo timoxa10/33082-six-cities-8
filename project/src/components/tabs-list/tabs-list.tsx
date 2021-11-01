@@ -1,3 +1,5 @@
+/* eslint-disable comma-dangle */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Link } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
@@ -6,9 +8,14 @@ import { AppRoute } from 'config/AppRoute';
 import type { State } from 'types/state';
 import type { Actions } from 'types/action';
 import type { CityCoordinates } from 'types/city-coordinates';
-import type { CardsProps } from 'types/card-props';
+import type { OffersProps } from 'types/card-props';
 import { filterOffersList } from 'utils/utils';
-import { getCurrentCityAction, updateOffersListAction } from 'store/action';
+import {
+  getCurrentCityAction,
+  updateOffersListAction,
+  getActiveSortTypeAction,
+} from 'store/action';
+import { DEFAULT_SORT_TYPE } from 'config/constants';
 
 const mapStateToProps = ({ city, offers, locationsList }: State) => ({
   city,
@@ -21,8 +28,9 @@ const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
     dispatch(getCurrentCityAction(value));
   },
 
-  onOffersUpdate(offers: CardsProps, city: string) {
+  onOffersUpdate(offers: OffersProps, city: string) {
     dispatch(updateOffersListAction(filterOffersList(city, offers)));
+    dispatch(getActiveSortTypeAction(DEFAULT_SORT_TYPE));
   },
 });
 

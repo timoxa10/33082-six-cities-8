@@ -2,7 +2,7 @@ import type { CityCoordinates } from 'types/city-coordinates';
 import type { HostData } from 'types/host-data';
 import type { LocationInfo } from 'types/location-info';
 
-interface CardProps {
+interface OfferProps {
   bedrooms: number;
   city: CityCoordinates;
   description: string;
@@ -21,6 +21,6 @@ interface CardProps {
   type: string;
 }
 
-type CardsProps = CardProps[];
+type OffersProps = OfferProps[];
 
-export type { CardProps, CardsProps };
+export type { OfferProps, OffersProps };

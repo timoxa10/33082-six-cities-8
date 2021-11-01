@@ -6,6 +6,8 @@ import {
   getListOfOffersAction,
   getListOfCitiesAction,
   updateOffersListAction,
+  getActiveSortTypeAction,
+  setIsLoadingAction,
 } from 'store/action';
 import { State } from 'types/state';
 
@@ -14,13 +16,17 @@ export enum ActionType {
   GetListOfOffers = 'GetListOfOffers',
   GetListOfCities = 'GetListOfCities',
   UpdateOffersList = 'UpdateOffersList',
+  GetActiveSortType = 'GetActiveSortType',
+  SetIsLoading = 'SetIsLoading',
 }
 
 export type Actions =
   | ReturnType<typeof getCurrentCityAction>
   | ReturnType<typeof getListOfOffersAction>
   | ReturnType<typeof getListOfCitiesAction>
-  | ReturnType<typeof updateOffersListAction>;
+  | ReturnType<typeof updateOffersListAction>
+  | ReturnType<typeof getActiveSortTypeAction>
+  | ReturnType<typeof setIsLoadingAction>;
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<
   R,

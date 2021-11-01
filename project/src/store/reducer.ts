@@ -1,12 +1,19 @@
+/* eslint-disable comma-dangle */
 import { ActionType, Actions } from 'types/action';
 import type { State } from 'types/state';
-import { INITIAL_CITY, LOCATION_LIST } from 'config/constants';
+import {
+  INITIAL_CITY,
+  LOCATIONS_LIST,
+  DEFAULT_SORT_TYPE,
+} from 'config/constants';
 
 const initialState = {
   city: INITIAL_CITY,
   offers: [],
   offersByCity: [],
-  locationsList: LOCATION_LIST,
+  activeSortType: DEFAULT_SORT_TYPE,
+  locationsList: LOCATIONS_LIST,
+  isLoading: true,
 };
 
 const reducer = (state: State = initialState, action: Actions): State => {
@@ -26,7 +33,17 @@ const reducer = (state: State = initialState, action: Actions): State => {
     case ActionType.GetListOfCities:
       return {
         ...state,
-        locationsList: LOCATION_LIST,
+        locationsList: LOCATIONS_LIST,
+      };
+    case ActionType.GetActiveSortType:
+      return {
+        ...state,
+        activeSortType: action.payload,
+      };
+    case ActionType.SetIsLoading:
+      return {
+        ...state,
+        isLoading: action.payload,
       };
     default:
       return state;

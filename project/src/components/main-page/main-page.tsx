@@ -7,12 +7,14 @@ import HiddenBookmarkContent from 'components/hidden-bookmark-content/hidden-boo
 import TabsList from 'components/tabs-list/tabs-list';
 import OfferPageForm from 'components/offer-sorting-form/offer-sorting-form';
 import Card from 'elements/card/card';
-import CitiesMap from '../cities-map/cities-map';
+import CitiesMap from 'components/cities-map/cities-map';
+import Spinner from 'elements/spinner/spinner';
 
 const connector = connect(
-  ({ city, offersByCity }: State) => ({
+  ({ city, offersByCity, isLoading }: State) => ({
     city,
     offersByCity,
+    isLoading,
   }),
   {},
 );
@@ -20,7 +22,7 @@ const connector = connect(
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function MainPage(props: PropsFromRedux): JSX.Element {
-  const { city, offersByCity } = props;
+  const { isLoading, city, offersByCity } = props;
 
   const [selectedPoint, setSelectedPoint] = useState<LocationInfo | undefined>(
     undefined,
@@ -42,37 +44,56 @@ function MainPage(props: PropsFromRedux): JSX.Element {
         <Header />
         <main className="page__main page__main--index">
           <h1 className="visually-hidden">Cities</h1>
-          <TabsList />
-          <div className="cities">
-            <div className="cities__places-container container">
-              <section className="cities__places places">
-                <h2 className="visually-hidden">Places</h2>
-                <b className="places__found">
-                  {offersByCity.length} places to stay in {city.name}
-                </b>
-                <OfferPageForm />
-                <div className="cities__places-list places__list tabs__content">
-                  {offersByCity?.map((card) => (
-                    <Card
-                      key={card.id}
-                      card={card}
-                      onListItemHover={onListItemHover}
-                      className="cities__place-card"
-                    />
-                  ))}
-                </div>
-              </section>
-              <div className="cities__right-section">
-                <section className="cities__map map">
-                  <CitiesMap
-                    city={city}
-                    points={offersByCity.map(({ location }) => location)}
-                    selectedPoint={selectedPoint}
-                  />
-                </section>
-              </div>
+
+          {isLoading && (
+            <div
+              style={{
+                width: '100%',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+              }}
+            >
+              <Spinner />
             </div>
-          </div>
+          )}
+
+          {!isLoading && (
+            <>
+              <TabsList />
+              <div className="cities">
+                <div className="cities__places-container container">
+                  <section className="cities__places places">
+                    <h2 className="visually-hidden">Places</h2>
+                    <b className="places__found">
+                      {offersByCity.length} places to stay in {city.name}
+                    </b>
+                    <OfferPageForm />
+                    <div className="cities__places-list places__list tabs__content">
+                      {offersByCity?.map((card) => (
+                        <Card
+                          key={card.id}
+                          card={card}
+                          onListItemHover={onListItemHover}
+                          className="cities__place-card"
+                        />
+                      ))}
+                    </div>
+                  </section>
+
+                  <div className="cities__right-section">
+                    <section className="cities__map map">
+                      <CitiesMap
+                        city={city}
+                        points={offersByCity.map(({ location }) => location)}
+                        selectedPoint={selectedPoint}
+                      />
+                    </section>
+                  </div>
+                </div>
+              </div>
+            </>
+          )}
         </main>
       </div>
     </>

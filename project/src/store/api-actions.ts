@@ -1,13 +1,18 @@
+/* eslint-disable comma-dangle */
 import camelСaseKeys from 'camelcase-keys';
-import type { CardsProps } from 'types/card-props';
+import type { OffersProps } from 'types/card-props';
 import { ThunkActionResult } from 'types/action';
-import { getListOfOffersAction, updateOffersListAction } from 'store/action';
+import {
+  getListOfOffersAction,
+  updateOffersListAction,
+  setIsLoadingAction,
+} from 'store/action';
 import { filterOffersList } from 'utils/utils';
 import { INITIAL_CITY } from 'config/constants';
 
 function fetchOffersList(): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
-    const { data } = await api.get<CardsProps>('/hotels');
+    const { data } = await api.get<OffersProps>('/hotels');
     const offers = camelСaseKeys(data, {
       deep: true,
     });
@@ -16,6 +21,7 @@ function fetchOffersList(): ThunkActionResult {
     dispatch(
       updateOffersListAction(filterOffersList(INITIAL_CITY.name, offers)),
     );
+    dispatch(setIsLoadingAction(false));
   };
 }
 

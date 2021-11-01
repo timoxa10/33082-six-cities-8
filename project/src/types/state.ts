@@ -1,9 +1,11 @@
-import type { CardsProps } from 'types/card-props';
+import type { OffersProps } from 'types/card-props';
 import type { CityCoordinates } from 'types/city-coordinates';
 
 export type State = {
   city: CityCoordinates;
-  offers: CardsProps;
-  offersByCity: CardsProps;
+  offers: OffersProps;
+  offersByCity: OffersProps;
+  activeSortType: string;
   locationsList: CityCoordinates[];
+  isLoading: boolean;
 };

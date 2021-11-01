@@ -2,13 +2,13 @@
 /* eslint-disable no-console */
 import clsx from 'clsx';
 import { MouseEvent } from 'react';
-import type { CardProps } from 'types/card-props';
+import type { OfferProps } from 'types/card-props';
 import { Link } from 'react-router-dom';
 import type { LocationInfo } from 'types/location-info';
 import { capitalizeFirstLetter } from 'utils/utils';
 
 type MainCardProps = {
-  card: CardProps;
+  card: OfferProps;
   onListItemHover: (location: LocationInfo) => void;
   className: string;
 };

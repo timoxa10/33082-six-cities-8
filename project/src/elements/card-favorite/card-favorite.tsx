@@ -1,4 +1,4 @@
-import type { CardProps } from 'types/card-props';
+import type { OfferProps } from 'types/card-props';
 import { Link } from 'react-router-dom';
 
 function CardFavorite({
@@ -7,7 +7,7 @@ function CardFavorite({
   title,
   type,
   id,
-}: CardProps): JSX.Element {
+}: OfferProps): JSX.Element {
   const [mainImage] = images;
 
   return (

@@ -1,13 +1,12 @@
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
-import type { CardProps, CardsProps } from 'types/card-props';
+import type { OfferProps, OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
 import type { LocationInfo } from 'types/location-info';
 import type { State } from 'types/state';
 import Header from 'components/header/header';
 import MetaDataComponent from 'components/meta-data-component/meta-data-component';
-
 import HiddenBookmarkContent from 'components/hidden-bookmark-content/hidden-bookmark-content';
 import ReviewPageForm from 'components/offer-page-form/offer-page-form';
 import Card from 'elements/card/card';
@@ -26,8 +25,8 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & CardOfferProps;
 
 type CardOfferProps = {
-  card: CardProps;
-  cardList: CardsProps;
+  card: OfferProps;
+  cardList: OffersProps;
   currentOffer: number;
 };
 

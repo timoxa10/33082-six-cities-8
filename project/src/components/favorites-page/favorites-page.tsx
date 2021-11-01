@@ -1,11 +1,11 @@
-import type { CardsProps } from 'types/card-props';
+import type { OffersProps } from 'types/card-props';
 import Logo from 'elements/logo/logo';
 import Header from 'components/header/header';
 import HiddenBookmarkContent from 'components/hidden-bookmark-content/hidden-bookmark-content';
 import CardFavorite from 'elements/card-favorite/card-favorite';
 
 interface FavoritesPageProps {
-  cardList: CardsProps;
+  cardList: OffersProps;
 }
 
 function FavoritesPage({ cardList }: FavoritesPageProps): JSX.Element {

@@ -1,62 +1,61 @@
-import { useState } from 'react';
+import { Dispatch } from 'redux';
+import type { Actions } from 'types/action';
 import { connect, ConnectedProps } from 'react-redux';
 import type { LocationInfo } from 'types/location-info';
 import type { State } from 'types/state';
 import Header from 'components/header/header';
-import HiddenBookmarkContent from 'components/hidden-bookmark-content/hidden-bookmark-content';
+import SvgSpriteIcons from 'components/svg-sprite-icons/svg-sprite-icons';
 import TabsList from 'components/tabs-list/tabs-list';
 import OfferPageForm from 'components/offer-sorting-form/offer-sorting-form';
 import Card from 'elements/card/card';
 import CitiesMap from 'components/cities-map/cities-map';
 import Spinner from 'elements/spinner/spinner';
+import { getSelectedPointAction } from 'store/action';
 
-const connector = connect(
-  ({ city, offersByCity, isLoading }: State) => ({
-    city,
-    offersByCity,
-    isLoading,
-  }),
-  {},
-);
+const mapStateToProps = ({
+  city,
+  offersByCity,
+  isLoading,
+  selectedPoint,
+}: State) => ({
+  city,
+  offersByCity,
+  isLoading,
+  selectedPoint,
+});
+
+const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
+  onSelectedPoint(point: LocationInfo) {
+    dispatch(getSelectedPointAction(point));
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function MainPage(props: PropsFromRedux): JSX.Element {
-  const { isLoading, city, offersByCity } = props;
-
-  const [selectedPoint, setSelectedPoint] = useState<LocationInfo | undefined>(
-    undefined,
-  );
+  const { isLoading, city, offersByCity, selectedPoint, onSelectedPoint } =
+    props;
 
   const onListItemHover = (location: LocationInfo) => {
     const currentCard = offersByCity.find(
       (point) => point.location === location,
     );
     if (currentCard) {
-      setSelectedPoint(currentCard.location);
+      onSelectedPoint(currentCard.location);
     }
   };
 
   return (
     <>
-      <HiddenBookmarkContent />
+      <SvgSpriteIcons />
       <div className="page page--gray page--main">
         <Header />
         <main className="page__main page__main--index">
           <h1 className="visually-hidden">Cities</h1>
 
-          {isLoading && (
-            <div
-              style={{
-                width: '100%',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-              }}
-            >
-              <Spinner />
-            </div>
-          )}
+          {isLoading && <Spinner />}
 
           {!isLoading && (
             <>
@@ -66,7 +65,7 @@ function MainPage(props: PropsFromRedux): JSX.Element {
                   <section className="cities__places places">
                     <h2 className="visually-hidden">Places</h2>
                     <b className="places__found">
-                      {offersByCity.length} places to stay in {city.name}
+                      {offersByCity?.length} places to stay in {city?.name}
                     </b>
                     <OfferPageForm />
                     <div className="cities__places-list places__list tabs__content">

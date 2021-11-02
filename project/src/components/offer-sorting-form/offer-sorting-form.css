@@ -1,0 +1,8 @@
+.sorting-arrow-active {
+  transform: rotate(180deg) translateY(3px);
+}
+
+.sorting-arrow-default {
+  transform: rotate(0deg) translateY(-50%);
+}
+

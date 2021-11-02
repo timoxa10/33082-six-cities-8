@@ -1,10 +1,10 @@
 import Logo from 'elements/logo/logo';
-import HiddenBookmarkContent from 'components/hidden-bookmark-content/hidden-bookmark-content';
+import SvgSpriteIcons from 'components/svg-sprite-icons/svg-sprite-icons';
 
 function LoginPage(): JSX.Element {
   return (
     <>
-      <HiddenBookmarkContent />
+      <SvgSpriteIcons />
       <div className="page page--gray page--login">
         <header className="header">
           <div className="container">

@@ -10,13 +10,13 @@ const filterOffersList = (city: string, offers: OffersProps): OffersProps =>
 const sortOffersByType = (type: string, offers: OffersProps): OffersProps => {
   switch (type) {
     case SortTypes.Popular:
-      return offers.sort((a, b) => a.id - b.id);
+      return offers.slice().sort((a, b) => a.id - b.id);
     case SortTypes.AscendingOrder:
-      return offers.sort((a, b) => a.price - b.price);
+      return offers.slice().sort((a, b) => a.price - b.price);
     case SortTypes.DescendingOrder:
-      return offers.sort((a, b) => b.price - a.price);
+      return offers.slice().sort((a, b) => b.price - a.price);
     case SortTypes.TopRated:
-      return offers.sort((a, b) => b.rating - a.rating);
+      return offers.slice().sort((a, b) => b.rating - a.rating);
     default:
       return offers;
   }

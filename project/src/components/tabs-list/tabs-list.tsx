@@ -1,5 +1,3 @@
-/* eslint-disable comma-dangle */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Link } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import { connect, ConnectedProps } from 'react-redux';
@@ -13,9 +11,10 @@ import { filterOffersList } from 'utils/utils';
 import {
   getCurrentCityAction,
   updateOffersListAction,
+  // eslint-disable-next-line comma-dangle
   getActiveSortTypeAction,
 } from 'store/action';
-import { DEFAULT_SORT_TYPE } from 'config/constants';
+import { DEFAULT_SORT_TYPE } from 'config/default-sort-type';
 
 const mapStateToProps = ({ city, offers, locationsList }: State) => ({
   city,

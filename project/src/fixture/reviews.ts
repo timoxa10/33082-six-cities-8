@@ -1,5 +1,5 @@
 /* eslint-disable camelcase */
-import type { ReviewsProps } from 'types/review-list-props';
+import type { ReviewsProps } from 'types/review-props';
 import camelСaseKeys from 'camelcase-keys';
 
 const initialReviewList = [

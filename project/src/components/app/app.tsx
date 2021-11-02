@@ -1,8 +1,10 @@
+/* eslint-disable no-console */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { connect, ConnectedProps } from 'react-redux';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
-import type { CardListProps } from 'types/card-list-props';
-import type { ReviewsProps } from 'types/review-list-props';
+import type { State } from 'types/state';
 import CardOffer from 'elements/card-offer/card-offer';
 import MainPage from '../main-page/main-page';
 import LoginPage from '../login-page/login-page';
@@ -10,25 +12,24 @@ import FavoritesPage from '../favorites-page/favorites-page';
 import PrivateRoute from '../private-route/private-route';
 import NotFoundPage from '../not-found-page/not-found-page';
 
-type AppProps = {
-  availableApartments?: number;
-  cardList: CardListProps[];
-  reviewList: ReviewsProps;
-};
+const connector = connect(
+  ({ offersByCity, city }: State) => ({
+    offersByCity,
+    city,
+  }),
+  {},
+);
 
-function App({
-  availableApartments,
-  cardList,
-  reviewList,
-}: AppProps): JSX.Element {
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function App(props: PropsFromRedux): JSX.Element {
+  const { offersByCity } = props;
+
   return (
     <BrowserRouter>
       <Switch>
         <Route exact path={AppRoute.Root}>
-          <MainPage
-            availableApartments={availableApartments}
-            cardList={cardList}
-          />
+          <MainPage />
         </Route>
         <Route exact path={AppRoute.Login} component={LoginPage} />
         <Route
@@ -37,15 +38,14 @@ function App({
           render={({ match }) => {
             const id = Number(match.params.id);
 
-            const card = cardList.find((item) => item.id === id);
+            const card = offersByCity.find((item) => item.id === id);
 
             if (card) {
               return (
                 <CardOffer
                   card={card}
-                  cardList={cardList}
+                  cardList={offersByCity}
                   currentOffer={id}
-                  reviewList={reviewList}
                 />
               );
             }
@@ -54,7 +54,7 @@ function App({
         <PrivateRoute
           exact
           path={AppRoute.Favorites}
-          component={() => <FavoritesPage cardList={cardList} />}
+          component={() => <FavoritesPage cardList={offersByCity} />}
           authorizationStatus={UserStatus.Auth}
         />
         <Route component={NotFoundPage} />
@@ -62,5 +62,5 @@ function App({
     </BrowserRouter>
   );
 }
-
-export default App;
+export { App };
+export default connector(App);

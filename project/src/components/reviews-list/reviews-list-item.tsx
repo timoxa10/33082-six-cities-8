@@ -1,4 +1,4 @@
-import type { ReviewProps } from 'types/review-list-props';
+import type { ReviewProps } from 'types/review-props';
 import convertDateToString from 'utils/convertDateToString';
 
 type ReviewsItemProps = {

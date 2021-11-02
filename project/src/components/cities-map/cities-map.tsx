@@ -16,6 +16,7 @@ function CitiesMap({
   selectedPoint,
 }: CitiesMapProps): JSX.Element {
   const mapRef = useRef(null);
+
   useMap(mapRef, city, points, selectedPoint);
 
   return <div style={{ height: '100%' }} ref={mapRef} />;

@@ -1,38 +1,52 @@
 import type { CityCoordinates } from 'types/city-coordinates';
 import type { OffersProps } from 'types/card-props';
 import { ActionType } from 'types/action';
+import type { LocationInfo } from 'types/location-info';
 
-export const getCurrentCityAction = (value: CityCoordinates) =>
+export const getCurrentCityAction = (payload: CityCoordinates) =>
   ({
     type: ActionType.GetCurrentCity,
-    payload: value,
+    payload,
   } as const);
 
-export const getListOfOffersAction = (offers: OffersProps) =>
+export const getListOfOffersAction = (payload: OffersProps) =>
   ({
     type: ActionType.GetListOfOffers,
-    payload: offers,
+    payload,
   } as const);
 
-export const updateOffersListAction = (offers: OffersProps) =>
+export const updateOffersListAction = (payload: OffersProps) =>
   ({
     type: ActionType.UpdateOffersList,
-    payload: offers,
+    payload,
   } as const);
 
-export const getListOfCitiesAction = () =>
+export const getListOfCitiesAction = (payload: CityCoordinates[]) =>
   ({
     type: ActionType.GetListOfCities,
+    payload,
   } as const);
 
-export const getActiveSortTypeAction = (value: string) =>
+export const getActiveSortTypeAction = (payload: string) =>
   ({
     type: ActionType.GetActiveSortType,
-    payload: value,
+    payload,
   } as const);
 
-export const setIsLoadingAction = (value: boolean) =>
+export const setIsLoadingAction = (payload: boolean) =>
   ({
     type: ActionType.SetIsLoading,
-    payload: value,
+    payload,
+  } as const);
+
+export const getCurrentOfferIdAction = (payload: number) =>
+  ({
+    type: ActionType.GetCurrentOfferId,
+    payload,
+  } as const);
+
+export const getSelectedPointAction = (payload: LocationInfo) =>
+  ({
+    type: ActionType.GetSelectedPoint,
+    payload,
   } as const);

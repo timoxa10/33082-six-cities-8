@@ -1,7 +1,7 @@
 import type { OffersProps } from 'types/card-props';
 import Logo from 'elements/logo/logo';
 import Header from 'components/header/header';
-import HiddenBookmarkContent from 'components/hidden-bookmark-content/hidden-bookmark-content';
+import SvgSpriteIcons from 'components/svg-sprite-icons/svg-sprite-icons';
 import CardFavorite from 'elements/card-favorite/card-favorite';
 
 interface FavoritesPageProps {
@@ -11,7 +11,7 @@ interface FavoritesPageProps {
 function FavoritesPage({ cardList }: FavoritesPageProps): JSX.Element {
   return (
     <>
-      <HiddenBookmarkContent />
+      <SvgSpriteIcons />
       <div className="page">
         <Header />
         <main className="page__main page__main--favorites">

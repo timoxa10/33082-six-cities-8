@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
-import clsx from 'clsx';
+import classNames from 'classnames';
 import { MouseEvent } from 'react';
 import type { OfferProps } from 'types/card-props';
 import { Link } from 'react-router-dom';
@@ -25,7 +25,7 @@ function Card({ card, onListItemHover, ...props }: MainCardProps): JSX.Element {
 
   return (
     <article
-      className={clsx(['place-card', className])}
+      className={classNames('place-card', className)}
       onMouseEnter={listItemHoverHandler}
     >
       {card.isPremium && (

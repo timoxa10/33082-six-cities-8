@@ -7,6 +7,13 @@
   }
 }
 
+.spinner-wrapper {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .ldio-ikzu4whbxje div {
   box-sizing: border-box !important;
 }

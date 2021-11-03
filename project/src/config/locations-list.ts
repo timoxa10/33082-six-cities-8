@@ -1,12 +1,3 @@
-export const INITIAL_CITY = {
-  name: 'Paris',
-  location: {
-    latitude: 48.85661,
-    longitude: 2.351499,
-    zoom: 13,
-  },
-};
-
 export const LOCATIONS_LIST = [
   {
     name: 'Paris',
@@ -57,5 +48,3 @@ export const LOCATIONS_LIST = [
     },
   },
 ];
-
-export const DEFAULT_SORT_TYPE = 'Popular';

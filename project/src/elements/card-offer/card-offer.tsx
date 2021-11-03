@@ -1,95 +1,113 @@
-import axios from 'axios';
+/* eslint-disable no-console */
+import camelСaseKeys from 'camelcase-keys';
 import { useState, useEffect, useCallback } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import type { OfferProps, OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
 import type { LocationInfo } from 'types/location-info';
 import type { State } from 'types/state';
+import { createAPI } from 'services/api';
 import Header from 'components/header/header';
 import MetaDataComponent from 'components/meta-data-component/meta-data-component';
-import HiddenBookmarkContent from 'components/hidden-bookmark-content/hidden-bookmark-content';
+import SvgSpriteIcons from 'components/svg-sprite-icons/svg-sprite-icons';
 import ReviewPageForm from 'components/offer-page-form/offer-page-form';
 import Card from 'elements/card/card';
 import ReviewsList from 'components/reviews-list/reviews-list';
 import CitiesMap from 'components/cities-map/cities-map';
 
-const connector = connect(
-  ({ city }: State) => ({
-    city,
-  }),
-  {},
-);
+const api = createAPI();
+
+const connector = connect(({ city, currentOfferId }: State) => ({
+  city,
+  currentOfferId,
+}));
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
-type ConnectedComponentProps = PropsFromRedux & CardOfferProps;
-
-type CardOfferProps = {
-  card: OfferProps;
-  cardList: OffersProps;
-  currentOffer: number;
-};
-
-function CardOffer(props: ConnectedComponentProps): JSX.Element {
-  const { city, card, cardList, currentOffer } = props;
-
-  const {
-    isPremium,
-    title,
-    price,
-    goods,
-    rating,
-    type,
-    bedrooms,
-    maxAdults,
-    description,
-    images,
-  } = card;
-
-  const filteredItems = cardList
-    .filter((item) => item.id !== currentOffer)
-    .slice(0, 3);
+function CardOffer(props: PropsFromRedux): JSX.Element {
+  const { city, currentOfferId } = props;
 
   const [selectedPoint, setSelectedPoint] = useState<LocationInfo>();
 
   const onListItemHover = (location: LocationInfo) => {
-    const currentCard = cardList?.find((point) => point.location === location);
+    const currentCard = nearbyCards?.find(
+      (point) => point.location === location,
+    );
     if (currentCard) {
       setSelectedPoint(currentCard.location);
     }
   };
 
+  const [cardData, setCardData] = useState<OfferProps>();
   const [reviewData, setReviewData] = useState<ReviewsProps>([]);
+  const [nearbyCards, setNearbyCards] = useState<OffersProps>([]);
 
   const fetchCardReview = useCallback(async () => {
     try {
-      const url = `https://8.react.pages.academy/six-cities/comments/${card.id}`;
-      const response = await axios.get(url);
-      if (response.data) {
-        setReviewData(response.data);
+      const { data } = await api.get<ReviewsProps>(
+        `/comments/${currentOfferId}`,
+      );
+      if (data) {
+        setReviewData(data);
       }
     } catch (err) {
       // eslint-disable-next-line no-console
       console.error('Ошибка выполнения fetchCardReview', err);
     }
-  }, [card.id]);
+  }, [currentOfferId]);
+
+  const fetchCardData = useCallback(async () => {
+    try {
+      const { data } = await api.get<OfferProps>(`/hotels/${currentOfferId}`);
+      if (data) {
+        setCardData(
+          camelСaseKeys(data, {
+            deep: true,
+          }),
+        );
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Ошибка выполнения fetchCardData', err);
+    }
+  }, [currentOfferId]);
+
+  const fetchNearbyCards = useCallback(async () => {
+    try {
+      const { data } = await api.get<OffersProps>(
+        `/hotels/${currentOfferId}/nearby`,
+      );
+      if (data) {
+        setNearbyCards(
+          camelСaseKeys(data, {
+            deep: true,
+          }),
+        );
+      }
+    } catch (err) {
+      // eslint-disable-next-line no-console
+      console.error('Ошибка выполнения fetchNearbyCards', err);
+    }
+  }, [currentOfferId]);
 
   useEffect(() => {
     fetchCardReview();
-  }, [card.id, fetchCardReview]);
+    fetchCardData();
+    fetchNearbyCards();
+  }, [currentOfferId, fetchCardData, fetchCardReview, fetchNearbyCards]);
 
   return (
     <>
       <MetaDataComponent title="6 cities: property" />
       <link rel="stylesheet" href="../project/public/css/main.css" />
-      <HiddenBookmarkContent />
+      <SvgSpriteIcons />
       <div className="page">
         <Header />
         <main className="page__main page__main--property">
           <section className="property">
             <div className="property__gallery-container container">
               <div className="property__gallery">
-                {images.map((image) => (
+                {cardData?.images.map((image) => (
                   <div className="property__image-wrapper" key={image}>
                     <img
                       className="property__image"
@@ -102,13 +120,13 @@ function CardOffer(props: ConnectedComponentProps): JSX.Element {
             </div>
             <div className="property__container container">
               <div className="property__wrapper">
-                {isPremium && (
+                {cardData?.isPremium && (
                   <div className="property__mark">
                     <span>Premium</span>
                   </div>
                 )}
                 <div className="property__name-wrapper">
-                  <h1 className="property__name">{title}</h1>
+                  <h1 className="property__name">{cardData?.title}</h1>
                   <button
                     className="property__bookmark-button button"
                     type="button"
@@ -129,33 +147,32 @@ function CardOffer(props: ConnectedComponentProps): JSX.Element {
                     <span className="visually-hidden">Rating</span>
                   </div>
                   <span className="property__rating-value rating__value">
-                    {rating}
+                    {cardData?.rating}
                   </span>
                 </div>
                 <ul className="property__features">
                   <li className="property__feature property__feature--entire">
-                    {type}
+                    {cardData?.type}
                   </li>
                   <li className="property__feature property__feature--bedrooms">
-                    {`${bedrooms} Bedrooms`}
+                    {`${cardData?.bedrooms} Bedrooms`}
                   </li>
                   <li className="property__feature property__feature--adults">
-                    {`Max ${maxAdults} adults`}
+                    {`Max ${cardData?.maxAdults} adults`}
                   </li>
                 </ul>
                 <div className="property__price">
-                  <b className="property__price-value">{`€${price}`}</b>
+                  <b className="property__price-value">{`€${cardData?.price}`}</b>
                   <span className="property__price-text">&nbsp;night</span>
                 </div>
                 <div className="property__inside">
                   <h2 className="property__inside-title">What&apos;s inside</h2>
                   <ul className="property__inside-list">
-                    {goods &&
-                      goods.map((item) => (
-                        <li className="property__inside-item" key={item}>
-                          {item}
-                        </li>
-                      ))}
+                    {cardData?.goods?.map((item) => (
+                      <li className="property__inside-item" key={item}>
+                        {item}
+                      </li>
+                    ))}
                   </ul>
                 </div>
                 <div className="property__host">
@@ -169,21 +186,21 @@ function CardOffer(props: ConnectedComponentProps): JSX.Element {
                     >
                       <img
                         className="property__avatar user__avatar"
-                        src={card.host.avatarUrl}
+                        src={cardData?.host.avatarUrl}
                         width={74}
                         height={74}
                         alt="Host avatar"
                       />
                     </div>
                     <span className="property__user-name">
-                      {card.host.name}
+                      {cardData?.host.name}
                     </span>
-                    {card.host.isPro && (
+                    {cardData?.host.isPro && (
                       <span className="property__user-status"> Pro </span>
                     )}
                   </div>
                   <div className="property__description">
-                    <p className="property__text">{description}</p>
+                    <p className="property__text">{cardData?.description}</p>
                   </div>
                 </div>
                 <section className="property__reviews reviews">
@@ -195,7 +212,7 @@ function CardOffer(props: ConnectedComponentProps): JSX.Element {
             <section className="property__map map">
               <CitiesMap
                 city={city}
-                points={filteredItems.map(({ location }) => location)}
+                points={nearbyCards?.map(({ location }) => location)}
                 selectedPoint={selectedPoint}
               />
             </section>
@@ -206,7 +223,7 @@ function CardOffer(props: ConnectedComponentProps): JSX.Element {
                 Other places in the neighbourhood
               </h2>
               <div className="near-places__list places__list">
-                {filteredItems.map((item) => (
+                {nearbyCards?.map((item) => (
                   <Card
                     card={item}
                     key={item.id}

@@ -1,5 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import classNames from 'classnames';
 import { useState } from 'react';
 import { Dispatch } from 'redux';
@@ -42,10 +40,10 @@ function OfferSortingForm(props: PropsFromRedux): JSX.Element {
 
   const [isOpened, setIsOpened] = useState(false);
 
-  const onSortTypeOnClick = (type: string, offers: OffersProps) => {
+  const onSortTypeOnClick = (offers: OffersProps, type: string) => {
     onSortTypeSelected(type);
     onUpdateOfferByType(offers, type);
-    setIsOpened((prevState) => !prevState);
+    setIsOpened(!isOpened);
   };
 
   return (
@@ -54,18 +52,16 @@ function OfferSortingForm(props: PropsFromRedux): JSX.Element {
       <span
         className="places__sorting-type"
         tabIndex={0}
-        onClick={() => setIsOpened((prevState) => !prevState)}
+        onClick={() => setIsOpened(!isOpened)}
       >
         {activeSortType}
         <svg
-          className="places__sorting-arrow"
           width={7}
           height={4}
-          style={{
-            transform: isOpened
-              ? 'rotate(180deg) translateY(3px)'
-              : 'rotate(0deg) translateY(-50%)',
-          }}
+          className={classNames('places__sorting-arrow', {
+            'sorting-arrow-default': !isOpened,
+            'sorting-arrow-active': isOpened,
+          })}
         >
           <use xlinkHref="#icon-arrow-select" />
         </svg>
@@ -82,7 +78,7 @@ function OfferSortingForm(props: PropsFromRedux): JSX.Element {
             })}
             tabIndex={0}
             key={type}
-            onClick={() => onSortTypeOnClick(type, offersByCity)}
+            onClick={() => onSortTypeOnClick(offersByCity, type)}
           >
             {type}
           </li>

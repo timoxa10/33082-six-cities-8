@@ -1,20 +1,6 @@
-/* eslint-disable comma-dangle */
 import { ActionType, Actions } from 'types/action';
 import type { State } from 'types/state';
-import {
-  INITIAL_CITY,
-  LOCATIONS_LIST,
-  DEFAULT_SORT_TYPE,
-} from 'config/constants';
-
-const initialState = {
-  city: INITIAL_CITY,
-  offers: [],
-  offersByCity: [],
-  activeSortType: DEFAULT_SORT_TYPE,
-  locationsList: LOCATIONS_LIST,
-  isLoading: true,
-};
+import { initialState } from 'store/initial-state';
 
 const reducer = (state: State = initialState, action: Actions): State => {
   switch (action.type) {
@@ -33,7 +19,7 @@ const reducer = (state: State = initialState, action: Actions): State => {
     case ActionType.GetListOfCities:
       return {
         ...state,
-        locationsList: LOCATIONS_LIST,
+        locationsList: action.payload,
       };
     case ActionType.GetActiveSortType:
       return {
@@ -44,6 +30,16 @@ const reducer = (state: State = initialState, action: Actions): State => {
       return {
         ...state,
         isLoading: action.payload,
+      };
+    case ActionType.GetCurrentOfferId:
+      return {
+        ...state,
+        currentOfferId: action.payload,
+      };
+    case ActionType.GetSelectedPoint:
+      return {
+        ...state,
+        selectedPoint: action.payload,
       };
     default:
       return state;

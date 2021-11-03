@@ -6,9 +6,11 @@ import {
   getListOfOffersAction,
   updateOffersListAction,
   setIsLoadingAction,
+  getListOfCitiesAction,
 } from 'store/action';
 import { filterOffersList } from 'utils/utils';
-import { INITIAL_CITY } from 'config/constants';
+import { INITIAL_CITY } from 'config/initial-city';
+import { LOCATIONS_LIST } from 'config/locations-list';
 
 function fetchOffersList(): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
@@ -21,6 +23,7 @@ function fetchOffersList(): ThunkActionResult {
     dispatch(
       updateOffersListAction(filterOffersList(INITIAL_CITY.name, offers)),
     );
+    dispatch(getListOfCitiesAction(LOCATIONS_LIST));
     dispatch(setIsLoadingAction(false));
   };
 }

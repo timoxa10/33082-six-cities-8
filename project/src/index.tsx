@@ -9,6 +9,8 @@ import type { ThunkAppDispatch } from 'types/action';
 import { fetchOffersList } from 'store/api-actions';
 import { composeWithDevTools } from 'redux-devtools-extension';
 import App from './components/app/app';
+import 'elements/spinner/spinner.css';
+import 'components/offer-sorting-form/offer-sorting-form.css';
 
 const api = createAPI();
 

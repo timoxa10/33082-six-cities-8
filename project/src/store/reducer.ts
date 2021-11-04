@@ -41,6 +41,21 @@ const reducer = (state: State = initialState, action: Actions): State => {
         ...state,
         selectedPoint: action.payload,
       };
+    case ActionType.GetListOfReviews:
+      return {
+        ...state,
+        reviewsList: action.payload,
+      };
+    case ActionType.GetCurrentOfferByIdData:
+      return {
+        ...state,
+        offerByIdData: action.payload,
+      };
+    case ActionType.GetNearbyOffers:
+      return {
+        ...state,
+        nearbyOffers: action.payload,
+      };
     default:
       return state;
   }

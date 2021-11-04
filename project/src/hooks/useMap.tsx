@@ -1,7 +1,5 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useEffect, useState, MutableRefObject } from 'react';
-import { Map, TileLayer, Icon, Marker } from 'leaflet';
+import { Map, TileLayer, Icon, Marker, LayerGroup } from 'leaflet';
 import type { CityCoordinates } from 'types/city-coordinates';
 import type { LocationInfo } from 'types/location-info';
 
@@ -26,7 +24,7 @@ function useMap(
   mapRef: MutableRefObject<HTMLElement | null>,
   city: CityCoordinates,
   points: LocationInfo[],
-  selectedPoint: LocationInfo | undefined,
+  selectedPoint: LocationInfo | null,
 ): Map | null {
   const [map, setMap] = useState<Map | null>(null);
 
@@ -55,6 +53,8 @@ function useMap(
   }, [mapRef, map, city]);
 
   useEffect(() => {
+    const iconsGroup = new LayerGroup();
+
     if (map && points?.length > 0) {
       points.forEach((point) => {
         const marker = new Marker({
@@ -62,12 +62,16 @@ function useMap(
           lng: point.longitude,
         });
 
+        marker.setIcon(defaultCustomIcon);
+
         if (selectedPoint !== undefined && point === selectedPoint) {
-          marker.setIcon(currentCustomIcon).addTo(map);
-        } else {
-          marker.setIcon(defaultCustomIcon).addTo(map);
+          marker.setIcon(currentCustomIcon);
         }
+
+        marker.addTo(iconsGroup);
       });
+
+      iconsGroup.addTo(map);
 
       if (prevCity !== city.name) {
         map.flyTo(
@@ -80,6 +84,12 @@ function useMap(
         prevCity = city.name;
       }
     }
+
+    return () => {
+      if (map) {
+        map.removeLayer(iconsGroup);
+      }
+    };
   }, [map, points, selectedPoint]);
 
   return map;

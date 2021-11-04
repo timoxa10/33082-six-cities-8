@@ -9,5 +9,8 @@ export const initialState = {
   locationsList: [],
   isLoading: true,
   currentOfferId: 0,
-  selectedPoint: undefined,
+  selectedPoint: null,
+  reviewsList: [],
+  offerByIdData: null,
+  nearbyOffers: [],
 };

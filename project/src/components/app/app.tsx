@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { Switch, Route, BrowserRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import type { Actions } from 'types/action';
@@ -6,7 +7,7 @@ import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
 import type { State } from 'types/state';
 import { getCurrentOfferIdAction } from 'store/action';
-import CardOffer from 'elements/card-offer/card-offer';
+import CardOfferContainer from 'containers/card-offer-container/card-offer-container';
 import MainPage from '../main-page/main-page';
 import LoginPage from '../login-page/login-page';
 import FavoritesPage from '../favorites-page/favorites-page';
@@ -18,7 +19,7 @@ const mapStateToProps = ({ offersByCity }: State) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  onCardOnClick(value: number) {
+  setActiveCardId(value: number) {
     dispatch(getCurrentOfferIdAction(value));
   },
 });
@@ -28,7 +29,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function App(props: PropsFromRedux): JSX.Element {
-  const { offersByCity, onCardOnClick } = props;
+  const { offersByCity, setActiveCardId } = props;
 
   return (
     <BrowserRouter>
@@ -41,9 +42,9 @@ function App(props: PropsFromRedux): JSX.Element {
           exact
           path={AppRoute.RoomOffer}
           render={({ match }) => {
-            onCardOnClick(Number(match.params.id));
+            setActiveCardId(Number(match.params.id));
 
-            return <CardOffer />;
+            return <CardOfferContainer />;
           }}
         />
         <PrivateRoute

@@ -1,12 +1,16 @@
 /* eslint-disable comma-dangle */
 import camelСaseKeys from 'camelcase-keys';
-import type { OffersProps } from 'types/card-props';
 import { ThunkActionResult } from 'types/action';
+import type { OfferProps, OffersProps } from 'types/card-props';
+import type { ReviewsProps } from 'types/review-props';
 import {
   getListOfOffersAction,
   updateOffersListAction,
   setIsLoadingAction,
   getListOfCitiesAction,
+  getListOfReviewsAction,
+  getCurrentOfferByIdDataAction,
+  getNearbyOffersAction,
 } from 'store/action';
 import { filterOffersList } from 'utils/utils';
 import { INITIAL_CITY } from 'config/initial-city';
@@ -28,4 +32,38 @@ function fetchOffersList(): ThunkActionResult {
   };
 }
 
-export { fetchOffersList };
+function fetchOfferData(id: number): ThunkActionResult {
+  return async (dispatch, _, api): Promise<void> => {
+    await api.get<ReviewsProps>(`/comments/${id}`).then(({ data }) => {
+      dispatch(
+        getListOfReviewsAction(
+          camelСaseKeys(data, {
+            deep: true,
+          }),
+        ),
+      );
+    });
+
+    await api.get<OfferProps>(`/hotels/${id}`).then(({ data }) => {
+      dispatch(
+        getCurrentOfferByIdDataAction(
+          camelСaseKeys(data, {
+            deep: true,
+          }),
+        ),
+      );
+    });
+
+    await api.get<OffersProps>(`/hotels/${id}/nearby`).then(({ data }) => {
+      dispatch(
+        getNearbyOffersAction(
+          camelСaseKeys(data, {
+            deep: true,
+          }),
+        ),
+      );
+    });
+  };
+}
+
+export { fetchOffersList, fetchOfferData };

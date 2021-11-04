@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 import { useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import useMap from 'hooks/useMap';
@@ -7,7 +8,7 @@ import type { LocationInfo } from 'types/location-info';
 interface CitiesMapProps {
   city: CityCoordinates;
   points: LocationInfo[];
-  selectedPoint: LocationInfo | undefined;
+  selectedPoint: LocationInfo | null;
 }
 
 function CitiesMap({

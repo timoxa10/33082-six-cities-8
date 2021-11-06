@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 import classNames from 'classnames';
+import { useState } from 'react';
 import { MouseEvent } from 'react';
 import type { OfferProps } from 'types/card-props';
 import { Link } from 'react-router-dom';

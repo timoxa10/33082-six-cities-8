@@ -14,7 +14,7 @@ import {
   // eslint-disable-next-line comma-dangle
   getActiveSortTypeAction,
 } from 'store/action';
-import { DEFAULT_SORT_TYPE } from 'config/default-sort-type';
+import { DEFAULT_SORT_TYPE } from 'config/DefaultSortType';
 
 const mapStateToProps = ({ city, offers, locationsList }: State) => ({
   city,

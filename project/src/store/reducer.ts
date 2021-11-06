@@ -1,6 +1,7 @@
 import { ActionType, Actions } from 'types/action';
 import type { State } from 'types/state';
 import { initialState } from 'store/initial-state';
+import { UserStatus } from 'config/UserStatus';
 
 const reducer = (state: State = initialState, action: Actions): State => {
   switch (action.type) {
@@ -41,6 +42,27 @@ const reducer = (state: State = initialState, action: Actions): State => {
         ...state,
         selectedPoint: action.payload,
       };
+    case ActionType.GetListOfReviews:
+      return {
+        ...state,
+        reviewsList: action.payload,
+      };
+    case ActionType.GetCurrentOfferByIdData:
+      return {
+        ...state,
+        offerByIdData: action.payload,
+      };
+    case ActionType.GetNearbyOffers:
+      return {
+        ...state,
+        nearbyOffers: action.payload,
+      };
+    case ActionType.RequireAuthorization:
+      return { ...state, authorizationStatus: action.payload };
+    case ActionType.RequireLogout:
+      return { ...state, authorizationStatus: UserStatus.NoAuth };
+    case ActionType.SetLoginAction:
+      return { ...state, login: action.payload };
     default:
       return state;
   }

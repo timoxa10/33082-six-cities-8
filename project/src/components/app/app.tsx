@@ -1,24 +1,24 @@
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, Router as BrowserRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import type { Actions } from 'types/action';
 import { connect, ConnectedProps } from 'react-redux';
 import { AppRoute } from 'config/AppRoute';
-import { UserStatus } from 'config/UserStatus';
 import type { State } from 'types/state';
 import { getCurrentOfferIdAction } from 'store/action';
-import CardOffer from 'elements/card-offer/card-offer';
-import MainPage from '../main-page/main-page';
-import LoginPage from '../login-page/login-page';
-import FavoritesPage from '../favorites-page/favorites-page';
-import PrivateRoute from '../private-route/private-route';
-import NotFoundPage from '../not-found-page/not-found-page';
+import CardOfferContainer from 'containers/card-offer-container/card-offer-container';
+import browserHistory from 'components/browser-history/browser-history';
+import MainPage from 'components/main-page/main-page';
+import LoginPage from 'components/login-page/login-page';
+import FavoritesPage from 'components/favorites-page/favorites-page';
+import PrivateRoute from 'components/private-route/private-route';
+import NotFoundPage from 'components/not-found-page/not-found-page';
 
 const mapStateToProps = ({ offersByCity }: State) => ({
   offersByCity,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  onCardOnClick(value: number) {
+  setActiveCardId(value: number) {
     dispatch(getCurrentOfferIdAction(value));
   },
 });
@@ -28,29 +28,36 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function App(props: PropsFromRedux): JSX.Element {
-  const { offersByCity, onCardOnClick } = props;
+  const { offersByCity, setActiveCardId } = props;
 
   return (
-    <BrowserRouter>
+    <BrowserRouter history={browserHistory}>
       <Switch>
         <Route exact path={AppRoute.Root}>
           <MainPage />
         </Route>
-        <Route exact path={AppRoute.Login} component={LoginPage} />
+
+        <Route
+          path={AppRoute.Login}
+          exact
+          render={({ history }) => (
+            <LoginPage onAuth={() => history.push(AppRoute.Root)} />
+          )}
+        />
+
         <Route
           exact
           path={AppRoute.RoomOffer}
           render={({ match }) => {
-            onCardOnClick(Number(match.params.id));
+            setActiveCardId(Number(match.params.id));
 
-            return <CardOffer />;
+            return <CardOfferContainer />;
           }}
         />
         <PrivateRoute
           exact
           path={AppRoute.Favorites}
           component={() => <FavoritesPage cardList={offersByCity} />}
-          authorizationStatus={UserStatus.Auth}
         />
         <Route component={NotFoundPage} />
       </Switch>

@@ -1,6 +1,33 @@
+/* eslint-disable no-console */
+import { Link } from 'react-router-dom';
+import { connect, ConnectedProps } from 'react-redux';
+import { State } from 'types/state';
+import { ThunkAppDispatch } from 'types/action';
+import { logoutAction } from 'store/api-actions';
+import { AppRoute } from 'config/AppRoute';
+import { UserStatus } from 'config/UserStatus';
 import Logo from 'elements/logo/logo';
 
-function Header(): JSX.Element {
+const mapStateToProps = ({ authorizationStatus, login }: State) => ({
+  authorizationStatus,
+  login,
+});
+
+const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
+  onLogout() {
+    dispatch(logoutAction());
+  },
+});
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>;
+
+function Header({
+  authorizationStatus,
+  login,
+  onLogout,
+}: PropsFromRedux): JSX.Element {
   return (
     <header className="header">
       <div className="container">
@@ -11,20 +38,33 @@ function Header(): JSX.Element {
           <nav className="header__nav">
             <ul className="header__nav-list">
               <li className="header__nav-item user">
-                <a
+                <Link
                   className="header__nav-link header__nav-link--profile"
-                  href="#"
+                  to={
+                    authorizationStatus === UserStatus.Auth
+                      ? AppRoute.Favorites
+                      : AppRoute.Login
+                  }
                 >
                   <div className="header__avatar-wrapper user__avatar-wrapper"></div>
-                  <span className="header__user-name user__name">
-                    Oliver.conner@gmail.com
-                  </span>
-                </a>
+                  <span className="header__user-name user__name">{login}</span>
+                </Link>
               </li>
-              <li className="header__nav-item">
-                <a className="header__nav-link" href="#">
-                  <span className="header__signout">Sign out</span>
-                </a>
+              <li className="header__nav-item" onClick={onLogout}>
+                <Link
+                  className="header__nav-link"
+                  to={
+                    authorizationStatus === UserStatus.Auth
+                      ? AppRoute.Root
+                      : AppRoute.Login
+                  }
+                >
+                  <span className="header__signout">
+                    {authorizationStatus === UserStatus.Auth
+                      ? 'Sign out'
+                      : 'Sign in'}
+                  </span>
+                </Link>
               </li>
             </ul>
           </nav>
@@ -34,4 +74,5 @@ function Header(): JSX.Element {
   );
 }
 
-export default Header;
+export { Header };
+export default connector(Header);

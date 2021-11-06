@@ -3,6 +3,8 @@ import type { OfferProps, OffersProps } from 'types/card-props';
 import { ActionType } from 'types/action';
 import type { LocationInfo } from 'types/location-info';
 import type { ReviewsProps } from 'types/review-props';
+import { UserStatus } from 'config/UserStatus';
+import { AppRoute } from 'config/AppRoute';
 
 export const getCurrentCityAction = (payload: CityCoordinates) =>
   ({
@@ -68,4 +70,27 @@ export const getNearbyOffersAction = (payload: OffersProps) =>
   ({
     type: ActionType.GetNearbyOffers,
     payload,
+  } as const);
+
+export const setLoginAction = (payload: string) =>
+  ({
+    type: ActionType.SetLoginAction,
+    payload,
+  } as const);
+
+export const requireAuthorizationAction = (payload: UserStatus) =>
+  ({
+    type: ActionType.RequireAuthorization,
+    payload,
+  } as const);
+
+export const requireLogoutAction = () =>
+  ({
+    type: ActionType.RequireLogout,
+  } as const);
+
+export const redirectToRouteAction = (url: AppRoute) =>
+  ({
+    type: ActionType.RedirectToRoute,
+    payload: url,
   } as const);

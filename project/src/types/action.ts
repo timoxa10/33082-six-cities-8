@@ -13,6 +13,10 @@ import {
   getListOfReviewsAction,
   getCurrentOfferByIdDataAction,
   getNearbyOffersAction,
+  requireAuthorizationAction,
+  requireLogoutAction,
+  redirectToRouteAction,
+  setLoginAction,
 } from 'store/action';
 import { State } from 'types/state';
 
@@ -28,6 +32,10 @@ export enum ActionType {
   GetListOfReviews = 'GetListOfReviews',
   GetCurrentOfferByIdData = 'GetCurrentOfferByIdData',
   GetNearbyOffers = 'GetNearbyOffers',
+  SetLoginAction = 'SetLoginAction',
+  RequireAuthorization = 'RequireAuthorization',
+  RequireLogout = 'RequireLogout',
+  RedirectToRoute = 'RedirectToRoute',
 }
 
 export type Actions =
@@ -41,7 +49,11 @@ export type Actions =
   | ReturnType<typeof getSelectedPointAction>
   | ReturnType<typeof getListOfReviewsAction>
   | ReturnType<typeof getCurrentOfferByIdDataAction>
-  | ReturnType<typeof getNearbyOffersAction>;
+  | ReturnType<typeof getNearbyOffersAction>
+  | ReturnType<typeof requireAuthorizationAction>
+  | ReturnType<typeof requireLogoutAction>
+  | ReturnType<typeof redirectToRouteAction>
+  | ReturnType<typeof setLoginAction>;
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<
   R,

@@ -1,18 +1,17 @@
-/* eslint-disable no-console */
-import { Switch, Route, BrowserRouter } from 'react-router-dom';
+import { Switch, Route, Router as BrowserRouter } from 'react-router-dom';
 import { Dispatch } from 'redux';
 import type { Actions } from 'types/action';
 import { connect, ConnectedProps } from 'react-redux';
 import { AppRoute } from 'config/AppRoute';
-import { UserStatus } from 'config/UserStatus';
 import type { State } from 'types/state';
 import { getCurrentOfferIdAction } from 'store/action';
 import CardOfferContainer from 'containers/card-offer-container/card-offer-container';
-import MainPage from '../main-page/main-page';
-import LoginPage from '../login-page/login-page';
-import FavoritesPage from '../favorites-page/favorites-page';
-import PrivateRoute from '../private-route/private-route';
-import NotFoundPage from '../not-found-page/not-found-page';
+import browserHistory from 'components/browser-history/browser-history';
+import MainPage from 'components/main-page/main-page';
+import LoginPage from 'components/login-page/login-page';
+import FavoritesPage from 'components/favorites-page/favorites-page';
+import PrivateRoute from 'components/private-route/private-route';
+import NotFoundPage from 'components/not-found-page/not-found-page';
 
 const mapStateToProps = ({ offersByCity }: State) => ({
   offersByCity,
@@ -32,12 +31,20 @@ function App(props: PropsFromRedux): JSX.Element {
   const { offersByCity, setActiveCardId } = props;
 
   return (
-    <BrowserRouter>
+    <BrowserRouter history={browserHistory}>
       <Switch>
         <Route exact path={AppRoute.Root}>
           <MainPage />
         </Route>
-        <Route exact path={AppRoute.Login} component={LoginPage} />
+
+        <Route
+          path={AppRoute.Login}
+          exact
+          render={({ history }) => (
+            <LoginPage onAuth={() => history.push(AppRoute.Root)} />
+          )}
+        />
+
         <Route
           exact
           path={AppRoute.RoomOffer}
@@ -51,7 +58,6 @@ function App(props: PropsFromRedux): JSX.Element {
           exact
           path={AppRoute.Favorites}
           component={() => <FavoritesPage cardList={offersByCity} />}
-          authorizationStatus={UserStatus.Auth}
         />
         <Route component={NotFoundPage} />
       </Switch>

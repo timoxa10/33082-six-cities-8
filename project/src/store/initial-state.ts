@@ -1,5 +1,7 @@
-import { INITIAL_CITY } from 'config/initial-city';
-import { DEFAULT_SORT_TYPE } from 'config/default-sort-type';
+import { INITIAL_CITY } from 'config/InitialCity';
+import { DEFAULT_SORT_TYPE } from 'config/DefaultSortType';
+import { UserStatus } from 'config/UserStatus';
+import { INITIAL_LOGIN } from 'config/InitialLogin';
 
 export const initialState = {
   city: INITIAL_CITY,
@@ -13,4 +15,6 @@ export const initialState = {
   reviewsList: [],
   offerByIdData: null,
   nearbyOffers: [],
+  authorizationStatus: UserStatus.Unknown,
+  login: INITIAL_LOGIN,
 };

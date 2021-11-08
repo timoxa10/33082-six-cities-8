@@ -6,7 +6,7 @@ import { AppRoute } from 'config/AppRoute';
 import type { State } from 'types/state';
 import { getCurrentOfferIdAction } from 'store/action';
 import CardOfferContainer from 'containers/card-offer-container/card-offer-container';
-import browserHistory from 'components/browser-history/browser-history';
+import browserHistory from 'browser-history/browser-history';
 import MainPage from 'components/main-page/main-page';
 import LoginPage from 'components/login-page/login-page';
 import FavoritesPage from 'components/favorites-page/favorites-page';
@@ -54,11 +54,13 @@ function App(props: PropsFromRedux): JSX.Element {
             return <CardOfferContainer />;
           }}
         />
+
         <PrivateRoute
           exact
           path={AppRoute.Favorites}
           component={() => <FavoritesPage cardList={offersByCity} />}
         />
+
         <Route component={NotFoundPage} />
       </Switch>
     </BrowserRouter>

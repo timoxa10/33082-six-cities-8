@@ -42,6 +42,12 @@ export const setIsLoadingAction = (payload: boolean) =>
     payload,
   } as const);
 
+export const setIsErrorAction = (payload: boolean) =>
+  ({
+    type: ActionType.SetIsError,
+    payload,
+  } as const);
+
 export const getCurrentOfferIdAction = (payload: number) =>
   ({
     type: ActionType.GetCurrentOfferId,
@@ -75,6 +81,12 @@ export const getNearbyOffersAction = (payload: OffersProps) =>
 export const setLoginAction = (payload: string) =>
   ({
     type: ActionType.SetLoginAction,
+    payload,
+  } as const);
+
+export const setAvatarUrlAction = (payload: string) =>
+  ({
+    type: ActionType.SetAvatarUrl,
     payload,
   } as const);
 

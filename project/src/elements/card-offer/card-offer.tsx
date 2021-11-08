@@ -1,20 +1,18 @@
-import { useState } from 'react';
 import type { OfferProps, OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
-import type { LocationInfo } from 'types/location-info';
 import type { CityCoordinates } from 'types/city-coordinates';
-import Header from 'components/header/header';
+import { UserStatus } from 'config/UserStatus';
 import ReviewPageForm from 'components/offer-page-form/offer-page-form';
 import Card from 'elements/card/card';
 import ReviewsList from 'components/reviews-list/reviews-list';
 import CitiesMap from 'components/cities-map/cities-map';
-import Spinner from 'elements/spinner/spinner';
 
 interface CardOfferProps {
   city: CityCoordinates;
   reviewsList: ReviewsProps;
-  offerByIdData: OfferProps | null;
+  offerByIdData: Partial<OfferProps>;
   nearbyOffers: OffersProps;
+  authorizationStatus: UserStatus;
 }
 
 function CardOffer({
@@ -22,26 +20,17 @@ function CardOffer({
   reviewsList,
   offerByIdData,
   nearbyOffers,
+  authorizationStatus,
 }: CardOfferProps): JSX.Element {
-  const [selectedPoint, setSelectedPoint] = useState<LocationInfo | null>(null);
+  const isAuth = authorizationStatus === UserStatus.Auth;
 
-  const onListItemHover = (location: LocationInfo) => {
-    const currentCard = nearbyOffers?.find(
-      (point) => point.location === location,
-    );
-    if (currentCard) {
-      setSelectedPoint(currentCard.location);
-    }
-  };
-
-  return offerByIdData && Object.keys(offerByIdData)?.length > 0 ? (
-    <div className="page">
-      <Header />
+  if (Object.keys(offerByIdData).length > 0) {
+    return (
       <main className="page__main page__main--property">
         <section className="property">
           <div className="property__gallery-container container">
             <div className="property__gallery">
-              {offerByIdData?.images.map((image) => (
+              {offerByIdData?.images?.map((image) => (
                 <div className="property__image-wrapper" key={image}>
                   <img
                     className="property__image"
@@ -89,10 +78,10 @@ function CardOffer({
                   {offerByIdData?.type}
                 </li>
                 <li className="property__feature property__feature--bedrooms">
-                  {`${offerByIdData?.bedrooms} Bedrooms`}
+                  {offerByIdData?.bedrooms} Bedrooms
                 </li>
                 <li className="property__feature property__feature--adults">
-                  {`Max ${offerByIdData?.maxAdults} adults`}
+                  Max {offerByIdData?.maxAdults} adults
                 </li>
               </ul>
               <div className="property__price">
@@ -101,14 +90,15 @@ function CardOffer({
               </div>
               <div className="property__inside">
                 <h2 className="property__inside-title">What&apos;s inside</h2>
-                <ul className="property__inside-list">
-                  {offerByIdData &&
-                    offerByIdData?.goods?.map((item) => (
+                {offerByIdData?.goods && (
+                  <ul className="property__inside-list">
+                    {offerByIdData?.goods?.map((item) => (
                       <li className="property__inside-item" key={item}>
                         {item}
                       </li>
                     ))}
-                </ul>
+                  </ul>
+                )}
               </div>
               <div className="property__host">
                 <h2 className="property__host-title">Meet the host</h2>
@@ -116,16 +106,16 @@ function CardOffer({
                   <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
                     <img
                       className="property__avatar user__avatar"
-                      src={offerByIdData?.host.avatarUrl}
+                      src={offerByIdData?.host?.avatarUrl}
                       width={74}
                       height={74}
                       alt="Host avatar"
                     />
                   </div>
                   <span className="property__user-name">
-                    {offerByIdData?.host.name}
+                    {offerByIdData?.host?.name}
                   </span>
-                  {offerByIdData?.host.isPro && (
+                  {offerByIdData?.host?.isPro && (
                     <span className="property__user-status"> Pro </span>
                   )}
                 </div>
@@ -135,7 +125,7 @@ function CardOffer({
               </div>
               <section className="property__reviews reviews">
                 <ReviewsList reviews={reviewsList} />
-                <ReviewPageForm />
+                {isAuth && <ReviewPageForm />}
               </section>
             </div>
           </div>
@@ -143,7 +133,8 @@ function CardOffer({
             <CitiesMap
               city={city}
               points={nearbyOffers?.map(({ location }) => location)}
-              selectedPoint={selectedPoint}
+              selectedPoint={null}
+              isHovered={null}
             />
           </section>
         </section>
@@ -154,21 +145,16 @@ function CardOffer({
             </h2>
             <div className="near-places__list places__list">
               {nearbyOffers?.map((item) => (
-                <Card
-                  card={item}
-                  key={item.id}
-                  onListItemHover={onListItemHover}
-                  className="near-places__card"
-                />
+                <Card card={item} key={item.id} className="near-places__card" />
               ))}
             </div>
           </section>
         </div>
       </main>
-    </div>
-  ) : (
-    <Spinner />
-  );
+    );
+  }
+
+  return <div></div>;
 }
 
 export default CardOffer;

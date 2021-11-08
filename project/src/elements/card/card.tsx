@@ -1,7 +1,4 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable no-console */
 import classNames from 'classnames';
-import { useState } from 'react';
 import { MouseEvent } from 'react';
 import type { OfferProps } from 'types/card-props';
 import { Link } from 'react-router-dom';
@@ -10,24 +7,33 @@ import { capitalizeFirstLetter } from 'utils/utils';
 
 type MainCardProps = {
   card: OfferProps;
-  onListItemHover: (location: LocationInfo) => void;
+  onListItemHover?: (location: LocationInfo) => void;
+  onListItemLeave?: () => void;
   className: string;
 };
 
-function Card({ card, onListItemHover, ...props }: MainCardProps): JSX.Element {
+function Card({
+  card,
+  onListItemHover,
+  onListItemLeave,
+  ...props
+}: MainCardProps): JSX.Element {
   const { className } = props;
 
   const [mainImage] = card.images;
 
   const listItemHoverHandler = (event: MouseEvent<HTMLDivElement>) => {
-    event.preventDefault();
-    onListItemHover(card.location);
+    if (onListItemHover) {
+      event.preventDefault();
+      onListItemHover(card.location);
+    }
   };
 
   return (
     <article
       className={classNames('place-card', className)}
       onMouseEnter={listItemHoverHandler}
+      onMouseLeave={onListItemLeave}
     >
       {card.isPremium && (
         <div className="place-card__mark">

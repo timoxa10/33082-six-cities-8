@@ -1,17 +1,16 @@
 import { Link } from 'react-router-dom';
 import { AppRoute } from 'config/AppRoute';
 
-function NotFoundPage(): JSX.Element {
+function ErrorPage(): JSX.Element {
   return (
     <>
       <h1>
-        404.
+        Something went wrong.
         <br />
-        <small>Page not found</small>
       </h1>
       <Link to={AppRoute.Root}>Go to main page -&gt;</Link>
     </>
   );
 }
 
-export default NotFoundPage;
+export default ErrorPage;

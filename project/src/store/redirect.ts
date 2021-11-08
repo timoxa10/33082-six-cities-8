@@ -1,4 +1,4 @@
-import browserHistory from 'components/browser-history/browser-history';
+import browserHistory from 'browser-history/browser-history';
 import { Middleware } from 'redux';
 import { reducer } from 'store/reducer';
 import { ActionType } from 'types/action';

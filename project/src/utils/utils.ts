@@ -8,18 +8,18 @@ const filterOffersList = (city: string, offers: OffersProps): OffersProps =>
   offers.filter((offer) => offer.city.name === city);
 
 const sortOffersByType = (type: string, offers: OffersProps): OffersProps => {
-  const sortedOffers = offers.slice();
+  const fetchedOffers = offers.slice();
   switch (type) {
     case SortTypes.Popular:
-      return sortedOffers.sort((a, b) => a.id - b.id);
+      return fetchedOffers.sort((a, b) => a.id - b.id);
     case SortTypes.AscendingOrder:
-      return sortedOffers.sort((a, b) => a.price - b.price);
+      return fetchedOffers.sort((a, b) => a.price - b.price);
     case SortTypes.DescendingOrder:
-      return sortedOffers.sort((a, b) => b.price - a.price);
+      return fetchedOffers.sort((a, b) => b.price - a.price);
     case SortTypes.TopRated:
-      return sortedOffers.sort((a, b) => b.rating - a.rating);
+      return fetchedOffers.sort((a, b) => b.rating - a.rating);
     default:
-      return sortedOffers;
+      return fetchedOffers;
   }
 };
 

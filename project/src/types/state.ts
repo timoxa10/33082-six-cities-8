@@ -11,11 +11,13 @@ export type State = {
   activeSortType: string;
   locationsList: CityCoordinates[];
   isLoading: boolean;
+  isError: boolean;
   currentOfferId: number;
   selectedPoint: LocationInfo | null;
   reviewsList: ReviewsProps;
-  offerByIdData: OfferProps | null;
+  offerByIdData: Partial<OfferProps>;
   nearbyOffers: OffersProps;
   authorizationStatus: UserStatus;
   login: string;
+  avatarUrl: string;
 };

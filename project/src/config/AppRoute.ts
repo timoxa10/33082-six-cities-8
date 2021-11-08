@@ -4,4 +4,5 @@ export enum AppRoute {
   Logout = '/logout',
   Favorites = '/favorites',
   RoomOffer = '/offer/:id',
+  Сomments = '/comments/',
 }

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import React from 'react';
 import ReactDOM from 'react-dom';
 import thunk from 'redux-thunk';
@@ -30,8 +29,6 @@ const store = createStore(
 
 (store.dispatch as ThunkAppDispatch)(checkAuthAction());
 (store.dispatch as ThunkAppDispatch)(fetchOffersList());
-
-console.log(store.getState());
 
 ReactDOM.render(
   <React.StrictMode>

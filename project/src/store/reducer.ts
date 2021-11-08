@@ -32,6 +32,11 @@ const reducer = (state: State = initialState, action: Actions): State => {
         ...state,
         isLoading: action.payload,
       };
+    case ActionType.SetIsError:
+      return {
+        ...state,
+        isError: action.payload,
+      };
     case ActionType.GetCurrentOfferId:
       return {
         ...state,
@@ -63,6 +68,8 @@ const reducer = (state: State = initialState, action: Actions): State => {
       return { ...state, authorizationStatus: UserStatus.NoAuth };
     case ActionType.SetLoginAction:
       return { ...state, login: action.payload };
+    case ActionType.SetAvatarUrl:
+      return { ...state, avatarUrl: action.payload };
     default:
       return state;
   }

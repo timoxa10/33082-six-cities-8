@@ -1,29 +1,67 @@
-import { useState, SyntheticEvent } from 'react';
+/* eslint-disable comma-dangle */
+import { Redirect } from 'react-router-dom';
+import { Dispatch } from 'redux';
+import { useState, SyntheticEvent, MouseEvent } from 'react';
 import { connect, ConnectedProps } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { loginAction } from 'store/api-actions';
 import { ThunkAppDispatch } from 'types/action';
 import { AuthData } from 'types/auth-data';
 import { AppRoute } from 'config/AppRoute';
+import type { Actions } from 'types/action';
+import type { State } from 'types/state';
+import type { OffersProps } from 'types/card-props';
+import type { CityCoordinates } from 'types/city-coordinates';
+import { UserStatus } from 'config/UserStatus';
+import {
+  updateOffersListAction,
+  redirectToRouteAction,
+  getCurrentCityAction,
+} from 'store/action';
+import { filterOffersList } from 'utils/utils';
 import Logo from 'elements/logo/logo';
 
 interface LoginPageProps {
   onAuth: () => void;
 }
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
+const mapStateToProps = ({ authorizationStatus, offers }: State) => ({
+  authorizationStatus,
+  offers,
+});
+
+const mapDispatchToProps = (
+  dispatch: Dispatch<Actions> & ThunkAppDispatch,
+) => ({
   onSubmit(authData: AuthData, openMainRoot: () => void) {
     dispatch(loginAction(authData));
     openMainRoot();
   },
+
+  onCitySelected(value: CityCoordinates) {
+    dispatch(getCurrentCityAction(value));
+  },
+
+  onUpdateCity(city: string, offers: OffersProps) {
+    dispatch(updateOffersListAction(filterOffersList(city, offers)));
+
+    dispatch(redirectToRouteAction(AppRoute.Root));
+  },
 });
 
-const connector = connect(null, mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>;
 type ConnectedComponentProps = PropsFromRedux & LoginPageProps;
 
-function LoginPage({ onSubmit, onAuth }: ConnectedComponentProps): JSX.Element {
+function LoginPage({
+  onSubmit,
+  onAuth,
+  authorizationStatus,
+  onUpdateCity,
+  offers,
+  onCitySelected,
+}: ConnectedComponentProps): JSX.Element {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
 
@@ -39,6 +77,25 @@ function LoginPage({ onSubmit, onAuth }: ConnectedComponentProps): JSX.Element {
         onAuth,
       );
     }
+  }
+
+  function handleUpdateCity(evt: MouseEvent<HTMLElement>) {
+    evt.preventDefault();
+
+    onUpdateCity('Amsterdam', offers);
+
+    onCitySelected({
+      name: 'Amsterdam',
+      location: {
+        latitude: 52.37454,
+        longitude: 4.897976,
+        zoom: 13,
+      },
+    });
+  }
+
+  if (authorizationStatus === UserStatus.Auth) {
+    return <Redirect to={AppRoute.Root} />;
   }
 
   return (
@@ -97,7 +154,11 @@ function LoginPage({ onSubmit, onAuth }: ConnectedComponentProps): JSX.Element {
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">
-              <Link className="locations__item-link" to={AppRoute.Root}>
+              <Link
+                className="locations__item-link"
+                to={AppRoute.Root}
+                onClick={(evt) => handleUpdateCity(evt)}
+              >
                 <span>Amsterdam</span>
               </Link>
             </div>

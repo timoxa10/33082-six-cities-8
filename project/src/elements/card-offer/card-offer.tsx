@@ -1,6 +1,5 @@
 import type { OfferProps, OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
-import type { CityCoordinates } from 'types/city-coordinates';
 import { UserStatus } from 'config/UserStatus';
 import ReviewPageForm from 'components/offer-page-form/offer-page-form';
 import Card from 'elements/card/card';
@@ -8,7 +7,6 @@ import ReviewsList from 'components/reviews-list/reviews-list';
 import CitiesMap from 'components/cities-map/cities-map';
 
 interface CardOfferProps {
-  city: CityCoordinates;
   reviewsList: ReviewsProps;
   offerByIdData: Partial<OfferProps>;
   nearbyOffers: OffersProps;
@@ -16,7 +14,6 @@ interface CardOfferProps {
 }
 
 function CardOffer({
-  city,
   reviewsList,
   offerByIdData,
   nearbyOffers,
@@ -130,12 +127,7 @@ function CardOffer({
             </div>
           </div>
           <section className="property__map map">
-            <CitiesMap
-              city={city}
-              points={nearbyOffers?.map(({ location }) => location)}
-              selectedPoint={null}
-              isHovered={null}
-            />
+            <CitiesMap isHovered />
           </section>
         </section>
         <div className="container">

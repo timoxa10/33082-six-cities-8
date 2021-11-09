@@ -1,3 +1,4 @@
+/* eslint-disable comma-dangle */
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { AxiosInstance } from 'axios';
 import {
@@ -17,7 +18,6 @@ import {
   requireLogoutAction,
   redirectToRouteAction,
   setLoginAction,
-  // eslint-disable-next-line comma-dangle
   setAvatarUrlAction,
 } from 'store/action';
 import { State } from 'types/state';

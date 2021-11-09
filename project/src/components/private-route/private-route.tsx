@@ -21,6 +21,11 @@ type ConnectedComponentProps = PropsFromRedux & PrivateRouteProps;
 
 function PrivateRoute(props: ConnectedComponentProps): JSX.Element {
   const { exact, path, component: Component, authorizationStatus } = props;
+
+  if (authorizationStatus === UserStatus.NoAuth) {
+    return <Redirect to={AppRoute.Login} />;
+  }
+
   return (
     <Route
       exact={exact}
@@ -29,7 +34,6 @@ function PrivateRoute(props: ConnectedComponentProps): JSX.Element {
         if (authorizationStatus === UserStatus.Auth) {
           return Component && <Component {...props} />;
         }
-        return <Redirect to={AppRoute.Login} />;
       }}
     />
   );

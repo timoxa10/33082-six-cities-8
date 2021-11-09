@@ -11,16 +11,10 @@ import Card from 'elements/card/card';
 import CitiesMap from 'components/cities-map/cities-map';
 import { getSelectedPointAction } from 'store/action';
 
-const mapStateToProps = ({
+const mapStateToProps = ({ city, offersByCity, isLoading }: State) => ({
   city,
   offersByCity,
   isLoading,
-  selectedPoint,
-}: State) => ({
-  city,
-  offersByCity,
-  isLoading,
-  selectedPoint,
 });
 
 const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
@@ -34,7 +28,7 @@ const connector = connect(mapStateToProps, mapDispatchToProps);
 type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function MainPage(props: PropsFromRedux): JSX.Element {
-  const { city, offersByCity, selectedPoint, onSelectedPoint } = props;
+  const { city, offersByCity, onSelectedPoint } = props;
 
   const [hovered, setHovered] = useState(false);
 
@@ -81,12 +75,7 @@ function MainPage(props: PropsFromRedux): JSX.Element {
 
             <div className="cities__right-section">
               <section className="cities__map map">
-                <CitiesMap
-                  city={city}
-                  points={offersByCity.map(({ location }) => location)}
-                  selectedPoint={selectedPoint}
-                  isHovered={hovered}
-                />
+                <CitiesMap useOffersByCityPoints isHovered={hovered} />
               </section>
             </div>
           </div>

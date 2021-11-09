@@ -1,4 +1,6 @@
+/* eslint-disable comma-dangle */
 import type { OffersProps } from 'types/card-props';
+import type { ReviewsProps } from 'types/review-props';
 import { SortTypes } from 'config/SortTypes';
 
 const capitalizeFirstLetter = (string = ''): string =>
@@ -6,6 +8,11 @@ const capitalizeFirstLetter = (string = ''): string =>
 
 const filterOffersList = (city: string, offers: OffersProps): OffersProps =>
   offers.filter((offer) => offer.city.name === city);
+
+const filterReviewsList = (reviews: ReviewsProps): ReviewsProps =>
+  reviews
+    .slice()
+    .sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
 
 const sortOffersByType = (type: string, offers: OffersProps): OffersProps => {
   const fetchedOffers = offers.slice();
@@ -23,4 +30,9 @@ const sortOffersByType = (type: string, offers: OffersProps): OffersProps => {
   }
 };
 
-export { capitalizeFirstLetter, filterOffersList, sortOffersByType };
+export {
+  capitalizeFirstLetter,
+  filterOffersList,
+  sortOffersByType,
+  filterReviewsList,
+};

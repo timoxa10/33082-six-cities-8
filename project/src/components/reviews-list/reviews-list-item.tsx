@@ -22,7 +22,7 @@ function ReviewsListItem({ review }: ReviewsItemProps): JSX.Element {
             alt="Reviews avatar"
           />
         </div>
-        <span className="reviews__user-name">{review.user.name}</span>
+        <span className="reviews__user-name">{review?.user?.name}</span>
       </div>
       <div className="reviews__info">
         <div className="reviews__rating rating">
@@ -31,9 +31,9 @@ function ReviewsListItem({ review }: ReviewsItemProps): JSX.Element {
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
-        <p className="reviews__text">{review.comment}</p>
-        <time className="reviews__time" dateTime={review.date}>
-          {convertDateToString(review.date)}
+        <p className="reviews__text">{review?.comment}</p>
+        <time className="reviews__time" dateTime={review?.date}>
+          {convertDateToString(review?.date)}
         </time>
       </div>
     </>

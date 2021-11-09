@@ -7,7 +7,6 @@ import Layout from 'components/layout/layout';
 import CardOffer from 'elements/card-offer/card-offer';
 
 const mapStateToProps = ({
-  city,
   currentOfferId,
   reviewsList,
   offerByIdData,
@@ -15,7 +14,6 @@ const mapStateToProps = ({
   authorizationStatus,
   isLoading,
 }: State) => ({
-  city,
   currentOfferId,
   reviewsList,
   offerByIdData,
@@ -36,7 +34,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function CardOfferContainer(props: PropsFromRedux): JSX.Element {
   const {
-    city,
     currentOfferId,
     reviewsList,
     offerByIdData,
@@ -52,7 +49,6 @@ function CardOfferContainer(props: PropsFromRedux): JSX.Element {
   return (
     <Layout className="page">
       <CardOffer
-        city={city}
         reviewsList={reviewsList}
         offerByIdData={offerByIdData}
         nearbyOffers={nearbyOffers}

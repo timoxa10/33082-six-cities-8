@@ -16,9 +16,10 @@ import {
   getNearbyOffersAction,
   requireAuthorizationAction,
   requireLogoutAction,
-  redirectToRouteAction,
   setLoginAction,
   setAvatarUrlAction,
+  getCurrentCityAction,
+  getSelectedPointAction,
 } from 'store/action';
 import { filterOffersList } from 'utils/utils';
 import { INITIAL_CITY } from 'config/InitialCity';
@@ -26,10 +27,11 @@ import { LOCATIONS_LIST } from 'config/LocationsList';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
 import { INITIAL_LOGIN } from 'config/InitialLogin';
+import { INITIAL_AVATAR_URL } from 'config/InitialAvatarUrl';
+import { filterReviewsList } from 'utils/utils';
 import {
   saveToken,
   dropToken,
-  Token,
   saveLoginName,
   getLoginName,
   dropLoginName,
@@ -65,9 +67,11 @@ function fetchOfferData(id: number): ThunkActionResult {
       const { data } = await api.get<ReviewsProps>(`/comments/${id}`);
       dispatch(
         getListOfReviewsAction(
-          camelСaseKeys(data, {
-            deep: true,
-          }),
+          filterReviewsList(
+            camelСaseKeys(data, {
+              deep: true,
+            }),
+          ),
         ),
       );
       dispatch(setIsLoadingAction(false));
@@ -85,6 +89,9 @@ function fetchOfferData(id: number): ThunkActionResult {
           }),
         ),
       );
+
+      dispatch(getCurrentCityAction(data.city));
+      dispatch(getSelectedPointAction(data.location));
       dispatch(setIsLoadingAction(false));
       dispatch(setIsErrorAction(false));
     } catch (error) {
@@ -114,7 +121,6 @@ function checkAuthAction(): ThunkActionResult {
     if (data) {
       dispatch(requireAuthorizationAction(UserStatus.Auth));
       dispatch(setLoginAction(getLoginName()));
-      saveAvatarUrl(data.avatar_url);
       dispatch(setAvatarUrlAction(getAvatarUrl()));
     }
   };
@@ -122,25 +128,36 @@ function checkAuthAction(): ThunkActionResult {
 
 function loginAction({ login: email, password }: AuthData): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
-    const {
-      data: { token },
-    } = await api.post<{ token: Token }>(AppRoute.Login, { email, password });
-    saveToken(token);
+    const { data } = await api.post(AppRoute.Login, {
+      email,
+      password,
+    });
+    const result = camelСaseKeys(data, {
+      deep: true,
+    });
+
+    saveToken(result.token);
+    saveAvatarUrl(result.avatarUrl);
     saveLoginName(email);
-    dispatch(requireAuthorizationAction(UserStatus.Auth));
+
     dispatch(setLoginAction(email));
-    dispatch(redirectToRouteAction(AppRoute.Root));
+    dispatch(setAvatarUrlAction(result.avatarUrl));
+
+    dispatch(requireAuthorizationAction(UserStatus.Auth));
   };
 }
 
 function logoutAction(): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
     api.delete(AppRoute.Logout);
+
     dropToken();
     dropLoginName();
     dropAvatarUrl();
+
     dispatch(requireLogoutAction());
     dispatch(setLoginAction(INITIAL_LOGIN));
+    dispatch(setAvatarUrlAction(INITIAL_AVATAR_URL));
   };
 }
 

@@ -8,7 +8,6 @@ import Input from 'elements/input/input';
 
 const mapStateToProps = ({ currentOfferId, isError }: State) => ({
   currentOfferId,
-  isError,
 });
 
 const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
@@ -23,7 +22,6 @@ type PropsFromRedux = ConnectedProps<typeof connector>;
 
 function OfferPageForm({
   currentOfferId,
-  isError,
   onSubmit,
 }: PropsFromRedux): JSX.Element {
   const [rating, setRating] = useState<number>(0);
@@ -71,7 +69,7 @@ function OfferPageForm({
         onChange={({ target }: ChangeEvent<HTMLTextAreaElement>) => {
           const text = target.value;
           setComment(text);
-          setIsDisabled(rating === 0 || text.length < 50);
+          setIsDisabled(rating === 0 || text.length < 50 || text.length > 300);
         }}
       />
       <div className="reviews__button-wrapper">

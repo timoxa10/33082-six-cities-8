@@ -1,15 +1,13 @@
 /* eslint-disable comma-dangle */
 import { Redirect } from 'react-router-dom';
-import { Dispatch } from 'redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { getAuthorizationStatus } from 'store/app-auth/selectors';
+import { getOffers } from 'store/app-data/selectors';
 import { useState, SyntheticEvent, MouseEvent } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { loginAction } from 'store/api-actions';
-import { ThunkAppDispatch } from 'types/action';
 import { AuthData } from 'types/auth-data';
 import { AppRoute } from 'config/AppRoute';
-import type { Actions } from 'types/action';
-import type { State } from 'types/state';
 import type { OffersProps } from 'types/card-props';
 import type { CityCoordinates } from 'types/city-coordinates';
 import { UserStatus } from 'config/UserStatus';
@@ -25,45 +23,37 @@ interface LoginPageProps {
   onAuth: () => void;
 }
 
-const mapStateToProps = ({ authorizationStatus, offers }: State) => ({
-  authorizationStatus,
-  offers,
-});
+function LoginPage({ onAuth }: LoginPageProps): JSX.Element {
+  const offers = useSelector(getOffers);
+  const authorizationStatus = useSelector(getAuthorizationStatus);
 
-const mapDispatchToProps = (
-  dispatch: Dispatch<Actions> & ThunkAppDispatch,
-) => ({
-  onSubmit(authData: AuthData, openMainRoot: () => void) {
+  const dispatch = useDispatch();
+
+  const onSubmit = (authData: AuthData, openMainRoot: () => void) => {
     dispatch(loginAction(authData));
     openMainRoot();
-  },
+  };
 
-  onCitySelected(value: CityCoordinates) {
+  const onCitySelected = (value: CityCoordinates) => {
     dispatch(getCurrentCityAction(value));
-  },
+  };
 
-  onUpdateCity(city: string, offers: OffersProps) {
-    dispatch(updateOffersListAction(filterOffersList(city, offers)));
+  const onUpdateCity = (city: string, array: OffersProps) => {
+    dispatch(updateOffersListAction(filterOffersList(city, array)));
 
     dispatch(redirectToRouteAction(AppRoute.Root));
-  },
-});
+  };
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & LoginPageProps;
-
-function LoginPage({
-  onSubmit,
-  onAuth,
-  authorizationStatus,
-  onUpdateCity,
-  offers,
-  onCitySelected,
-}: ConnectedComponentProps): JSX.Element {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
+
+  // const onLoginCallback = useCallback((value) => {
+  //   setLogin(value);
+  // }, []);
+
+  // const onPasswordCallback = useCallback((value) => {
+  //   setPassword(value);
+  // }, []);
 
   function handleSubmit(evt: SyntheticEvent) {
     evt.preventDefault();
@@ -169,5 +159,4 @@ function LoginPage({
   );
 }
 
-export { LoginPage };
-export default connector(LoginPage);
+export default LoginPage;

@@ -4,6 +4,7 @@ import type { OfferProps } from 'types/card-props';
 import { Link } from 'react-router-dom';
 import type { LocationInfo } from 'types/location-info';
 import { capitalizeFirstLetter } from 'utils/utils';
+import { transformRatingToPersent } from 'utils/utils';
 
 type MainCardProps = {
   card: OfferProps;
@@ -20,7 +21,7 @@ function Card({
 }: MainCardProps): JSX.Element {
   const { className } = props;
 
-  const [mainImage] = card.images;
+  const [mainImage] = card?.images;
 
   const listItemHoverHandler = (event: MouseEvent<HTMLDivElement>) => {
     if (onListItemHover) {
@@ -35,13 +36,13 @@ function Card({
       onMouseEnter={listItemHoverHandler}
       onMouseLeave={onListItemLeave}
     >
-      {card.isPremium && (
+      {card?.isPremium && (
         <div className="place-card__mark">
           <span>Premium</span>
         </div>
       )}
       <div className="cities__image-wrapper place-card__image-wrapper">
-        <Link to={`/offer/${card.id}/`}>
+        <Link to={`/offer/${card?.id}/`}>
           <img
             className="place-card__image"
             src={mainImage}
@@ -54,7 +55,7 @@ function Card({
       <div className="place-card__info">
         <div className="place-card__price-wrapper">
           <div className="place-card__price">
-            <b className="place-card__price-value">{card.price}</b>
+            <b className="place-card__price-value">{card?.price}</b>
             <span className="place-card__price-text">/ night</span>
           </div>
           <button className="place-card__bookmark-button button" type="button">
@@ -66,14 +67,14 @@ function Card({
         </div>
         <div className="place-card__rating rating">
           <div className="place-card__stars rating__stars">
-            <span style={{ width: '80%' }} />
+            <span style={{ width: transformRatingToPersent(card?.rating) }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
         <h2 className="place-card__name">
-          <Link to={`/offer/${card.id}/`}>{card.title}</Link>
+          <Link to={`/offer/${card?.id}/`}>{card?.title}</Link>
         </h2>
-        <p className="place-card__type">{capitalizeFirstLetter(card.type)}</p>
+        <p className="place-card__type">{capitalizeFirstLetter(card?.type)}</p>
       </div>
     </article>
   );

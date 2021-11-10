@@ -1,29 +1,19 @@
+import { useSelector, useDispatch } from 'react-redux';
 import { useState, ChangeEvent, SyntheticEvent } from 'react';
-import { ThunkAppDispatch } from 'types/action';
-import { connect, ConnectedProps } from 'react-redux';
+import { getCurrentOfferId } from 'store/app-data/selectors';
 import type { CommentData } from 'types/comment-data';
-import type { State } from 'types/state';
 import { addComment } from 'store/api-actions';
 import Input from 'elements/input/input';
 
-const mapStateToProps = ({ currentOfferId, isError }: State) => ({
-  currentOfferId,
-});
+function OfferPageForm(): JSX.Element {
+  const currentOfferId = useSelector(getCurrentOfferId);
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  onSubmit(data: CommentData, id: number) {
+  const dispatch = useDispatch();
+
+  const onSubmit = (data: CommentData, id: number) => {
     dispatch(addComment(data, id));
-  },
-});
+  };
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function OfferPageForm({
-  currentOfferId,
-  onSubmit,
-}: PropsFromRedux): JSX.Element {
   const [rating, setRating] = useState<number>(0);
   const [comment, setComment] = useState<string>('');
   const [isDisabled, setIsDisabled] = useState(true);
@@ -91,5 +81,4 @@ function OfferPageForm({
   );
 }
 
-export { OfferPageForm };
-export default connector(OfferPageForm);
+export default OfferPageForm;

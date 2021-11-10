@@ -5,6 +5,7 @@ import ReviewPageForm from 'components/offer-page-form/offer-page-form';
 import Card from 'elements/card/card';
 import ReviewsList from 'components/reviews-list/reviews-list';
 import CitiesMap from 'components/cities-map/cities-map';
+import { transformRatingToPersent } from 'utils/utils';
 
 interface CardOfferProps {
   reviewsList: ReviewsProps;
@@ -63,7 +64,11 @@ function CardOffer({
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
-                  <span style={{ width: '80%' }} />
+                  <span
+                    style={{
+                      width: transformRatingToPersent(offerByIdData?.rating),
+                    }}
+                  />
                   <span className="visually-hidden">Rating</span>
                 </div>
                 <span className="property__rating-value rating__value">

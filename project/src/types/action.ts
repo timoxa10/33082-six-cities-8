@@ -1,25 +1,6 @@
-/* eslint-disable comma-dangle */
+import { Action } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { AxiosInstance } from 'axios';
-import {
-  getCurrentCityAction,
-  getListOfOffersAction,
-  getListOfCitiesAction,
-  updateOffersListAction,
-  getActiveSortTypeAction,
-  setIsLoadingAction,
-  setIsErrorAction,
-  getCurrentOfferIdAction,
-  getSelectedPointAction,
-  getListOfReviewsAction,
-  getCurrentOfferByIdDataAction,
-  getNearbyOffersAction,
-  requireAuthorizationAction,
-  requireLogoutAction,
-  redirectToRouteAction,
-  setLoginAction,
-  setAvatarUrlAction,
-} from 'store/action';
 import { State } from 'types/state';
 
 export enum ActionType {
@@ -42,30 +23,11 @@ export enum ActionType {
   RedirectToRoute = 'RedirectToRoute',
 }
 
-export type Actions =
-  | ReturnType<typeof getCurrentCityAction>
-  | ReturnType<typeof getListOfOffersAction>
-  | ReturnType<typeof getListOfCitiesAction>
-  | ReturnType<typeof updateOffersListAction>
-  | ReturnType<typeof getActiveSortTypeAction>
-  | ReturnType<typeof setIsLoadingAction>
-  | ReturnType<typeof getCurrentOfferIdAction>
-  | ReturnType<typeof getSelectedPointAction>
-  | ReturnType<typeof getListOfReviewsAction>
-  | ReturnType<typeof getCurrentOfferByIdDataAction>
-  | ReturnType<typeof getNearbyOffersAction>
-  | ReturnType<typeof requireAuthorizationAction>
-  | ReturnType<typeof requireLogoutAction>
-  | ReturnType<typeof redirectToRouteAction>
-  | ReturnType<typeof setLoginAction>
-  | ReturnType<typeof setIsErrorAction>
-  | ReturnType<typeof setAvatarUrlAction>;
-
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<
   R,
   State,
   AxiosInstance,
-  Actions
+  Action
 >;
 
-export type ThunkAppDispatch = ThunkDispatch<State, AxiosInstance, Actions>;
+export type ThunkAppDispatch = ThunkDispatch<State, AxiosInstance, Action>;

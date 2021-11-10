@@ -1,3 +1,4 @@
+import { createAction } from '@reduxjs/toolkit';
 import type { CityCoordinates } from 'types/city-coordinates';
 import type { OfferProps, OffersProps } from 'types/card-props';
 import { ActionType } from 'types/action';
@@ -6,103 +7,116 @@ import type { ReviewsProps } from 'types/review-props';
 import { UserStatus } from 'config/UserStatus';
 import { AppRoute } from 'config/AppRoute';
 
-export const getCurrentCityAction = (payload: CityCoordinates) =>
-  ({
-    type: ActionType.GetCurrentCity,
+export const getCurrentCityAction = createAction(
+  ActionType.GetCurrentCity,
+  (payload: CityCoordinates) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const getListOfOffersAction = (payload: OffersProps) =>
-  ({
-    type: ActionType.GetListOfOffers,
+export const getListOfOffersAction = createAction(
+  ActionType.GetListOfOffers,
+  (payload: OffersProps) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const updateOffersListAction = (payload: OffersProps) =>
-  ({
-    type: ActionType.UpdateOffersList,
+export const updateOffersListAction = createAction(
+  ActionType.UpdateOffersList,
+  (payload: OffersProps) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const getListOfCitiesAction = (payload: CityCoordinates[]) =>
-  ({
-    type: ActionType.GetListOfCities,
+export const getListOfCitiesAction = createAction(
+  ActionType.GetListOfCities,
+  (payload: CityCoordinates[]) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const getActiveSortTypeAction = (payload: string) =>
-  ({
-    type: ActionType.GetActiveSortType,
+export const getActiveSortTypeAction = createAction(
+  ActionType.GetActiveSortType,
+  (payload: string) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const setIsLoadingAction = (payload: boolean) =>
-  ({
-    type: ActionType.SetIsLoading,
+export const setIsLoadingAction = createAction(
+  ActionType.SetIsLoading,
+  (payload: boolean) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const setIsErrorAction = (payload: boolean) =>
-  ({
-    type: ActionType.SetIsError,
+export const setIsErrorAction = createAction(
+  ActionType.SetIsError,
+  (payload: boolean) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const getCurrentOfferIdAction = (payload: number) =>
-  ({
-    type: ActionType.GetCurrentOfferId,
+export const getCurrentOfferIdAction = createAction(
+  ActionType.GetCurrentOfferId,
+  (payload: number) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const getSelectedPointAction = (payload: LocationInfo) =>
-  ({
-    type: ActionType.GetSelectedPoint,
+export const getSelectedPointAction = createAction(
+  ActionType.GetSelectedPoint,
+  (payload: LocationInfo) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const getListOfReviewsAction = (payload: ReviewsProps) =>
-  ({
-    type: ActionType.GetListOfReviews,
+export const getListOfReviewsAction = createAction(
+  ActionType.GetListOfReviews,
+  (payload: ReviewsProps) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const getCurrentOfferByIdDataAction = (payload: OfferProps) =>
-  ({
-    type: ActionType.GetCurrentOfferByIdData,
+export const getCurrentOfferByIdDataAction = createAction(
+  ActionType.GetCurrentOfferByIdData,
+  (payload: OfferProps) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const getNearbyOffersAction = (payload: OffersProps) =>
-  ({
-    type: ActionType.GetNearbyOffers,
+export const getNearbyOffersAction = createAction(
+  ActionType.GetNearbyOffers,
+  (payload: OffersProps) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const setLoginAction = (payload: string) =>
-  ({
-    type: ActionType.SetLoginAction,
+export const setLoginAction = createAction(
+  ActionType.SetLoginAction,
+  (payload: string) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const setAvatarUrlAction = (payload: string) =>
-  ({
-    type: ActionType.SetAvatarUrl,
+export const setAvatarUrlAction = createAction(
+  ActionType.SetAvatarUrl,
+  (payload: string) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const requireAuthorizationAction = (payload: UserStatus) =>
-  ({
-    type: ActionType.RequireAuthorization,
+export const requireAuthorizationAction = createAction(
+  ActionType.RequireAuthorization,
+  (payload: UserStatus) => ({
     payload,
-  } as const);
+  }),
+);
 
-export const requireLogoutAction = () =>
-  ({
-    type: ActionType.RequireLogout,
-  } as const);
+export const requireLogoutAction = createAction(ActionType.RequireLogout);
 
-export const redirectToRouteAction = (url: AppRoute) =>
-  ({
-    type: ActionType.RedirectToRoute,
-    payload: url,
-  } as const);
+export const redirectToRouteAction = createAction(
+  ActionType.RedirectToRoute,
+  (payload: AppRoute) => ({
+    payload,
+  }),
+);

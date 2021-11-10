@@ -1,35 +1,29 @@
+/* eslint-disable comma-dangle */
+import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { connect, ConnectedProps } from 'react-redux';
-import { State } from 'types/state';
-import { ThunkAppDispatch } from 'types/action';
+import {
+  getAuthorizationStatus,
+  getLogin,
+  getAvatarUrl,
+} from 'store/app-auth/selectors';
 import { logoutAction } from 'store/api-actions';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
 import Logo from 'elements/logo/logo';
 
-const mapStateToProps = ({ authorizationStatus, login, avatarUrl }: State) => ({
-  authorizationStatus,
-  login,
-  avatarUrl,
-});
+function Header(): JSX.Element {
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const login = useSelector(getLogin);
+  const avatarUrl = useSelector(getAvatarUrl);
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  onLogout() {
+  const dispatch = useDispatch();
+
+  const onLogout = () => {
     dispatch(logoutAction());
-  },
-});
+  };
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function Header({
-  authorizationStatus,
-  login,
-  avatarUrl,
-  onLogout,
-}: PropsFromRedux): JSX.Element {
   const isAuth = authorizationStatus === UserStatus.Auth;
+
   return (
     <header className="header">
       <div className="container">
@@ -73,5 +67,4 @@ function Header({
   );
 }
 
-export { Header };
-export default connector(Header);
+export default Header;

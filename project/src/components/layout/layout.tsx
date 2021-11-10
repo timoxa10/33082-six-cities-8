@@ -1,6 +1,6 @@
 import classNames from 'classnames';
-import type { State } from 'types/state';
-import { connect, ConnectedProps } from 'react-redux';
+import { useSelector } from 'react-redux';
+import { getIsLoading, getIsError } from 'store/app-data/selectors';
 import Logo from 'elements/logo/logo';
 import SvgSpriteIcons from 'components/svg-sprite-icons/svg-sprite-icons';
 import Header from 'components/header/header';
@@ -13,21 +13,14 @@ interface LayoutProps {
   shouldRenderFooter?: boolean;
 }
 
-const connector = connect(({ isLoading, isError }: State) => ({
-  isLoading,
-  isError,
-}));
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & LayoutProps;
-
 function Layout({
   children,
-  isLoading,
-  isError,
   className,
   shouldRenderFooter = false,
-}: ConnectedComponentProps): JSX.Element {
+}: LayoutProps): JSX.Element {
+  const isLoading = useSelector(getIsLoading);
+  const isError = useSelector(getIsError);
+
   return (
     <>
       {isLoading && <Spinner />}
@@ -51,5 +44,4 @@ function Layout({
     </>
   );
 }
-export { Layout };
-export default connector(Layout);
+export default Layout;

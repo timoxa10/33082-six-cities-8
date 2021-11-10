@@ -30,9 +30,13 @@ const sortOffersByType = (type: string, offers: OffersProps): OffersProps => {
   }
 };
 
+const transformRatingToPersent = (rating: number | undefined): string =>
+  !rating ? '' : `${(Math.round(rating) * 100) / 5}%`;
+
 export {
   capitalizeFirstLetter,
   filterOffersList,
   sortOffersByType,
   filterReviewsList,
+  transformRatingToPersent,
 };

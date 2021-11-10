@@ -1,34 +1,36 @@
 import { useState } from 'react';
-import { Dispatch } from 'redux';
-import type { Actions } from 'types/action';
-import { connect, ConnectedProps } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import type { LocationInfo } from 'types/location-info';
-import type { State } from 'types/state';
+import type { OffersProps } from 'types/card-props';
 import Layout from 'components/layout/layout';
 import TabsList from 'components/tabs-list/tabs-list';
 import OfferPageForm from 'components/offer-sorting-form/offer-sorting-form';
 import Card from 'elements/card/card';
 import CitiesMap from 'components/cities-map/cities-map';
-import { getSelectedPointAction } from 'store/action';
+import { getSelectedPointAction, updateOffersListAction } from 'store/action';
+import { getCity, getOffersByCity, getOffers } from 'store/app-data/selectors';
+import { filterOffersList } from 'utils/utils';
 
-const mapStateToProps = ({ city, offersByCity, isLoading }: State) => ({
-  city,
-  offersByCity,
-  isLoading,
-});
+function MainPage(): JSX.Element {
+  const city = useSelector(getCity);
+  const offersByCity = useSelector(getOffersByCity);
+  const offers = useSelector(getOffers);
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  onSelectedPoint(point: LocationInfo) {
+  const dispatch = useDispatch();
+
+  const onSelectedPoint = (point: LocationInfo) => {
     dispatch(getSelectedPointAction(point));
-  },
-});
+  };
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+  const onUpdateOffers = (value: string, array: OffersProps) => {
+    dispatch(updateOffersListAction(filterOffersList(value, array)));
+  };
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
+  const amountByCity = filterOffersList(city.name, offers);
 
-function MainPage(props: PropsFromRedux): JSX.Element {
-  const { city, offersByCity, onSelectedPoint } = props;
+  if (amountByCity.length !== offersByCity.length) {
+    onUpdateOffers(city.name, offers);
+  }
 
   const [hovered, setHovered] = useState(false);
 
@@ -85,5 +87,4 @@ function MainPage(props: PropsFromRedux): JSX.Element {
   );
 }
 
-export { MainPage };
-export default connector(MainPage);
+export default MainPage;

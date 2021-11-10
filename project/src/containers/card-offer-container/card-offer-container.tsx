@@ -1,50 +1,36 @@
-import { useEffect } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import type { ThunkAppDispatch } from 'types/action';
-import type { State } from 'types/state';
+/* eslint-disable comma-dangle */
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useCallback } from 'react';
+import {
+  getCurrentOfferId,
+  getReviewsList,
+  getOfferByIdData,
+  getNearbyOffers,
+} from 'store/app-data/selectors';
+import { getAuthorizationStatus } from 'store/app-auth/selectors';
 import { fetchOfferData } from 'store/api-actions';
 import Layout from 'components/layout/layout';
 import CardOffer from 'elements/card-offer/card-offer';
 
-const mapStateToProps = ({
-  currentOfferId,
-  reviewsList,
-  offerByIdData,
-  nearbyOffers,
-  authorizationStatus,
-  isLoading,
-}: State) => ({
-  currentOfferId,
-  reviewsList,
-  offerByIdData,
-  nearbyOffers,
-  authorizationStatus,
-  isLoading,
-});
+function CardOfferContainer(): JSX.Element {
+  const currentOfferId = useSelector(getCurrentOfferId);
+  const reviewsList = useSelector(getReviewsList);
+  const offerByIdData = useSelector(getOfferByIdData);
+  const nearbyOffers = useSelector(getNearbyOffers);
+  const authorizationStatus = useSelector(getAuthorizationStatus);
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  fetchData(id: number) {
-    dispatch(fetchOfferData(id));
-  },
-});
+  const dispatch = useDispatch();
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function CardOfferContainer(props: PropsFromRedux): JSX.Element {
-  const {
-    currentOfferId,
-    reviewsList,
-    offerByIdData,
-    nearbyOffers,
-    fetchData,
-    authorizationStatus,
-  } = props;
+  const fetchData = useCallback(
+    (id: number) => {
+      dispatch(fetchOfferData(id));
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     fetchData(currentOfferId);
-  }, [currentOfferId]);
+  }, [currentOfferId, fetchData]);
 
   return (
     <Layout className="page">
@@ -58,5 +44,4 @@ function CardOfferContainer(props: PropsFromRedux): JSX.Element {
   );
 }
 
-export { CardOfferContainer };
-export default connector(CardOfferContainer);
+export default CardOfferContainer;

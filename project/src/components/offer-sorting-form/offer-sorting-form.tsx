@@ -1,40 +1,25 @@
 import classNames from 'classnames';
+import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { Dispatch } from 'redux';
-import { connect, ConnectedProps } from 'react-redux';
 import { SortTypes } from 'config/SortTypes';
-import type { State } from 'types/state';
-import type { Actions } from 'types/action';
 import type { OffersProps } from 'types/card-props';
 import { getActiveSortTypeAction, updateOffersListAction } from 'store/action';
+import { getActiveSortType, getOffersByCity } from 'store/app-data/selectors';
 import { sortOffersByType } from 'utils/utils';
 
-const mapStateToProps = ({ activeSortType, offersByCity }: State) => ({
-  activeSortType,
-  offersByCity,
-});
+function OfferSortingForm(): JSX.Element {
+  const activeSortType = useSelector(getActiveSortType);
+  const offersByCity = useSelector(getOffersByCity);
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  onSortTypeSelected(value: string) {
+  const dispatch = useDispatch();
+
+  const onSortTypeSelected = (value: string) => {
     dispatch(getActiveSortTypeAction(value));
-  },
+  };
 
-  onUpdateOfferByType(offers: OffersProps, type: string) {
+  const onUpdateOfferByType = (offers: OffersProps, type: string) => {
     dispatch(updateOffersListAction(sortOffersByType(type, offers)));
-  },
-});
-
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function OfferSortingForm(props: PropsFromRedux): JSX.Element {
-  const {
-    activeSortType,
-    offersByCity,
-    onSortTypeSelected,
-    onUpdateOfferByType,
-  } = props;
+  };
 
   const sortTypesList = Object.values(SortTypes);
 
@@ -88,5 +73,4 @@ function OfferSortingForm(props: PropsFromRedux): JSX.Element {
   );
 }
 
-export { OfferSortingForm };
-export default connector(OfferSortingForm);
+export default OfferSortingForm;

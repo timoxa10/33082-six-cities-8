@@ -1,15 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import thunk from 'redux-thunk';
-import { createStore, applyMiddleware } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
 import { Provider } from 'react-redux';
-import { reducer } from 'store/reducer';
+import { rootReducer } from 'store/root-reducer';
 import { createAPI } from 'services/api';
-import type { ThunkAppDispatch } from 'types/action';
 import { fetchOffersList, checkAuthAction } from 'store/api-actions';
 import { requireAuthorizationAction } from 'store/action';
 import { UserStatus } from 'config/UserStatus';
-import { composeWithDevTools } from 'redux-devtools-extension';
 import { redirect } from 'store/redirect';
 import App from './components/app/app';
 import 'elements/spinner/spinner.css';
@@ -19,16 +16,18 @@ const api = createAPI(() =>
   store.dispatch(requireAuthorizationAction(UserStatus.NoAuth)),
 );
 
-const store = createStore(
-  reducer,
-  composeWithDevTools(
-    applyMiddleware(thunk.withExtraArgument(api)),
-    applyMiddleware(redirect),
-  ),
-);
+const store = configureStore({
+  reducer: rootReducer,
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware({
+      thunk: {
+        extraArgument: api,
+      },
+    }).concat(redirect),
+});
 
-(store.dispatch as ThunkAppDispatch)(checkAuthAction());
-(store.dispatch as ThunkAppDispatch)(fetchOffersList());
+store.dispatch(checkAuthAction());
+store.dispatch(fetchOffersList());
 
 ReactDOM.render(
   <React.StrictMode>

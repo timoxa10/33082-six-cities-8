@@ -1,8 +1,7 @@
-import { useSelector, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { Switch, Route, Router as BrowserRouter } from 'react-router-dom';
 import { AppRoute } from 'config/AppRoute';
 import { getCurrentOfferIdAction } from 'store/action';
-import { getOffersByCity } from 'store/app-data/selectors';
 import CardOfferContainer from 'containers/card-offer-container/card-offer-container';
 import browserHistory from 'browser-history/browser-history';
 import MainPage from 'components/main-page/main-page';
@@ -12,8 +11,6 @@ import PrivateRoute from 'components/private-route/private-route';
 import NotFoundPage from 'components/not-found-page/not-found-page';
 
 function App(): JSX.Element {
-  const offersByCity = useSelector(getOffersByCity);
-
   const dispatch = useDispatch();
 
   const setActiveCardId = (value: number) => {
@@ -48,7 +45,7 @@ function App(): JSX.Element {
         <PrivateRoute
           exact
           path={AppRoute.Favorites}
-          component={() => <FavoritesPage cardList={offersByCity} />}
+          component={() => <FavoritesPage />}
         />
 
         <Route component={NotFoundPage} />

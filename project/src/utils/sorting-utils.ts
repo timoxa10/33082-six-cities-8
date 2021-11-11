@@ -1,10 +1,6 @@
-/* eslint-disable comma-dangle */
 import type { OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
 import { SortTypes } from 'config/SortTypes';
-
-const capitalizeFirstLetter = (string = ''): string =>
-  string.charAt(0).toUpperCase() + string.slice(1);
 
 const filterOffersList = (city: string, offers: OffersProps): OffersProps =>
   offers.filter((offer) => offer.city.name === city);
@@ -30,13 +26,4 @@ const sortOffersByType = (type: string, offers: OffersProps): OffersProps => {
   }
 };
 
-const transformRatingToPersent = (rating: number | undefined): string =>
-  !rating ? '' : `${(Math.round(rating) * 100) / 5}%`;
-
-export {
-  capitalizeFirstLetter,
-  filterOffersList,
-  sortOffersByType,
-  filterReviewsList,
-  transformRatingToPersent,
-};
+export { filterOffersList, sortOffersByType, filterReviewsList };

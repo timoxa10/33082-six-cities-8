@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import type { OfferProps, OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
 import { UserStatus } from 'config/UserStatus';
@@ -5,7 +6,8 @@ import ReviewPageForm from 'components/offer-page-form/offer-page-form';
 import Card from 'elements/card/card';
 import ReviewsList from 'components/reviews-list/reviews-list';
 import CitiesMap from 'components/cities-map/cities-map';
-import { transformRatingToPersent } from 'utils/utils';
+import Bookmark from 'elements/bookmark/bookmark';
+import transformRatingToPersent from 'utils/transformRatingToPersent';
 
 interface CardOfferProps {
   reviewsList: ReviewsProps;
@@ -48,19 +50,16 @@ function CardOffer({
               )}
               <div className="property__name-wrapper">
                 <h1 className="property__name">{offerByIdData?.title}</h1>
-                <button
-                  className="property__bookmark-button button"
-                  type="button"
-                >
-                  <svg
-                    className="property__bookmark-icon"
-                    width={31}
-                    height={33}
-                  >
-                    <use xlinkHref="#icon-bookmark" />
-                  </svg>
-                  <span className="visually-hidden">To bookmarks</span>
-                </button>
+
+                <Bookmark
+                  className="property"
+                  width={31}
+                  height={33}
+                  // @ts-ignore
+                  isFavorite={offerByIdData?.isFavorite}
+                  // @ts-ignore
+                  id={offerByIdData.id}
+                />
               </div>
               <div className="property__rating rating">
                 <div className="property__stars rating__stars">
@@ -142,7 +141,13 @@ function CardOffer({
             </h2>
             <div className="near-places__list places__list">
               {nearbyOffers?.map((item) => (
-                <Card card={item} key={item.id} className="near-places__card" />
+                <Card
+                  card={item}
+                  key={item.id}
+                  className="near-places__card"
+                  width={260}
+                  height={200}
+                />
               ))}
             </div>
           </section>

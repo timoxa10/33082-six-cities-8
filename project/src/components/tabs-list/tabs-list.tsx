@@ -6,7 +6,7 @@ import { getCity, getOffers, getLocationsList } from 'store/app-data/selectors';
 import { AppRoute } from 'config/AppRoute';
 import type { CityCoordinates } from 'types/city-coordinates';
 import type { OffersProps } from 'types/card-props';
-import { filterOffersList } from 'utils/utils';
+import { filterOffersList } from 'utils/sorting-utils';
 import {
   getCurrentCityAction,
   updateOffersListAction,

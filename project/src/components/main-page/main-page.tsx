@@ -1,3 +1,5 @@
+/* eslint-disable comma-dangle */
+import { debounce } from 'throttle-debounce';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { LocationInfo } from 'types/location-info';
@@ -7,9 +9,10 @@ import TabsList from 'components/tabs-list/tabs-list';
 import OfferPageForm from 'components/offer-sorting-form/offer-sorting-form';
 import Card from 'elements/card/card';
 import CitiesMap from 'components/cities-map/cities-map';
+import MainPageEmpty from 'components/main-page-empty/main-page-empty';
 import { getSelectedPointAction, updateOffersListAction } from 'store/action';
 import { getCity, getOffersByCity, getOffers } from 'store/app-data/selectors';
-import { filterOffersList } from 'utils/utils';
+import { filterOffersList } from 'utils/sorting-utils';
 
 function MainPage(): JSX.Element {
   const city = useSelector(getCity);
@@ -34,19 +37,24 @@ function MainPage(): JSX.Element {
 
   const [hovered, setHovered] = useState(false);
 
-  const onListItemHover = (location: LocationInfo) => {
+  const onListItemHover = debounce(300, (location: LocationInfo) => {
     const currentCard = offersByCity.find(
       (point) => point.location === location,
     );
+
     if (currentCard) {
       onSelectedPoint(currentCard.location);
     }
     setHovered(true);
-  };
+  });
 
   const onListItemLeave = () => {
     setHovered(false);
   };
+
+  if (offersByCity.length === 0) {
+    return <MainPageEmpty city={city.name} />;
+  }
 
   return (
     <Layout className="page page--gray page--main">
@@ -70,11 +78,12 @@ function MainPage(): JSX.Element {
                     onListItemHover={onListItemHover}
                     onListItemLeave={onListItemLeave}
                     className="cities__place-card"
+                    width={260}
+                    height={200}
                   />
                 ))}
               </div>
             </section>
-
             <div className="cities__right-section">
               <section className="cities__map map">
                 <CitiesMap useOffersByCityPoints isHovered={hovered} />

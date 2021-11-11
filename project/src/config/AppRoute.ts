@@ -3,6 +3,7 @@ export enum AppRoute {
   Login = '/login',
   Logout = '/logout',
   Favorites = '/favorites',
+  FavoriteAPI = '/favorite',
   RoomOffer = '/offer/:id',
   Сomments = '/comments/',
 }

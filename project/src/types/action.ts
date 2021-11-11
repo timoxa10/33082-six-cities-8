@@ -21,6 +21,8 @@ export enum ActionType {
   RequireAuthorization = 'RequireAuthorization',
   RequireLogout = 'RequireLogout',
   RedirectToRoute = 'RedirectToRoute',
+  UpdateOffer = 'UpdateOffer',
+  GetListOfFavoriteCards = 'GetListOfFavoriteCards',
 }
 
 export type ThunkActionResult<R = Promise<void>> = ThunkAction<

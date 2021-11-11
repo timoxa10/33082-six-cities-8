@@ -18,6 +18,7 @@ export type AppData = {
   reviewsList: ReviewsProps;
   offerByIdData: Partial<OfferProps>;
   nearbyOffers: OffersProps;
+  favoriteCardsList: OffersProps;
 };
 
 export type AppAuth = {

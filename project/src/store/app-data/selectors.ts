@@ -40,3 +40,6 @@ export const getReviewsList = (state: State): ReviewsProps =>
 
 export const getOfferByIdData = (state: State): Partial<OfferProps> =>
   state[NameSpace.data].offerByIdData;
+
+export const getFavoriteCardsList = (state: State): OffersProps =>
+  state[NameSpace.data].favoriteCardsList;

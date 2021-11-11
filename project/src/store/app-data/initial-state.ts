@@ -15,4 +15,5 @@ export const initialStateAppData: AppData = {
   reviewsList: [],
   offerByIdData: {},
   nearbyOffers: [],
+  favoriteCardsList: [],
 };

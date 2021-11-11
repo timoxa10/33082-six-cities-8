@@ -3,7 +3,7 @@ import { Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAuthorizationStatus } from 'store/app-auth/selectors';
 import { getOffers } from 'store/app-data/selectors';
-import { useState, SyntheticEvent, MouseEvent } from 'react';
+import { useState, useCallback, SyntheticEvent, MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { loginAction } from 'store/api-actions';
 import { AuthData } from 'types/auth-data';
@@ -16,7 +16,7 @@ import {
   redirectToRouteAction,
   getCurrentCityAction,
 } from 'store/action';
-import { filterOffersList } from 'utils/utils';
+import { filterOffersList } from 'utils/sorting-utils';
 import Logo from 'elements/logo/logo';
 
 interface LoginPageProps {
@@ -47,13 +47,13 @@ function LoginPage({ onAuth }: LoginPageProps): JSX.Element {
   const [login, setLogin] = useState('');
   const [password, setPassword] = useState('');
 
-  // const onLoginCallback = useCallback((value) => {
-  //   setLogin(value);
-  // }, []);
+  const onLoginCallback = useCallback((evt) => {
+    setLogin(evt.target.value);
+  }, []);
 
-  // const onPasswordCallback = useCallback((value) => {
-  //   setPassword(value);
-  // }, []);
+  const onPasswordCallback = useCallback((evt) => {
+    setPassword(evt.target.value);
+  }, []);
 
   function handleSubmit(evt: SyntheticEvent) {
     evt.preventDefault();
@@ -118,7 +118,7 @@ function LoginPage({ onAuth }: LoginPageProps): JSX.Element {
                   name="email"
                   placeholder="Email"
                   required
-                  onChange={({ target }) => setLogin(target.value)}
+                  onChange={onLoginCallback}
                 />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
@@ -130,7 +130,7 @@ function LoginPage({ onAuth }: LoginPageProps): JSX.Element {
                   name="password"
                   placeholder="Password"
                   required
-                  onChange={({ target }) => setPassword(target.value)}
+                  onChange={onPasswordCallback}
                 />
               </div>
               <button

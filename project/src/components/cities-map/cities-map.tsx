@@ -9,6 +9,7 @@ import {
   getOffersByCity,
   getNearbyOffers,
 } from 'store/app-data/selectors';
+import { getPointsForMainPage, getPointsForCardPage } from 'utils/point-utils';
 
 interface CitiesMapProps {
   isHovered: boolean;
@@ -26,17 +27,11 @@ function CitiesMap({
   const offersByCity = useSelector(getOffersByCity);
   const nearbyOffers = useSelector(getNearbyOffers);
 
-  const sortedOffersByCity = offersByCity?.map(({ location }) => location);
+  const pagePoints = getPointsForMainPage(offersByCity);
 
-  const sortedNearbyOffers = nearbyOffers?.map(({ location }) => location);
+  const cardPoints = getPointsForCardPage(nearbyOffers, selectedPoint);
 
-  const nearbyOffersPoints = !selectedPoint
-    ? sortedNearbyOffers
-    : [...sortedNearbyOffers, selectedPoint];
-
-  const points = useOffersByCityPoints
-    ? sortedOffersByCity
-    : nearbyOffersPoints;
+  const points = useOffersByCityPoints ? pagePoints : cardPoints;
 
   useMap(mapRef, city, points, selectedPoint, isHovered);
 

@@ -120,3 +120,17 @@ export const redirectToRouteAction = createAction(
     payload,
   }),
 );
+
+export const updateOfferAction = createAction(
+  ActionType.UpdateOffer,
+  (payload: OfferProps) => ({
+    payload,
+  }),
+);
+
+export const getListOfFavoriteCardsAction = createAction(
+  ActionType.GetListOfFavoriteCards,
+  (payload: OffersProps) => ({
+    payload,
+  }),
+);

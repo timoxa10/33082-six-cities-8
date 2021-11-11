@@ -1,5 +1,4 @@
 /* eslint-disable comma-dangle */
-import camelСaseKeys from 'camelcase-keys';
 import { ThunkActionResult } from 'types/action';
 import type { OfferProps, OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
@@ -20,15 +19,18 @@ import {
   setAvatarUrlAction,
   getCurrentCityAction,
   getSelectedPointAction,
+  updateOfferAction,
+  getListOfFavoriteCardsAction,
 } from 'store/action';
-import { filterOffersList } from 'utils/utils';
+import { filterOffersList } from 'utils/sorting-utils';
 import { INITIAL_CITY } from 'config/InitialCity';
 import { LOCATIONS_LIST } from 'config/LocationsList';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
 import { INITIAL_LOGIN } from 'config/InitialLogin';
 import { INITIAL_AVATAR_URL } from 'config/InitialAvatarUrl';
-import { filterReviewsList } from 'utils/utils';
+import { filterReviewsList } from 'utils/sorting-utils';
+import convertCamelСaseKeys from 'utils/convertCamelСaseKeys';
 import {
   saveToken,
   dropToken,
@@ -44,9 +46,7 @@ function fetchOffersList(): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
     try {
       const { data } = await api.get<OffersProps>('/hotels');
-      const offers = camelСaseKeys(data, {
-        deep: true,
-      });
+      const offers = convertCamelСaseKeys(data);
 
       dispatch(getListOfOffersAction(offers));
       dispatch(
@@ -66,13 +66,7 @@ function fetchOfferData(id: number): ThunkActionResult {
     try {
       const { data } = await api.get<ReviewsProps>(`/comments/${id}`);
       dispatch(
-        getListOfReviewsAction(
-          filterReviewsList(
-            camelСaseKeys(data, {
-              deep: true,
-            }),
-          ),
-        ),
+        getListOfReviewsAction(filterReviewsList(convertCamelСaseKeys(data))),
       );
       dispatch(setIsLoadingAction(false));
       dispatch(setIsErrorAction(false));
@@ -82,13 +76,7 @@ function fetchOfferData(id: number): ThunkActionResult {
 
     try {
       const { data } = await api.get<OfferProps>(`/hotels/${id}`);
-      dispatch(
-        getCurrentOfferByIdDataAction(
-          camelСaseKeys(data, {
-            deep: true,
-          }),
-        ),
-      );
+      dispatch(getCurrentOfferByIdDataAction(convertCamelСaseKeys(data)));
 
       dispatch(getCurrentCityAction(data.city));
       dispatch(getSelectedPointAction(data.location));
@@ -100,13 +88,7 @@ function fetchOfferData(id: number): ThunkActionResult {
 
     try {
       const { data } = await api.get<OffersProps>(`/hotels/${id}/nearby`);
-      dispatch(
-        getNearbyOffersAction(
-          camelСaseKeys(data, {
-            deep: true,
-          }),
-        ),
-      );
+      dispatch(getNearbyOffersAction(convertCamelСaseKeys(data)));
       dispatch(setIsLoadingAction(false));
       dispatch(setIsErrorAction(false));
     } catch (error) {
@@ -132,9 +114,7 @@ function loginAction({ login: email, password }: AuthData): ThunkActionResult {
       email,
       password,
     });
-    const result = camelСaseKeys(data, {
-      deep: true,
-    });
+    const result = convertCamelСaseKeys(data);
 
     saveToken(result.token);
     saveAvatarUrl(result.avatarUrl);
@@ -171,13 +151,29 @@ function addComment(
         rating,
         comment,
       });
-      dispatch(
-        getListOfReviewsAction(
-          camelСaseKeys(data, {
-            deep: true,
-          }),
-        ),
-      );
+      dispatch(getListOfReviewsAction(convertCamelСaseKeys(data)));
+    } catch (error) {
+      dispatch(setIsErrorAction(true));
+    }
+  };
+}
+
+function addToFavourites(offerId: number, status: boolean): ThunkActionResult {
+  return async (dispatch, _, api): Promise<void> => {
+    const { data } = await api.post<OfferProps>(
+      `${AppRoute.FavoriteAPI}/${offerId}/${Number(!status)}`,
+    );
+    dispatch(updateOfferAction(convertCamelСaseKeys(data)));
+  };
+}
+
+function fetchFavoriteList(): ThunkActionResult {
+  return async (dispatch, _, api): Promise<void> => {
+    try {
+      const { data } = await api.get<OffersProps>(`${AppRoute.FavoriteAPI}`);
+      dispatch(getListOfFavoriteCardsAction(convertCamelСaseKeys(data)));
+      dispatch(setIsLoadingAction(false));
+      dispatch(setIsErrorAction(false));
     } catch (error) {
       dispatch(setIsErrorAction(true));
     }
@@ -191,4 +187,6 @@ export {
   loginAction,
   logoutAction,
   addComment,
+  addToFavourites,
+  fetchFavoriteList,
 };

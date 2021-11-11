@@ -13,6 +13,8 @@ import {
   getListOfReviewsAction,
   getCurrentOfferByIdDataAction,
   getNearbyOffersAction,
+  updateOfferAction,
+  getListOfFavoriteCardsAction,
 } from 'store/action';
 import { initialStateAppData } from 'store/app-data/initial-state';
 
@@ -53,6 +55,27 @@ const appData = createReducer(initialStateAppData, (builder) => {
     })
     .addCase(getNearbyOffersAction, (state, action) => {
       state.nearbyOffers = action.payload;
+    })
+    .addCase(updateOfferAction, (state, action) => {
+      const offerToUpdate = state.offers.find(
+        (offer) => offer.id === action.payload.id,
+      );
+
+      const offerIndex = state.offers.findIndex(
+        (offer) => offer.id === action.payload.id,
+      );
+
+      if (offerToUpdate) {
+        offerToUpdate.isFavorite = action.payload.isFavorite;
+        state.offers = [
+          ...state.offers.slice(0, offerIndex),
+          offerToUpdate,
+          ...state.offers.slice(offerIndex + 1),
+        ];
+      }
+    })
+    .addCase(getListOfFavoriteCardsAction, (state, action) => {
+      state.favoriteCardsList = action.payload;
     });
 });
 

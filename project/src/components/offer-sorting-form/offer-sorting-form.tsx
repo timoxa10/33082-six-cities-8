@@ -5,7 +5,7 @@ import { SortTypes } from 'config/SortTypes';
 import type { OffersProps } from 'types/card-props';
 import { getActiveSortTypeAction, updateOffersListAction } from 'store/action';
 import { getActiveSortType, getOffersByCity } from 'store/app-data/selectors';
-import { sortOffersByType } from 'utils/utils';
+import { sortOffersByType } from 'utils/sorting-utils';
 
 function OfferSortingForm(): JSX.Element {
   const activeSortType = useSelector(getActiveSortType);

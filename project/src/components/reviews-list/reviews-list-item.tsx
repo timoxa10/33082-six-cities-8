@@ -1,5 +1,6 @@
 import type { ReviewProps } from 'types/review-props';
 import convertDateToString from 'utils/convertDateToString';
+import transformRatingToPersent from 'utils/transformRatingToPersent';
 
 type ReviewsItemProps = {
   review: ReviewProps;
@@ -27,7 +28,7 @@ function ReviewsListItem({ review }: ReviewsItemProps): JSX.Element {
       <div className="reviews__info">
         <div className="reviews__rating rating">
           <div className="reviews__stars rating__stars">
-            <span style={{ width: '80%' }} />
+            <span style={{ width: transformRatingToPersent(review?.rating) }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>

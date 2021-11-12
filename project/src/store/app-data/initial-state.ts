@@ -8,8 +8,6 @@ export const initialStateAppData: AppData = {
   offersByCity: [],
   activeSortType: DEFAULT_SORT_TYPE,
   locationsList: [],
-  isLoading: true,
-  isError: false,
   currentOfferId: 0,
   selectedPoint: null,
   reviewsList: [],

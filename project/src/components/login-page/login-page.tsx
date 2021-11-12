@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 import { Redirect } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAuthorizationStatus } from 'store/app-auth/selectors';
@@ -11,13 +10,10 @@ import { AppRoute } from 'config/AppRoute';
 import type { OffersProps } from 'types/card-props';
 import type { CityCoordinates } from 'types/city-coordinates';
 import { UserStatus } from 'config/UserStatus';
-import {
-  updateOffersListAction,
-  redirectToRouteAction,
-  getCurrentCityAction,
-} from 'store/action';
+import { updateOffersListAction, redirectToRouteAction } from 'store/action';
+import { getCurrentCityAction } from 'store/action';
 import { filterOffersList } from 'utils/sorting-utils';
-import Logo from 'elements/logo/logo';
+import Logo from 'components/logo/logo';
 
 interface LoginPageProps {
   onAuth: () => void;

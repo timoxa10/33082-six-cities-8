@@ -1,15 +1,11 @@
-/* eslint-disable comma-dangle */
-import { useSelector, useDispatch } from 'react-redux';
-import { Link } from 'react-router-dom';
-import {
-  getAuthorizationStatus,
-  getLogin,
-  getAvatarUrl,
-} from 'store/app-auth/selectors';
-import { logoutAction } from 'store/api-actions';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
-import Logo from 'elements/logo/logo';
+import Logo from 'components/logo/logo';
+import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
+import { logoutAction } from 'store/api-actions';
+import { getAuthorizationStatus, getAvatarUrl } from 'store/app-auth/selectors';
+import { getLogin } from 'store/app-auth/selectors';
 
 function Header(): JSX.Element {
   const authorizationStatus = useSelector(getAuthorizationStatus);

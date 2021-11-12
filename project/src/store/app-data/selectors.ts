@@ -20,12 +20,6 @@ export const getSelectedPoint = (state: State): LocationInfo | null =>
 export const getNearbyOffers = (state: State): OffersProps =>
   state[NameSpace.data].nearbyOffers;
 
-export const getIsLoading = (state: State): boolean =>
-  state[NameSpace.data].isLoading;
-
-export const getIsError = (state: State): boolean =>
-  state[NameSpace.data].isError;
-
 export const getCurrentOfferId = (state: State): number =>
   state[NameSpace.data].currentOfferId;
 

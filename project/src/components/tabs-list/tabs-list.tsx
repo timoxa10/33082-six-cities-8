@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
 import classNames from 'classnames';
@@ -7,11 +6,8 @@ import { AppRoute } from 'config/AppRoute';
 import type { CityCoordinates } from 'types/city-coordinates';
 import type { OffersProps } from 'types/card-props';
 import { filterOffersList } from 'utils/sorting-utils';
-import {
-  getCurrentCityAction,
-  updateOffersListAction,
-  getActiveSortTypeAction,
-} from 'store/action';
+import { getCurrentCityAction, updateOffersListAction } from 'store/action';
+import { getActiveSortTypeAction } from 'store/action';
 import { DEFAULT_SORT_TYPE } from 'config/DefaultSortType';
 
 function TabsList(): JSX.Element {

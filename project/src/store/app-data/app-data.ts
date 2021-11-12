@@ -6,8 +6,6 @@ import {
   updateOffersListAction,
   getListOfCitiesAction,
   getActiveSortTypeAction,
-  setIsLoadingAction,
-  setIsErrorAction,
   getCurrentOfferIdAction,
   getSelectedPointAction,
   getListOfReviewsAction,
@@ -34,12 +32,6 @@ const appData = createReducer(initialStateAppData, (builder) => {
     })
     .addCase(getActiveSortTypeAction, (state, action) => {
       state.activeSortType = action.payload;
-    })
-    .addCase(setIsLoadingAction, (state, action) => {
-      state.isLoading = action.payload;
-    })
-    .addCase(setIsErrorAction, (state, action) => {
-      state.isError = action.payload;
     })
     .addCase(getCurrentOfferIdAction, (state, action) => {
       state.currentOfferId = action.payload;

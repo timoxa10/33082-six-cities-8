@@ -1,11 +1,6 @@
-/* eslint-disable comma-dangle */
 import { createReducer } from '@reduxjs/toolkit';
-import {
-  requireAuthorizationAction,
-  requireLogoutAction,
-  setLoginAction,
-  setAvatarUrlAction,
-} from 'store/action';
+import { requireAuthorizationAction, requireLogoutAction } from 'store/action';
+import { setLoginAction, setAvatarUrlAction } from 'store/action';
 import { initialStateAppAuth } from 'store/app-auth/initial-state';
 import { UserStatus } from 'config/UserStatus';
 

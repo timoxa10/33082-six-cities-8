@@ -14,6 +14,7 @@ interface BookmarkProps {
   height: number;
   isFavorite: boolean;
   id: number;
+  shouldCallListUpdate?: boolean;
 }
 
 function Bookmark({
@@ -22,6 +23,7 @@ function Bookmark({
   height,
   isFavorite,
   id,
+  shouldCallListUpdate = false,
 }: BookmarkProps): JSX.Element {
   const authorizationStatus = useSelector(getAuthorizationStatus);
   const isAuth = authorizationStatus === UserStatus.Auth;
@@ -44,7 +46,9 @@ function Bookmark({
 
   const onFavoriteAction = (currentId: number) => {
     dispatch(addToFavourites(Number(currentId), isActive));
-    dispatch(fetchFavoriteList());
+    if (shouldCallListUpdate) {
+      dispatch(fetchFavoriteList());
+    }
   };
 
   const onNoAuthRedirect = () => {

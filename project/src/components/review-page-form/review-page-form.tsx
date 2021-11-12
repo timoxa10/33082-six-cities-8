@@ -1,12 +1,16 @@
+import classNames from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
-import { useState, ChangeEvent, SyntheticEvent } from 'react';
+import { useState, useEffect, ChangeEvent, SyntheticEvent } from 'react';
 import { getCurrentOfferId } from 'store/app-data/selectors';
+import { getSendedCommentStatus } from 'store/app-data-status/selectors';
+import { DataStatus } from 'config/DataStatus';
 import type { CommentData } from 'types/comment-data';
 import { addComment } from 'store/api-actions';
-import Input from 'elements/input/input';
+import Input from 'components/input/input';
 
-function OfferPageForm(): JSX.Element {
+function ReviewPageForm(): JSX.Element {
   const currentOfferId = useSelector(getCurrentOfferId);
+  const loadingStatus = useSelector(getSendedCommentStatus);
 
   const dispatch = useDispatch();
 
@@ -29,6 +33,13 @@ function OfferPageForm(): JSX.Element {
     setComment('');
   }
 
+  useEffect(() => {
+    if (loadingStatus === DataStatus.NotSended) {
+      setRating(0);
+      setComment('');
+    }
+  }, [loadingStatus]);
+
   return (
     <form
       className="reviews__form form"
@@ -39,7 +50,11 @@ function OfferPageForm(): JSX.Element {
       <label className="reviews__label form__label" htmlFor="review">
         Your review
       </label>
-      <div className="reviews__rating-form form__rating">
+      <div
+        className={classNames('reviews__rating-form form__rating', {
+          'page-form-disable ': loadingStatus === DataStatus.IsSending,
+        })}
+      >
         {[5, 4, 3, 2, 1].map((starCount) => (
           <Input
             key={`rating-star-${starCount}`}
@@ -56,12 +71,18 @@ function OfferPageForm(): JSX.Element {
         name="review"
         placeholder="Tell how was your stay, what you like and what can be improved"
         value={comment}
+        readOnly={loadingStatus === DataStatus.IsSending}
         onChange={({ target }: ChangeEvent<HTMLTextAreaElement>) => {
           const text = target.value;
           setComment(text);
           setIsDisabled(rating === 0 || text.length < 50 || text.length > 300);
         }}
       />
+      {loadingStatus === DataStatus.NotLoaded && (
+        <p className="reviews__text">
+          Failed to send message. Please, try again.
+        </p>
+      )}
       <div className="reviews__button-wrapper">
         <p className="reviews__help">
           To submit review please make sure to set{' '}
@@ -81,4 +102,4 @@ function OfferPageForm(): JSX.Element {
   );
 }
 
-export default OfferPageForm;
+export default ReviewPageForm;

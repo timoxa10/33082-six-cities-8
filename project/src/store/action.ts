@@ -6,6 +6,7 @@ import type { LocationInfo } from 'types/location-info';
 import type { ReviewsProps } from 'types/review-props';
 import { UserStatus } from 'config/UserStatus';
 import { AppRoute } from 'config/AppRoute';
+import { DataStatus } from 'config/DataStatus';
 
 export const getCurrentCityAction = createAction(
   ActionType.GetCurrentCity,
@@ -38,20 +39,6 @@ export const getListOfCitiesAction = createAction(
 export const getActiveSortTypeAction = createAction(
   ActionType.GetActiveSortType,
   (payload: string) => ({
-    payload,
-  }),
-);
-
-export const setIsLoadingAction = createAction(
-  ActionType.SetIsLoading,
-  (payload: boolean) => ({
-    payload,
-  }),
-);
-
-export const setIsErrorAction = createAction(
-  ActionType.SetIsError,
-  (payload: boolean) => ({
     payload,
   }),
 );
@@ -131,6 +118,34 @@ export const updateOfferAction = createAction(
 export const getListOfFavoriteCardsAction = createAction(
   ActionType.GetListOfFavoriteCards,
   (payload: OffersProps) => ({
+    payload,
+  }),
+);
+
+export const getOffersStatusAction = createAction(
+  ActionType.GetOffersStatus,
+  (payload: DataStatus) => ({
+    payload,
+  }),
+);
+
+export const getOfferPageStatusAction = createAction(
+  ActionType.GetOfferPageStatus,
+  (payload: DataStatus) => ({
+    payload,
+  }),
+);
+
+export const getFavoritesOffersStatusAction = createAction(
+  ActionType.GetFavoritesOffersStatus,
+  (payload: DataStatus) => ({
+    payload,
+  }),
+);
+
+export const getGetSendedCommentStatusAction = createAction(
+  ActionType.GetSendedCommentStatus,
+  (payload: DataStatus) => ({
     payload,
   }),
 );

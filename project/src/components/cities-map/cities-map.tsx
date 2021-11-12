@@ -1,14 +1,9 @@
-/* eslint-disable comma-dangle */
 import { useRef } from 'react';
 import { useSelector } from 'react-redux';
 import 'leaflet/dist/leaflet.css';
 import useMap from 'hooks/useMap';
-import {
-  getCity,
-  getSelectedPoint,
-  getOffersByCity,
-  getNearbyOffers,
-} from 'store/app-data/selectors';
+import { getCity, getSelectedPoint } from 'store/app-data/selectors';
+import { getOffersByCity, getNearbyOffers } from 'store/app-data/selectors';
 import { getPointsForMainPage, getPointsForCardPage } from 'utils/point-utils';
 
 interface CitiesMapProps {

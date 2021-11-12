@@ -3,17 +3,17 @@ import { debounce } from 'throttle-debounce';
 import { MouseEvent } from 'react';
 import type { OfferProps } from 'types/card-props';
 import { Link } from 'react-router-dom';
+import Bookmark from 'components/bookmark/bookmark';
 import type { LocationInfo } from 'types/location-info';
 import capitalizeFirstLetter from 'utils/capitalizeFirstLetter';
 import transformRatingToPersent from 'utils/transformRatingToPersent';
-import Bookmark from 'elements/bookmark/bookmark';
 
 type MainCardProps = {
+  className?: string;
   card: OfferProps;
   onListItemHover?: (location: LocationInfo) => void;
   onListItemLeave?: () => void;
-  className?: string;
-  favoritesClassName?: boolean;
+  isFavoriteCard?: boolean;
   width: number;
   height: number;
 };
@@ -23,7 +23,7 @@ function Card({
   onListItemHover,
   onListItemLeave,
   className,
-  favoritesClassName = false,
+  isFavoriteCard = false,
   width,
   height,
 }: MainCardProps): JSX.Element {
@@ -52,8 +52,8 @@ function Card({
       )}
       <div
         className={classNames('place-card__image-wrapper', {
-          'cities__image-wrapper': !favoritesClassName,
-          'favorites__image-wrapper': favoritesClassName,
+          'cities__image-wrapper': !isFavoriteCard,
+          'favorites__image-wrapper': isFavoriteCard,
         })}
       >
         <Link to={`/offer/${card?.id}/`}>
@@ -68,7 +68,7 @@ function Card({
       </div>
       <div
         className={classNames('place-card__info', {
-          'favorites__card-info': favoritesClassName,
+          'favorites__card-info': isFavoriteCard,
         })}
       >
         <div className="place-card__price-wrapper">
@@ -83,6 +83,7 @@ function Card({
             height={19}
             isFavorite={card?.isFavorite}
             id={card.id}
+            shouldCallListUpdate={isFavoriteCard}
           />
         </div>
         <div className="place-card__rating rating">

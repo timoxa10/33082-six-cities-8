@@ -4,11 +4,10 @@ import type { OfferProps, OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
 import type { AuthData } from 'types/auth-data';
 import type { CommentData } from 'types/comment-data';
+import { DataStatus } from 'config/DataStatus';
 import {
   getListOfOffersAction,
   updateOffersListAction,
-  setIsLoadingAction,
-  setIsErrorAction,
   getListOfCitiesAction,
   getListOfReviewsAction,
   getCurrentOfferByIdDataAction,
@@ -21,6 +20,10 @@ import {
   getSelectedPointAction,
   updateOfferAction,
   getListOfFavoriteCardsAction,
+  getOffersStatusAction,
+  getOfferPageStatusAction,
+  getFavoritesOffersStatusAction,
+  getGetSendedCommentStatusAction,
 } from 'store/action';
 import { filterOffersList } from 'utils/sorting-utils';
 import { INITIAL_CITY } from 'config/InitialCity';
@@ -44,8 +47,11 @@ import {
 
 function fetchOffersList(): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
+    dispatch(getOffersStatusAction(DataStatus.IsLoading));
+
     try {
       const { data } = await api.get<OffersProps>('/hotels');
+
       const offers = convertCamelСaseKeys(data);
 
       dispatch(getListOfOffersAction(offers));
@@ -53,46 +59,44 @@ function fetchOffersList(): ThunkActionResult {
         updateOffersListAction(filterOffersList(INITIAL_CITY.name, offers)),
       );
       dispatch(getListOfCitiesAction(LOCATIONS_LIST));
-      dispatch(setIsLoadingAction(false));
-      dispatch(setIsErrorAction(false));
+
+      if (data.length === 0) {
+        dispatch(getOffersStatusAction(DataStatus.IsEmpty));
+      }
+
+      dispatch(getOffersStatusAction(DataStatus.IsLoaded));
     } catch (error) {
-      dispatch(setIsErrorAction(true));
+      dispatch(getOffersStatusAction(DataStatus.NotLoaded));
     }
   };
 }
 
 function fetchOfferData(id: number): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
+    dispatch(getOfferPageStatusAction(DataStatus.IsLoading));
+
     try {
-      const { data } = await api.get<ReviewsProps>(`/comments/${id}`);
+      const offer = await api.get<OfferProps>(`/hotels/${id}`);
+
+      const comments = await api.get<ReviewsProps>(`/comments/${id}`);
+
+      const offersNearby = await api.get<OffersProps>(`/hotels/${id}/nearby`);
+
+      dispatch(getCurrentOfferByIdDataAction(convertCamelСaseKeys(offer.data)));
+      dispatch(getCurrentCityAction(offer.data.city));
+      dispatch(getSelectedPointAction(offer.data.location));
+
       dispatch(
-        getListOfReviewsAction(filterReviewsList(convertCamelСaseKeys(data))),
+        getListOfReviewsAction(
+          filterReviewsList(convertCamelСaseKeys(comments.data)),
+        ),
       );
-      dispatch(setIsLoadingAction(false));
-      dispatch(setIsErrorAction(false));
-    } catch (error) {
-      dispatch(setIsErrorAction(true));
-    }
 
-    try {
-      const { data } = await api.get<OfferProps>(`/hotels/${id}`);
-      dispatch(getCurrentOfferByIdDataAction(convertCamelСaseKeys(data)));
+      dispatch(getNearbyOffersAction(convertCamelСaseKeys(offersNearby.data)));
 
-      dispatch(getCurrentCityAction(data.city));
-      dispatch(getSelectedPointAction(data.location));
-      dispatch(setIsLoadingAction(false));
-      dispatch(setIsErrorAction(false));
+      dispatch(getOfferPageStatusAction(DataStatus.IsLoaded));
     } catch (error) {
-      dispatch(setIsErrorAction(true));
-    }
-
-    try {
-      const { data } = await api.get<OffersProps>(`/hotels/${id}/nearby`);
-      dispatch(getNearbyOffersAction(convertCamelСaseKeys(data)));
-      dispatch(setIsLoadingAction(false));
-      dispatch(setIsErrorAction(false));
-    } catch (error) {
-      dispatch(setIsErrorAction(true));
+      dispatch(getOfferPageStatusAction(DataStatus.NotLoaded));
     }
   };
 }
@@ -114,6 +118,7 @@ function loginAction({ login: email, password }: AuthData): ThunkActionResult {
       email,
       password,
     });
+
     const result = convertCamelСaseKeys(data);
 
     saveToken(result.token);
@@ -146,14 +151,20 @@ function addComment(
   id: number,
 ): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
+    dispatch(getGetSendedCommentStatusAction(DataStatus.IsSending));
+
     try {
       const { data } = await api.post(`${AppRoute.Сomments}${id}`, {
         rating,
         comment,
       });
       dispatch(getListOfReviewsAction(convertCamelСaseKeys(data)));
+
+      if (data) {
+        dispatch(getGetSendedCommentStatusAction(DataStatus.IsSended));
+      }
     } catch (error) {
-      dispatch(setIsErrorAction(true));
+      dispatch(getGetSendedCommentStatusAction(DataStatus.NotLoaded));
     }
   };
 }
@@ -163,19 +174,26 @@ function addToFavourites(offerId: number, status: boolean): ThunkActionResult {
     const { data } = await api.post<OfferProps>(
       `${AppRoute.FavoriteAPI}/${offerId}/${Number(!status)}`,
     );
+
     dispatch(updateOfferAction(convertCamelСaseKeys(data)));
   };
 }
 
 function fetchFavoriteList(): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
+    dispatch(getFavoritesOffersStatusAction(DataStatus.IsLoading));
+
     try {
       const { data } = await api.get<OffersProps>(`${AppRoute.FavoriteAPI}`);
       dispatch(getListOfFavoriteCardsAction(convertCamelСaseKeys(data)));
-      dispatch(setIsLoadingAction(false));
-      dispatch(setIsErrorAction(false));
+
+      dispatch(getFavoritesOffersStatusAction(DataStatus.IsLoaded));
+
+      if (data.length === 0) {
+        dispatch(getFavoritesOffersStatusAction(DataStatus.IsEmpty));
+      }
     } catch (error) {
-      dispatch(setIsErrorAction(true));
+      dispatch(getFavoritesOffersStatusAction(DataStatus.NotLoaded));
     }
   };
 }

@@ -1,16 +1,13 @@
-/* eslint-disable comma-dangle */
 import { useSelector, useDispatch } from 'react-redux';
 import { useEffect, useCallback } from 'react';
-import {
-  getCurrentOfferId,
-  getReviewsList,
-  getOfferByIdData,
-  getNearbyOffers,
-} from 'store/app-data/selectors';
+import { getCurrentOfferId, getReviewsList } from 'store/app-data/selectors';
+import { getOfferByIdData } from 'store/app-data/selectors';
+import { getNearbyOffers } from 'store/app-data/selectors';
+import { getOfferPageStatus } from 'store/app-data-status/selectors';
 import { getAuthorizationStatus } from 'store/app-auth/selectors';
 import { fetchOfferData } from 'store/api-actions';
 import Layout from 'components/layout/layout';
-import CardOffer from 'elements/card-offer/card-offer';
+import CardOffer from 'components/card-offer/card-offer';
 
 function CardOfferContainer(): JSX.Element {
   const currentOfferId = useSelector(getCurrentOfferId);
@@ -18,6 +15,7 @@ function CardOfferContainer(): JSX.Element {
   const offerByIdData = useSelector(getOfferByIdData);
   const nearbyOffers = useSelector(getNearbyOffers);
   const authorizationStatus = useSelector(getAuthorizationStatus);
+  const offerPageStatus = useSelector(getOfferPageStatus);
 
   const dispatch = useDispatch();
 
@@ -39,6 +37,7 @@ function CardOfferContainer(): JSX.Element {
         offerByIdData={offerByIdData}
         nearbyOffers={nearbyOffers}
         authorizationStatus={authorizationStatus}
+        loadingStatus={offerPageStatus}
       />
     </Layout>
   );

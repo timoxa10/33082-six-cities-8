@@ -9,8 +9,9 @@ import { requireAuthorizationAction } from 'store/action';
 import { UserStatus } from 'config/UserStatus';
 import { redirect } from 'store/redirect';
 import App from './components/app/app';
-import 'elements/spinner/spinner.css';
+import 'components/spinner/spinner.css';
 import 'components/offer-sorting-form/offer-sorting-form.css';
+import 'components/review-page-form/page-form.css';
 
 const api = createAPI(() =>
   store.dispatch(requireAuthorizationAction(UserStatus.NoAuth)),

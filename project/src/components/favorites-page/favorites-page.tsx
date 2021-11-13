@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import { useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { DataStatus } from 'config/DataStatus';
@@ -29,8 +28,6 @@ function FavoritesPage(): JSX.Element {
   const uniqueCities = [
     ...new Set(favoriteCardsList?.map((card) => card.city.name)),
   ];
-
-  console.log(loadingStatus);
 
   switch (loadingStatus) {
     case DataStatus.IsLoading:

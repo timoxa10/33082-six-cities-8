@@ -1,17 +1,34 @@
-import { ReactNode } from 'react';
+import classNames from 'classnames';
+import Logo from 'components/logo/logo';
 import SvgSpriteIcons from 'components/svg-sprite-icons/svg-sprite-icons';
+import Header from 'components/header/header';
 
 interface LayoutProps {
-  children: ReactNode;
+  children: JSX.Element | JSX.Element[];
+  className?: string;
+  shouldRenderFooter?: boolean;
+  shouldRenderHeader?: boolean;
 }
 
-function Layout({ children }: LayoutProps): JSX.Element {
+function Layout({
+  children,
+  className = 'page',
+  shouldRenderFooter = false,
+  shouldRenderHeader = true,
+}: LayoutProps): JSX.Element {
   return (
     <>
-      <SvgSpriteIcons />
-      {children}
+      <div className={classNames([className])}>
+        <SvgSpriteIcons />
+        {shouldRenderHeader && <Header />}
+        {children}
+      </div>
+      {shouldRenderFooter && (
+        <footer className="footer container">
+          <Logo />
+        </footer>
+      )}
     </>
   );
 }
-
 export default Layout;

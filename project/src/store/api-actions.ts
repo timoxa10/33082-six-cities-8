@@ -1,108 +1,204 @@
-/* eslint-disable no-console */
 /* eslint-disable comma-dangle */
-import camelСaseKeys from 'camelcase-keys';
 import { ThunkActionResult } from 'types/action';
 import type { OfferProps, OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
 import type { AuthData } from 'types/auth-data';
+import type { CommentData } from 'types/comment-data';
+import { DataStatus } from 'config/DataStatus';
 import {
   getListOfOffersAction,
   updateOffersListAction,
-  setIsLoadingAction,
   getListOfCitiesAction,
   getListOfReviewsAction,
   getCurrentOfferByIdDataAction,
   getNearbyOffersAction,
   requireAuthorizationAction,
   requireLogoutAction,
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  redirectToRouteAction,
   setLoginAction,
+  setAvatarUrlAction,
+  getCurrentCityAction,
+  getSelectedPointAction,
+  updateOfferAction,
+  getListOfFavoriteCardsAction,
+  getOffersStatusAction,
+  getOfferPageStatusAction,
+  getFavoritesOffersStatusAction,
+  getGetSendedCommentStatusAction,
 } from 'store/action';
-import { filterOffersList } from 'utils/utils';
+import { filterOffersList } from 'utils/sorting-utils';
 import { INITIAL_CITY } from 'config/InitialCity';
 import { LOCATIONS_LIST } from 'config/LocationsList';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
 import { INITIAL_LOGIN } from 'config/InitialLogin';
-import { saveToken, dropToken, Token } from 'services/token';
+import { INITIAL_AVATAR_URL } from 'config/InitialAvatarUrl';
+import { filterReviewsList } from 'utils/sorting-utils';
+import convertCamelСaseKeys from 'utils/convertCamelСaseKeys';
+import {
+  saveToken,
+  dropToken,
+  saveLoginName,
+  getLoginName,
+  dropLoginName,
+  saveAvatarUrl,
+  getAvatarUrl,
+  dropAvatarUrl,
+} from 'services/token';
 
 function fetchOffersList(): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
-    const { data } = await api.get<OffersProps>('/hotels');
-    const offers = camelСaseKeys(data, {
-      deep: true,
-    });
+    dispatch(getOffersStatusAction(DataStatus.IsLoading));
 
-    dispatch(getListOfOffersAction(offers));
-    dispatch(
-      updateOffersListAction(filterOffersList(INITIAL_CITY.name, offers)),
-    );
-    dispatch(getListOfCitiesAction(LOCATIONS_LIST));
-    dispatch(setIsLoadingAction(false));
+    try {
+      const { data } = await api.get<OffersProps>('/hotels');
+
+      const offers = convertCamelСaseKeys(data);
+
+      dispatch(getListOfOffersAction(offers));
+      dispatch(
+        updateOffersListAction(filterOffersList(INITIAL_CITY.name, offers)),
+      );
+      dispatch(getListOfCitiesAction(LOCATIONS_LIST));
+
+      if (data.length === 0) {
+        dispatch(getOffersStatusAction(DataStatus.IsEmpty));
+      }
+
+      dispatch(getOffersStatusAction(DataStatus.IsLoaded));
+    } catch (error) {
+      dispatch(getOffersStatusAction(DataStatus.NotLoaded));
+    }
   };
 }
 
 function fetchOfferData(id: number): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
-    await api.get<ReviewsProps>(`/comments/${id}`).then(({ data }) => {
+    dispatch(getOfferPageStatusAction(DataStatus.IsLoading));
+
+    try {
+      const offer = await api.get<OfferProps>(`/hotels/${id}`);
+
+      const comments = await api.get<ReviewsProps>(`/comments/${id}`);
+
+      const offersNearby = await api.get<OffersProps>(`/hotels/${id}/nearby`);
+
+      dispatch(getCurrentOfferByIdDataAction(convertCamelСaseKeys(offer.data)));
+      dispatch(getCurrentCityAction(offer.data.city));
+      dispatch(getSelectedPointAction(offer.data.location));
+
       dispatch(
         getListOfReviewsAction(
-          camelСaseKeys(data, {
-            deep: true,
-          }),
+          filterReviewsList(convertCamelСaseKeys(comments.data)),
         ),
       );
-    });
 
-    await api.get<OfferProps>(`/hotels/${id}`).then(({ data }) => {
-      dispatch(
-        getCurrentOfferByIdDataAction(
-          camelСaseKeys(data, {
-            deep: true,
-          }),
-        ),
-      );
-    });
+      dispatch(getNearbyOffersAction(convertCamelСaseKeys(offersNearby.data)));
 
-    await api.get<OffersProps>(`/hotels/${id}/nearby`).then(({ data }) => {
-      dispatch(
-        getNearbyOffersAction(
-          camelСaseKeys(data, {
-            deep: true,
-          }),
-        ),
-      );
-    });
+      dispatch(getOfferPageStatusAction(DataStatus.IsLoaded));
+    } catch (error) {
+      dispatch(getOfferPageStatusAction(DataStatus.NotLoaded));
+    }
   };
 }
 
 function checkAuthAction(): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
-    await api.get(AppRoute.Login).then(() => {
+    const { data } = await api.get(AppRoute.Login);
+    if (data) {
       dispatch(requireAuthorizationAction(UserStatus.Auth));
-    });
+      dispatch(setLoginAction(getLoginName()));
+      dispatch(setAvatarUrlAction(getAvatarUrl()));
+    }
   };
 }
 
 function loginAction({ login: email, password }: AuthData): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
-    console.log(email, password);
-    const {
-      data: { token },
-    } = await api.post<{ token: Token }>(AppRoute.Login, { email, password });
-    saveToken(token);
-    dispatch(requireAuthorizationAction(UserStatus.Auth));
-    dispatch(setLoginAction(email));
+    try {
+      const { data } = await api.post(AppRoute.Login, {
+        email,
+        password,
+      });
+
+      const result = convertCamelСaseKeys(data);
+
+      saveToken(result.token);
+      saveAvatarUrl(result.avatarUrl);
+      saveLoginName(email);
+
+      dispatch(setLoginAction(email));
+      dispatch(setAvatarUrlAction(result.avatarUrl));
+
+      dispatch(requireAuthorizationAction(UserStatus.Auth));
+    } catch (error) {
+      dispatch(requireAuthorizationAction(UserStatus.Error));
+    }
   };
 }
 
 function logoutAction(): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
     api.delete(AppRoute.Logout);
+
     dropToken();
+    dropLoginName();
+    dropAvatarUrl();
+
     dispatch(requireLogoutAction());
     dispatch(setLoginAction(INITIAL_LOGIN));
+    dispatch(setAvatarUrlAction(INITIAL_AVATAR_URL));
+  };
+}
+
+function addComment(
+  { rating, comment }: CommentData,
+  id: number,
+): ThunkActionResult {
+  return async (dispatch, _, api): Promise<void> => {
+    dispatch(getGetSendedCommentStatusAction(DataStatus.IsSending));
+
+    try {
+      const { data } = await api.post(`${AppRoute.Сomments}${id}`, {
+        rating,
+        comment,
+      });
+      dispatch(getListOfReviewsAction(convertCamelСaseKeys(data)));
+
+      if (data) {
+        dispatch(getGetSendedCommentStatusAction(DataStatus.IsSended));
+      }
+    } catch (error) {
+      dispatch(getGetSendedCommentStatusAction(DataStatus.NotLoaded));
+    }
+  };
+}
+
+function addToFavorites(offerId: number, status: boolean): ThunkActionResult {
+  return async (dispatch, _, api): Promise<void> => {
+    const { data } = await api.post<OfferProps>(
+      `${AppRoute.FavoriteAPI}/${offerId}/${Number(!status)}`,
+    );
+
+    dispatch(updateOfferAction(convertCamelСaseKeys(data)));
+  };
+}
+
+function fetchFavoriteList(): ThunkActionResult {
+  return async (dispatch, _, api): Promise<void> => {
+    dispatch(getFavoritesOffersStatusAction(DataStatus.IsLoading));
+
+    try {
+      const { data } = await api.get<OffersProps>(`${AppRoute.FavoriteAPI}`);
+      dispatch(getListOfFavoriteCardsAction(convertCamelСaseKeys(data)));
+
+      dispatch(getFavoritesOffersStatusAction(DataStatus.IsLoaded));
+
+      if (data.length === 0) {
+        dispatch(getFavoritesOffersStatusAction(DataStatus.IsEmpty));
+      }
+    } catch (error) {
+      dispatch(getFavoritesOffersStatusAction(DataStatus.NotLoaded));
+    }
   };
 }
 
@@ -112,4 +208,7 @@ export {
   checkAuthAction,
   loginAction,
   logoutAction,
+  addComment,
+  addToFavorites,
+  fetchFavoriteList,
 };

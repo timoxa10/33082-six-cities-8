@@ -1,39 +1,36 @@
-import { Route, Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
+import { useSelector } from 'react-redux';
+import { Route } from 'react-router-dom';
 import { RouteProps } from 'react-router-dom';
-import { connect, ConnectedProps } from 'react-redux';
-import { State } from '../../types/state';
+import { getAuthorizationStatus } from 'store/app-auth/selectors';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
 
 type PrivateRouteProps = RouteProps & {
-  authorizationStatus: UserStatus;
   component: () => JSX.Element;
 };
 
-const mapStateToProps = ({ authorizationStatus }: State) => ({
-  authorizationStatus,
-});
+function PrivateRoute(props: PrivateRouteProps): JSX.Element {
+  const { exact, path, component: Component } = props;
 
-const connector = connect(mapStateToProps);
+  const history = useHistory();
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
-type ConnectedComponentProps = PropsFromRedux & PrivateRouteProps;
+  const authStatus = useSelector(getAuthorizationStatus);
 
-function PrivateRoute(props: ConnectedComponentProps): JSX.Element {
-  const { exact, path, component: Component, authorizationStatus } = props;
+  if (authStatus === UserStatus.NoAuth) {
+    history.push(AppRoute.Login);
+  }
+
   return (
     <Route
       exact={exact}
       path={path}
       render={() => {
-        if (authorizationStatus === UserStatus.Auth) {
+        if (authStatus === UserStatus.Auth) {
           return Component && <Component {...props} />;
         }
-        return <Redirect to={AppRoute.Login} />;
       }}
     />
   );
 }
-
-export { PrivateRoute };
-export default connector(PrivateRoute);
+export default PrivateRoute;

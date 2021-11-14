@@ -1,59 +1,46 @@
-import { useEffect } from 'react';
-import { connect, ConnectedProps } from 'react-redux';
-import type { ThunkAppDispatch } from 'types/action';
-import type { State } from 'types/state';
+import { useSelector, useDispatch } from 'react-redux';
+import { useEffect, useCallback } from 'react';
+import { getCurrentOfferId, getReviewsList } from 'store/app-data/selectors';
+import { getOfferByIdData } from 'store/app-data/selectors';
+import { getNearbyOffers } from 'store/app-data/selectors';
+import { getOfferPageStatus } from 'store/app-data-status/selectors';
+import { getAuthorizationStatus } from 'store/app-auth/selectors';
 import { fetchOfferData } from 'store/api-actions';
-import CardOffer from 'elements/card-offer/card-offer';
+import Layout from 'components/layout/layout';
+import CardOffer from 'components/card-offer/card-offer';
 
-const mapStateToProps = ({
-  city,
-  currentOfferId,
-  isLoading,
-  reviewsList,
-  offerByIdData,
-  nearbyOffers,
-}: State) => ({
-  city,
-  currentOfferId,
-  isLoading,
-  reviewsList,
-  offerByIdData,
-  nearbyOffers,
-});
+function CardOfferContainer(): JSX.Element {
+  const currentOfferId = useSelector(getCurrentOfferId);
+  const reviewsList = useSelector(getReviewsList);
+  const offerByIdData = useSelector(getOfferByIdData);
+  const nearbyOffers = useSelector(getNearbyOffers);
+  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const offerPageStatus = useSelector(getOfferPageStatus);
 
-const mapDispatchToProps = (dispatch: ThunkAppDispatch) => ({
-  fetchData(id: number) {
-    dispatch(fetchOfferData(id));
-  },
-});
+  const dispatch = useDispatch();
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
-
-type PropsFromRedux = ConnectedProps<typeof connector>;
-
-function CardOfferContainer(props: PropsFromRedux): JSX.Element {
-  const {
-    city,
-    currentOfferId,
-    reviewsList,
-    offerByIdData,
-    nearbyOffers,
-    fetchData,
-  } = props;
+  const fetchData = useCallback(
+    (id: number) => {
+      dispatch(fetchOfferData(id));
+    },
+    [dispatch],
+  );
 
   useEffect(() => {
     fetchData(currentOfferId);
-  }, [currentOfferId]);
+  }, [currentOfferId, fetchData]);
 
   return (
-    <CardOffer
-      city={city}
-      reviewsList={reviewsList}
-      offerByIdData={offerByIdData}
-      nearbyOffers={nearbyOffers}
-    />
+    <Layout>
+      <CardOffer
+        reviewsList={reviewsList}
+        offerByIdData={offerByIdData}
+        nearbyOffers={nearbyOffers}
+        authorizationStatus={authorizationStatus}
+        loadingStatus={offerPageStatus}
+      />
+    </Layout>
   );
 }
 
-export { CardOfferContainer };
-export default connector(CardOfferContainer);
+export default CardOfferContainer;

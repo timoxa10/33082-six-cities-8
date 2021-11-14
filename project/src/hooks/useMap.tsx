@@ -25,6 +25,7 @@ function useMap(
   city: CityCoordinates,
   points: LocationInfo[],
   selectedPoint: LocationInfo | null,
+  isHovered: boolean,
 ): Map | null {
   const [map, setMap] = useState<Map | null>(null);
 
@@ -66,6 +67,10 @@ function useMap(
 
         if (selectedPoint !== undefined && point === selectedPoint) {
           marker.setIcon(currentCustomIcon);
+        }
+
+        if (!isHovered) {
+          marker.setIcon(defaultCustomIcon);
         }
 
         marker.addTo(iconsGroup);

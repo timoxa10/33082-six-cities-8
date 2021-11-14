@@ -1,5 +1,6 @@
 import type { ReviewProps } from 'types/review-props';
 import convertDateToString from 'utils/convertDateToString';
+import transformRatingToPersent from 'utils/transformRatingToPersent';
 
 type ReviewsItemProps = {
   review: ReviewProps;
@@ -22,18 +23,18 @@ function ReviewsListItem({ review }: ReviewsItemProps): JSX.Element {
             alt="Reviews avatar"
           />
         </div>
-        <span className="reviews__user-name">{review.user.name}</span>
+        <span className="reviews__user-name">{review?.user?.name}</span>
       </div>
       <div className="reviews__info">
         <div className="reviews__rating rating">
           <div className="reviews__stars rating__stars">
-            <span style={{ width: '80%' }} />
+            <span style={{ width: transformRatingToPersent(review?.rating) }} />
             <span className="visually-hidden">Rating</span>
           </div>
         </div>
-        <p className="reviews__text">{review.comment}</p>
-        <time className="reviews__time" dateTime={review.date}>
-          {convertDateToString(review.date)}
+        <p className="reviews__text">{review?.comment}</p>
+        <time className="reviews__time" dateTime={review?.date}>
+          {convertDateToString(review?.date)}
         </time>
       </div>
     </>

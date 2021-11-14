@@ -1,103 +1,113 @@
-import { Dispatch } from 'redux';
-import type { Actions } from 'types/action';
-import { connect, ConnectedProps } from 'react-redux';
+import { throttle } from 'throttle-debounce';
+import { useState } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import type { LocationInfo } from 'types/location-info';
-import type { State } from 'types/state';
-import Header from 'components/header/header';
-import SvgSpriteIcons from 'components/svg-sprite-icons/svg-sprite-icons';
+import type { OffersProps } from 'types/card-props';
+import { DataStatus } from 'config/DataStatus';
+import { getCity, getOffersByCity, getOffers } from 'store/app-data/selectors';
+import { getOffersStatus } from 'store/app-data-status/selectors';
+import { filterOffersList } from 'utils/sorting-utils';
+import Layout from 'components/layout/layout';
 import TabsList from 'components/tabs-list/tabs-list';
 import OfferPageForm from 'components/offer-sorting-form/offer-sorting-form';
-import Card from 'elements/card/card';
+import Card from 'components/card/card';
 import CitiesMap from 'components/cities-map/cities-map';
-import Spinner from 'elements/spinner/spinner';
-import { getSelectedPointAction } from 'store/action';
+import MainPageEmpty from 'components/main-page-empty/main-page-empty';
+import { getSelectedPointAction, updateOffersListAction } from 'store/action';
+import Spinner from 'components/spinner/spinner';
+import ErrorPage from 'components/error-page/error-page';
 
-const mapStateToProps = ({
-  city,
-  offersByCity,
-  isLoading,
-  selectedPoint,
-}: State) => ({
-  city,
-  offersByCity,
-  isLoading,
-  selectedPoint,
-});
+function MainPage(): JSX.Element {
+  const loadingStatus = useSelector(getOffersStatus);
+  const city = useSelector(getCity);
+  const offersByCity = useSelector(getOffersByCity);
+  const offers = useSelector(getOffers);
+  const amountByCity = filterOffersList(city.name, offers);
 
-const mapDispatchToProps = (dispatch: Dispatch<Actions>) => ({
-  onSelectedPoint(point: LocationInfo) {
+  const [hovered, setHovered] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const onSelectedPoint = (point: LocationInfo) => {
     dispatch(getSelectedPointAction(point));
-  },
-});
+  };
 
-const connector = connect(mapStateToProps, mapDispatchToProps);
+  const onUpdateOffers = (value: string, array: OffersProps) => {
+    dispatch(updateOffersListAction(filterOffersList(value, array)));
+  };
 
-type PropsFromRedux = ConnectedProps<typeof connector>;
+  if (amountByCity.length !== offersByCity.length) {
+    onUpdateOffers(city.name, offers);
+  }
 
-function MainPage(props: PropsFromRedux): JSX.Element {
-  const { isLoading, city, offersByCity, selectedPoint, onSelectedPoint } =
-    props;
-
-  const onListItemHover = (location: LocationInfo) => {
+  const onListItemHover = throttle(300, (location: LocationInfo) => {
     const currentCard = offersByCity.find(
       (point) => point.location === location,
     );
+
     if (currentCard) {
       onSelectedPoint(currentCard.location);
     }
+    setHovered(true);
+  });
+
+  const onListItemLeave = () => {
+    setHovered(false);
   };
 
-  return (
-    <>
-      <SvgSpriteIcons />
-      <div className="page page--gray page--main">
-        <Header />
+  if (loadingStatus === DataStatus.IsLoading) {
+    return <Spinner />;
+  }
+
+  if (loadingStatus === DataStatus.NotLoaded) {
+    return <ErrorPage />;
+  }
+
+  if (loadingStatus === DataStatus.IsLoaded) {
+    return (
+      <Layout className="page--gray page--main">
         <main className="page__main page__main--index">
           <h1 className="visually-hidden">Cities</h1>
-
-          {isLoading && <Spinner />}
-
-          {!isLoading && (
-            <>
-              <TabsList />
-              <div className="cities">
-                <div className="cities__places-container container">
-                  <section className="cities__places places">
-                    <h2 className="visually-hidden">Places</h2>
-                    <b className="places__found">
-                      {offersByCity?.length} places to stay in {city?.name}
-                    </b>
-                    <OfferPageForm />
-                    <div className="cities__places-list places__list tabs__content">
-                      {offersByCity?.map((card) => (
-                        <Card
-                          key={card.id}
-                          card={card}
-                          onListItemHover={onListItemHover}
-                          className="cities__place-card"
-                        />
-                      ))}
-                    </div>
-                  </section>
-
-                  <div className="cities__right-section">
-                    <section className="cities__map map">
-                      <CitiesMap
-                        city={city}
-                        points={offersByCity.map(({ location }) => location)}
-                        selectedPoint={selectedPoint}
-                      />
-                    </section>
-                  </div>
+          <TabsList />
+          <div className="cities">
+            <div className="cities__places-container container">
+              <section className="cities__places places">
+                <h2 className="visually-hidden">Places</h2>
+                <b className="places__found">
+                  {offersByCity?.length} places to stay in {city?.name}
+                </b>
+                <OfferPageForm />
+                <div className="cities__places-list places__list tabs__content">
+                  {offersByCity?.map((card) => (
+                    <Card
+                      key={card.id}
+                      card={card}
+                      onListItemHover={onListItemHover}
+                      onListItemLeave={onListItemLeave}
+                      width={260}
+                      height={200}
+                      isCitiesCard
+                    />
+                  ))}
                 </div>
+              </section>
+              <div className="cities__right-section">
+                <section className="cities__map map">
+                  <CitiesMap useOffersByCityPoints isHovered={hovered} />
+                </section>
               </div>
-            </>
-          )}
+            </div>
+          </div>
         </main>
-      </div>
-    </>
-  );
+      </Layout>
+    );
+  }
+
+  if (loadingStatus === DataStatus.IsEmpty) {
+    return <MainPageEmpty city={city.name} />;
+  }
+
+  return <Spinner />;
 }
 
-export { MainPage };
-export default connector(MainPage);
+export default MainPage;

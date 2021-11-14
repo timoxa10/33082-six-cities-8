@@ -3,10 +3,11 @@ import { ChangeEvent } from 'react';
 interface InputProps {
   id: number;
   value: number;
+  checked: boolean;
   onChange: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
-function Input({ id, value, onChange }: InputProps): JSX.Element {
+function Input({ id, value, checked, onChange }: InputProps): JSX.Element {
   return (
     <>
       <input
@@ -16,6 +17,7 @@ function Input({ id, value, onChange }: InputProps): JSX.Element {
         type="radio"
         value={value}
         onChange={onChange}
+        checked={checked}
       />
       <label
         htmlFor={`${id}-stars`}

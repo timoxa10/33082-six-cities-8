@@ -114,21 +114,25 @@ function checkAuthAction(): ThunkActionResult {
 
 function loginAction({ login: email, password }: AuthData): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
-    const { data } = await api.post(AppRoute.Login, {
-      email,
-      password,
-    });
+    try {
+      const { data } = await api.post(AppRoute.Login, {
+        email,
+        password,
+      });
 
-    const result = convertCamelСaseKeys(data);
+      const result = convertCamelСaseKeys(data);
 
-    saveToken(result.token);
-    saveAvatarUrl(result.avatarUrl);
-    saveLoginName(email);
+      saveToken(result.token);
+      saveAvatarUrl(result.avatarUrl);
+      saveLoginName(email);
 
-    dispatch(setLoginAction(email));
-    dispatch(setAvatarUrlAction(result.avatarUrl));
+      dispatch(setLoginAction(email));
+      dispatch(setAvatarUrlAction(result.avatarUrl));
 
-    dispatch(requireAuthorizationAction(UserStatus.Auth));
+      dispatch(requireAuthorizationAction(UserStatus.Auth));
+    } catch (error) {
+      dispatch(requireAuthorizationAction(UserStatus.Error));
+    }
   };
 }
 
@@ -169,7 +173,7 @@ function addComment(
   };
 }
 
-function addToFavourites(offerId: number, status: boolean): ThunkActionResult {
+function addToFavorites(offerId: number, status: boolean): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
     const { data } = await api.post<OfferProps>(
       `${AppRoute.FavoriteAPI}/${offerId}/${Number(!status)}`,
@@ -205,6 +209,6 @@ export {
   loginAction,
   logoutAction,
   addComment,
-  addToFavourites,
+  addToFavorites,
   fetchFavoriteList,
 };

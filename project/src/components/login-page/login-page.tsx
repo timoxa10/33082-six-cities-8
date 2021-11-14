@@ -1,4 +1,4 @@
-import { Redirect } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAuthorizationStatus } from 'store/app-auth/selectors';
 import { getOffers } from 'store/app-data/selectors';
@@ -15,19 +15,17 @@ import { getCurrentCityAction } from 'store/action';
 import { filterOffersList } from 'utils/sorting-utils';
 import Logo from 'components/logo/logo';
 
-interface LoginPageProps {
-  onAuth: () => void;
-}
+function LoginPage(): JSX.Element {
+  const history = useHistory();
 
-function LoginPage({ onAuth }: LoginPageProps): JSX.Element {
   const offers = useSelector(getOffers);
-  const authorizationStatus = useSelector(getAuthorizationStatus);
+
+  const authStatus = useSelector(getAuthorizationStatus);
 
   const dispatch = useDispatch();
 
-  const onSubmit = (authData: AuthData, openMainRoot: () => void) => {
+  const onSubmit = (authData: AuthData) => {
     dispatch(loginAction(authData));
-    openMainRoot();
   };
 
   const onCitySelected = (value: CityCoordinates) => {
@@ -55,13 +53,10 @@ function LoginPage({ onAuth }: LoginPageProps): JSX.Element {
     evt.preventDefault();
 
     if (login !== '' && password !== '') {
-      onSubmit(
-        {
-          login,
-          password,
-        },
-        onAuth,
-      );
+      onSubmit({
+        login,
+        password,
+      });
     }
   }
 
@@ -80,8 +75,8 @@ function LoginPage({ onAuth }: LoginPageProps): JSX.Element {
     });
   }
 
-  if (authorizationStatus === UserStatus.Auth) {
-    return <Redirect to={AppRoute.Root} />;
+  if (authStatus === UserStatus.Auth) {
+    history.push(AppRoute.Root);
   }
 
   return (
@@ -115,6 +110,11 @@ function LoginPage({ onAuth }: LoginPageProps): JSX.Element {
                   placeholder="Email"
                   required
                   onChange={onLoginCallback}
+                  style={
+                    authStatus === UserStatus.Error
+                      ? { borderColor: 'red' }
+                      : { borderColor: '#e6e6e6' }
+                  }
                 />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
@@ -137,6 +137,16 @@ function LoginPage({ onAuth }: LoginPageProps): JSX.Element {
                 Sign in
               </button>
             </form>
+
+            {authStatus === UserStatus.Error && (
+              <div className="locations__item locations--current ">
+                <p className="locations__item-link">
+                  Failed to login.
+                  <br />
+                  Please, enter a valid email.
+                </p>
+              </div>
+            )}
           </section>
           <section className="locations locations--login locations--current">
             <div className="locations__item">

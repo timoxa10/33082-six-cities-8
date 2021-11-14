@@ -24,13 +24,9 @@ function App(): JSX.Element {
           <MainPage />
         </Route>
 
-        <Route
-          path={AppRoute.Login}
-          exact
-          render={({ history }) => (
-            <LoginPage onAuth={() => history.push(AppRoute.Root)} />
-          )}
-        />
+        <Route exact path={AppRoute.Login}>
+          <LoginPage />
+        </Route>
 
         <Route
           exact

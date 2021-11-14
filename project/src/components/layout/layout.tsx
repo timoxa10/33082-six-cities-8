@@ -5,14 +5,14 @@ import Header from 'components/header/header';
 
 interface LayoutProps {
   children: JSX.Element | JSX.Element[];
-  className: string;
+  className?: string;
   shouldRenderFooter?: boolean;
   shouldRenderHeader?: boolean;
 }
 
 function Layout({
   children,
-  className,
+  className = 'page',
   shouldRenderFooter = false,
   shouldRenderHeader = true,
 }: LayoutProps): JSX.Element {

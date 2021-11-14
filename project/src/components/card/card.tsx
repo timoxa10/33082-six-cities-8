@@ -1,19 +1,19 @@
 import classNames from 'classnames';
-import { debounce } from 'throttle-debounce';
+import { throttle } from 'throttle-debounce';
 import { MouseEvent } from 'react';
 import type { OfferProps } from 'types/card-props';
 import { Link } from 'react-router-dom';
 import Bookmark from 'components/bookmark/bookmark';
 import type { LocationInfo } from 'types/location-info';
-import capitalizeFirstLetter from 'utils/capitalizeFirstLetter';
 import transformRatingToPersent from 'utils/transformRatingToPersent';
 
 type MainCardProps = {
-  className?: string;
   card: OfferProps;
   onListItemHover?: (location: LocationInfo) => void;
   onListItemLeave?: () => void;
   isFavoriteCard?: boolean;
+  isNearbyCard?: boolean;
+  isCitiesCard?: boolean;
   width: number;
   height: number;
 };
@@ -22,14 +22,15 @@ function Card({
   card,
   onListItemHover,
   onListItemLeave,
-  className,
   isFavoriteCard = false,
+  isNearbyCard = false,
+  isCitiesCard = false,
   width,
   height,
 }: MainCardProps): JSX.Element {
   const [mainImage] = card?.images;
 
-  const listItemHoverHandler = debounce(
+  const listItemHoverHandler = throttle(
     300,
     (event: MouseEvent<HTMLDivElement>) => {
       if (onListItemHover) {
@@ -41,7 +42,11 @@ function Card({
 
   return (
     <article
-      className={classNames(['place-card', `${className}`])}
+      className={classNames('place-card', {
+        'cities__place-card': isCitiesCard,
+        'favorites__card-wrapper': isFavoriteCard,
+        'near-places__card': isNearbyCard,
+      })}
       onMouseEnter={listItemHoverHandler}
       onMouseLeave={onListItemLeave}
     >
@@ -52,7 +57,7 @@ function Card({
       )}
       <div
         className={classNames('place-card__image-wrapper', {
-          'cities__image-wrapper': !isFavoriteCard,
+          'cities__image-wrapper': isCitiesCard,
           'favorites__image-wrapper': isFavoriteCard,
         })}
       >
@@ -78,7 +83,6 @@ function Card({
           </div>
 
           <Bookmark
-            className="place-card"
             width={18}
             height={19}
             isFavorite={card?.isFavorite}
@@ -95,7 +99,7 @@ function Card({
         <h2 className="place-card__name">
           <Link to={`/offer/${card?.id}/`}>{card?.title}</Link>
         </h2>
-        <p className="place-card__type">{capitalizeFirstLetter(card?.type)}</p>
+        <p className="place-card__type">{card?.type}</p>
       </div>
     </article>
   );

@@ -31,7 +31,7 @@ function CardOfferContainer(): JSX.Element {
   }, [currentOfferId, fetchData]);
 
   return (
-    <Layout className="page">
+    <Layout>
       <CardOffer
         reviewsList={reviewsList}
         offerByIdData={offerByIdData}

@@ -8,7 +8,7 @@ import ErrorPage from 'components/error-page/error-page';
 import FavoritesPageEmpty from 'components/favorites-page-empty/favorites-page-empty';
 import { getFavoriteCardsList } from 'store/app-data/selectors';
 import { getFavoritesOffersStatus } from 'store/app-data-status/selectors';
-import { fetchFavoriteList } from 'store/api-actions';
+import { fetchFavoriteList, fetchOffersList } from 'store/api-actions';
 import getOffersByCity from 'utils/getOffersByCity';
 
 function FavoritesPage(): JSX.Element {
@@ -21,65 +21,75 @@ function FavoritesPage(): JSX.Element {
     dispatch(fetchFavoriteList());
   }, [dispatch]);
 
+  const updateOffers = useCallback(() => {
+    dispatch(fetchOffersList());
+  }, [dispatch]);
+
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  useEffect(() => {
+    updateOffers();
+  }, [updateOffers, favoriteCardsList]);
 
   const uniqueCities = [
     ...new Set(favoriteCardsList?.map((card) => card.city.name)),
   ];
 
-  switch (loadingStatus) {
-    case DataStatus.IsLoading:
-      return <Spinner />;
-    case DataStatus.NotLoaded:
-      return <ErrorPage />;
-    case DataStatus.IsLoaded:
-      return (
-        <Layout className="page" shouldRenderFooter>
-          <main className="page__main page__main--favorites">
-            <div className="page__favorites-container container">
-              <section className="favorites">
-                <h1 className="favorites__title">Saved listing</h1>
-                <ul className="favorites__list">
-                  {[...uniqueCities].map(
-                    (city): JSX.Element => (
-                      <li className="favorites__locations-items" key={city}>
-                        <div className="favorites__locations locations locations--current">
-                          <div className="locations__item">
-                            <a className="locations__item-link" href="/">
-                              <span>{city}</span>
-                            </a>
-                          </div>
+  if (loadingStatus === DataStatus.IsLoading) {
+    return <Spinner />;
+  }
+
+  if (loadingStatus === DataStatus.NotLoaded) {
+    return <ErrorPage />;
+  }
+
+  if (loadingStatus === DataStatus.IsLoaded) {
+    return (
+      <Layout shouldRenderFooter>
+        <main className="page__main page__main--favorites">
+          <div className="page__favorites-container container">
+            <section className="favorites">
+              <h1 className="favorites__title">Saved listing</h1>
+              <ul className="favorites__list">
+                {[...uniqueCities].map(
+                  (city): JSX.Element => (
+                    <li className="favorites__locations-items" key={city}>
+                      <div className="favorites__locations locations locations--current">
+                        <div className="locations__item">
+                          <a className="locations__item-link" href="/">
+                            <span>{city}</span>
+                          </a>
                         </div>
-                        <div className="favorites__places">
-                          {favoriteCardsList &&
-                            getOffersByCity(city, favoriteCardsList).map(
-                              (cardByCity): JSX.Element => (
-                                <Card
-                                  card={cardByCity}
-                                  key={cardByCity.id}
-                                  isFavoriteCard
-                                  className="favorites__card"
-                                  width={150}
-                                  height={110}
-                                />
-                              ),
-                            )}
-                        </div>
-                      </li>
-                    ),
-                  )}
-                </ul>
-              </section>
-            </div>
-          </main>
-        </Layout>
-      );
-    case DataStatus.IsEmpty:
-      return <FavoritesPageEmpty />;
-    default:
-      break;
+                      </div>
+                      <div className="favorites__places">
+                        {favoriteCardsList &&
+                          getOffersByCity(city, favoriteCardsList).map(
+                            (cardByCity): JSX.Element => (
+                              <Card
+                                card={cardByCity}
+                                key={cardByCity.id}
+                                isFavoriteCard
+                                width={150}
+                                height={110}
+                              />
+                            ),
+                          )}
+                      </div>
+                    </li>
+                  ),
+                )}
+              </ul>
+            </section>
+          </div>
+        </main>
+      </Layout>
+    );
+  }
+
+  if (loadingStatus === DataStatus.IsEmpty) {
+    return <FavoritesPageEmpty />;
   }
 
   return <Spinner />;

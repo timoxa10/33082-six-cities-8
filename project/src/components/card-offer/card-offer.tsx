@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import type { OfferProps, OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
 import { UserStatus } from 'config/UserStatus';
@@ -29,18 +28,22 @@ function CardOffer({
 }: CardOfferProps): JSX.Element {
   const isAuth = authorizationStatus === UserStatus.Auth;
 
-  switch (loadingStatus) {
-    case DataStatus.IsLoading:
-      return <Spinner />;
-    case DataStatus.NotLoaded:
-      return <ErrorPage />;
-    case DataStatus.IsLoaded:
-      return (
-        <main className="page__main page__main--property">
-          <section className="property">
+  if (loadingStatus === DataStatus.IsLoading) {
+    return <Spinner />;
+  }
+
+  if (loadingStatus === DataStatus.NotLoaded) {
+    return <ErrorPage />;
+  }
+
+  if (loadingStatus === DataStatus.IsLoaded) {
+    return (
+      <main className="page__main page__main--property">
+        <section className="property">
+          {offerByIdData?.images && (
             <div className="property__gallery-container container">
               <div className="property__gallery">
-                {offerByIdData?.images?.map((image) => (
+                {offerByIdData.images.map((image) => (
                   <div className="property__image-wrapper" key={image}>
                     <img
                       className="property__image"
@@ -51,31 +54,34 @@ function CardOffer({
                 ))}
               </div>
             </div>
-            <div className="property__container container">
-              <div className="property__wrapper">
-                {offerByIdData?.isPremium && (
-                  <div className="property__mark">
-                    <span>Premium</span>
-                  </div>
-                )}
-                <div className="property__name-wrapper">
-                  <h1 className="property__name">{offerByIdData?.title}</h1>
-                  {offerByIdData['id'] &&
-                    offerByIdData['isFavorite'] !== undefined && (
-                      <Bookmark
-                        className="property"
-                        width={31}
-                        height={33}
-                        isFavorite={offerByIdData?.isFavorite}
-                        id={offerByIdData?.id}
-                      />
-                    )}
+          )}
+          <div className="property__container container">
+            <div className="property__wrapper">
+              {offerByIdData?.isPremium && (
+                <div className="property__mark">
+                  <span>Premium</span>
                 </div>
+              )}
+              {offerByIdData?.title && (
+                <div className="property__name-wrapper">
+                  <h1 className="property__name">{offerByIdData.title}</h1>
+                  {offerByIdData?.id && offerByIdData?.isFavorite && (
+                    <Bookmark
+                      width={31}
+                      height={33}
+                      isFavorite={offerByIdData.isFavorite}
+                      id={offerByIdData?.id}
+                      isPlaceCardBookmark={false}
+                    />
+                  )}
+                </div>
+              )}
+              {offerByIdData?.rating && (
                 <div className="property__rating rating">
                   <div className="property__stars rating__stars">
                     <span
                       style={{
-                        width: transformRatingToPersent(offerByIdData?.rating),
+                        width: transformRatingToPersent(offerByIdData.rating),
                       }}
                     />
                     <span className="visually-hidden">Rating</span>
@@ -84,90 +90,103 @@ function CardOffer({
                     {offerByIdData?.rating}
                   </span>
                 </div>
-                <ul className="property__features">
+              )}
+              <ul className="property__features">
+                {offerByIdData?.type && (
                   <li className="property__feature property__feature--entire">
-                    {offerByIdData?.type}
+                    {offerByIdData.type}
                   </li>
+                )}
+                {offerByIdData?.bedrooms && (
                   <li className="property__feature property__feature--bedrooms">
-                    {offerByIdData?.bedrooms} Bedrooms
+                    {offerByIdData.bedrooms} Bedrooms
                   </li>
+                )}
+                {offerByIdData?.maxAdults && (
                   <li className="property__feature property__feature--adults">
-                    Max {offerByIdData?.maxAdults} adults
+                    Max {offerByIdData.maxAdults} adults
                   </li>
-                </ul>
+                )}
+              </ul>
+              {offerByIdData?.price && (
                 <div className="property__price">
-                  <b className="property__price-value">{`€${offerByIdData?.price}`}</b>
+                  <b className="property__price-value">{`€${offerByIdData.price}`}</b>
                   <span className="property__price-text">&nbsp;night</span>
                 </div>
+              )}
+              {offerByIdData?.goods && (
                 <div className="property__inside">
                   <h2 className="property__inside-title">What&apos;s inside</h2>
-                  {offerByIdData?.goods && (
-                    <ul className="property__inside-list">
-                      {offerByIdData?.goods?.map((item) => (
-                        <li className="property__inside-item" key={item}>
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  )}
+                  <ul className="property__inside-list">
+                    {offerByIdData?.goods?.map((item) => (
+                      <li className="property__inside-item" key={item}>
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
-                <div className="property__host">
-                  <h2 className="property__host-title">Meet the host</h2>
-                  <div className="property__host-user user">
+              )}
+              <div className="property__host">
+                <h2 className="property__host-title">Meet the host</h2>
+                <div className="property__host-user user">
+                  {offerByIdData?.host?.avatarUrl && (
                     <div className="property__avatar-wrapper property__avatar-wrapper--pro user__avatar-wrapper">
                       <img
                         className="property__avatar user__avatar"
-                        src={offerByIdData?.host?.avatarUrl}
+                        src={offerByIdData.host.avatarUrl}
                         width={74}
                         height={74}
                         alt="Host avatar"
                       />
                     </div>
+                  )}
+                  {offerByIdData?.host?.name && (
                     <span className="property__user-name">
-                      {offerByIdData?.host?.name}
+                      {offerByIdData.host.name}
                     </span>
-                    {offerByIdData?.host?.isPro && (
-                      <span className="property__user-status"> Pro </span>
-                    )}
-                  </div>
+                  )}
+                  {offerByIdData?.host?.isPro && (
+                    <span className="property__user-status"> Pro </span>
+                  )}
+                </div>
+                {offerByIdData?.description && (
                   <div className="property__description">
                     <p className="property__text">
-                      {offerByIdData?.description}
+                      {offerByIdData.description}
                     </p>
                   </div>
-                </div>
-                <section className="property__reviews reviews">
-                  <ReviewsList reviews={reviewsList} />
-                  {isAuth && <ReviewPageForm />}
-                </section>
+                )}
               </div>
+              <section className="property__reviews reviews">
+                <ReviewsList reviews={reviewsList} />
+                {isAuth && <ReviewPageForm />}
+              </section>
             </div>
-            <section className="property__map map">
-              <CitiesMap isHovered />
-            </section>
-          </section>
-          <div className="container">
-            <section className="near-places places">
-              <h2 className="near-places__title">
-                Other places in the neighbourhood
-              </h2>
-              <div className="near-places__list places__list">
-                {nearbyOffers?.map((item) => (
-                  <Card
-                    card={item}
-                    key={item.id}
-                    className="near-places__card"
-                    width={260}
-                    height={200}
-                  />
-                ))}
-              </div>
-            </section>
           </div>
-        </main>
-      );
-    default:
-      break;
+          <section className="property__map map">
+            <CitiesMap isHovered />
+          </section>
+        </section>
+        <div className="container">
+          <section className="near-places places">
+            <h2 className="near-places__title">
+              Other places in the neighbourhood
+            </h2>
+            <div className="near-places__list places__list">
+              {nearbyOffers?.map((item) => (
+                <Card
+                  card={item}
+                  key={item.id}
+                  isNearbyCard
+                  width={260}
+                  height={200}
+                />
+              ))}
+            </div>
+          </section>
+        </div>
+      </main>
+    );
   }
 
   return <Spinner />;

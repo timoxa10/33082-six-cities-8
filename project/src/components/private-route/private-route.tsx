@@ -1,5 +1,6 @@
+import { useHistory } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { Route, Redirect } from 'react-router-dom';
+import { Route } from 'react-router-dom';
 import { RouteProps } from 'react-router-dom';
 import { getAuthorizationStatus } from 'store/app-auth/selectors';
 import { AppRoute } from 'config/AppRoute';
@@ -12,10 +13,12 @@ type PrivateRouteProps = RouteProps & {
 function PrivateRoute(props: PrivateRouteProps): JSX.Element {
   const { exact, path, component: Component } = props;
 
-  const authorizationStatus = useSelector(getAuthorizationStatus);
+  const history = useHistory();
 
-  if (authorizationStatus === UserStatus.NoAuth) {
-    return <Redirect to={AppRoute.Login} />;
+  const authStatus = useSelector(getAuthorizationStatus);
+
+  if (authStatus === UserStatus.NoAuth) {
+    history.push(AppRoute.Login);
   }
 
   return (
@@ -23,7 +26,7 @@ function PrivateRoute(props: PrivateRouteProps): JSX.Element {
       exact={exact}
       path={path}
       render={() => {
-        if (authorizationStatus === UserStatus.Auth) {
+        if (authStatus === UserStatus.Auth) {
           return Component && <Component {...props} />;
         }
       }}

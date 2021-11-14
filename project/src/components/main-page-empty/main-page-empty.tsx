@@ -7,7 +7,7 @@ interface MainPageEmptyProps {
 
 function MainPageEmpty({ city }: MainPageEmptyProps): JSX.Element {
   return (
-    <Layout className="page page--gray page--main page__main--index-empty">
+    <Layout className="page--gray page--main page__main--index-empty">
       <main className="page__main page__main--index">
         <h1 className="visually-hidden">Cities</h1>
         <TabsList />

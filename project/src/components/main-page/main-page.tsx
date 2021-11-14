@@ -1,4 +1,4 @@
-import { debounce } from 'throttle-debounce';
+import { throttle } from 'throttle-debounce';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { LocationInfo } from 'types/location-info';
@@ -18,7 +18,7 @@ import Spinner from 'components/spinner/spinner';
 import ErrorPage from 'components/error-page/error-page';
 
 function MainPage(): JSX.Element {
-  const offersStatus = useSelector(getOffersStatus);
+  const loadingStatus = useSelector(getOffersStatus);
   const city = useSelector(getCity);
   const offersByCity = useSelector(getOffersByCity);
   const offers = useSelector(getOffers);
@@ -40,7 +40,7 @@ function MainPage(): JSX.Element {
     onUpdateOffers(city.name, offers);
   }
 
-  const onListItemHover = debounce(300, (location: LocationInfo) => {
+  const onListItemHover = throttle(300, (location: LocationInfo) => {
     const currentCard = offersByCity.find(
       (point) => point.location === location,
     );
@@ -55,54 +55,56 @@ function MainPage(): JSX.Element {
     setHovered(false);
   };
 
-  switch (offersStatus) {
-    case DataStatus.IsLoading:
-      return <Spinner />;
-    case DataStatus.NotLoaded:
-      return <ErrorPage />;
-    case DataStatus.IsLoaded:
-      return (
-        <Layout className="page page--gray page--main">
-          <main className="page__main page__main--index">
-            <h1 className="visually-hidden">Cities</h1>
-            <TabsList />
+  if (loadingStatus === DataStatus.IsLoading) {
+    return <Spinner />;
+  }
 
-            <div className="cities">
-              <div className="cities__places-container container">
-                <section className="cities__places places">
-                  <h2 className="visually-hidden">Places</h2>
-                  <b className="places__found">
-                    {offersByCity?.length} places to stay in {city?.name}
-                  </b>
-                  <OfferPageForm />
-                  <div className="cities__places-list places__list tabs__content">
-                    {offersByCity?.map((card) => (
-                      <Card
-                        key={card.id}
-                        card={card}
-                        onListItemHover={onListItemHover}
-                        onListItemLeave={onListItemLeave}
-                        className="cities__place-card"
-                        width={260}
-                        height={200}
-                      />
-                    ))}
-                  </div>
-                </section>
-                <div className="cities__right-section">
-                  <section className="cities__map map">
-                    <CitiesMap useOffersByCityPoints isHovered={hovered} />
-                  </section>
+  if (loadingStatus === DataStatus.NotLoaded) {
+    return <ErrorPage />;
+  }
+
+  if (loadingStatus === DataStatus.IsLoaded) {
+    return (
+      <Layout className="page--gray page--main">
+        <main className="page__main page__main--index">
+          <h1 className="visually-hidden">Cities</h1>
+          <TabsList />
+          <div className="cities">
+            <div className="cities__places-container container">
+              <section className="cities__places places">
+                <h2 className="visually-hidden">Places</h2>
+                <b className="places__found">
+                  {offersByCity?.length} places to stay in {city?.name}
+                </b>
+                <OfferPageForm />
+                <div className="cities__places-list places__list tabs__content">
+                  {offersByCity?.map((card) => (
+                    <Card
+                      key={card.id}
+                      card={card}
+                      onListItemHover={onListItemHover}
+                      onListItemLeave={onListItemLeave}
+                      width={260}
+                      height={200}
+                      isCitiesCard
+                    />
+                  ))}
                 </div>
+              </section>
+              <div className="cities__right-section">
+                <section className="cities__map map">
+                  <CitiesMap useOffersByCityPoints isHovered={hovered} />
+                </section>
               </div>
             </div>
-          </main>
-        </Layout>
-      );
-    case DataStatus.IsEmpty:
-      return <MainPageEmpty city={city.name} />;
-    default:
-      break;
+          </div>
+        </main>
+      </Layout>
+    );
+  }
+
+  if (loadingStatus === DataStatus.IsEmpty) {
+    return <MainPageEmpty city={city.name} />;
   }
 
   return <Spinner />;

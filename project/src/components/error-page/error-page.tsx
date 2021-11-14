@@ -3,7 +3,7 @@ import Layout from 'components/layout/layout';
 function ErrorPage(): JSX.Element {
   return (
     <Layout
-      className="page page--gray page--main page__main--index-empty"
+      className="page--gray page--main page__main--index-empty"
       shouldRenderHeader={false}
     >
       <main className="page__main page__main--index">

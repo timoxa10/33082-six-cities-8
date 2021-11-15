@@ -62,10 +62,10 @@ function CardOffer({
                   <span>Premium</span>
                 </div>
               )}
-              {offerByIdData?.title && (
+              {offerByIdData['isFavorite'] !== undefined && (
                 <div className="property__name-wrapper">
                   <h1 className="property__name">{offerByIdData.title}</h1>
-                  {offerByIdData?.id && offerByIdData?.isFavorite && (
+                  {offerByIdData['id'] && (
                     <Bookmark
                       width={31}
                       height={33}

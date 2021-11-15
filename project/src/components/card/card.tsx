@@ -87,7 +87,6 @@ function Card({
             height={19}
             isFavorite={card?.isFavorite}
             id={card.id}
-            shouldCallListUpdate={isFavoriteCard}
           />
         </div>
         <div className="place-card__rating rating">

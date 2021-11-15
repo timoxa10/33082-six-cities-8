@@ -6,6 +6,7 @@ import { rootReducer } from 'store/root-reducer';
 import { createAPI } from 'services/api';
 import { fetchOffersList, checkAuthAction } from 'store/api-actions';
 import { requireAuthorizationAction } from 'store/action';
+import { INITIAL_CITY } from 'config/InitialCity';
 import { UserStatus } from 'config/UserStatus';
 import { redirect } from 'store/redirect';
 import App from './components/app/app';
@@ -28,7 +29,7 @@ const store = configureStore({
 });
 
 store.dispatch(checkAuthAction());
-store.dispatch(fetchOffersList());
+store.dispatch(fetchOffersList(INITIAL_CITY.name));
 
 ReactDOM.render(
   <React.StrictMode>

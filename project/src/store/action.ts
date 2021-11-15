@@ -79,7 +79,7 @@ export const getNearbyOffersAction = createAction(
 );
 
 export const setLoginAction = createAction(
-  ActionType.SetLoginAction,
+  ActionType.SetLogin,
   (payload: string) => ({
     payload,
   }),

@@ -24,9 +24,7 @@ function App(): JSX.Element {
           <MainPage />
         </Route>
 
-        <Route exact path={AppRoute.Login}>
-          <LoginPage />
-        </Route>
+        <Route exact path={AppRoute.Login} component={LoginPage} />
 
         <Route
           exact

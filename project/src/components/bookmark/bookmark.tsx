@@ -1,9 +1,9 @@
 import { throttle } from 'throttle-debounce';
 import classNames from 'classnames';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAuthorizationStatus } from 'store/app-auth/selectors';
-import { addToFavorites, fetchFavoriteList } from 'store/api-actions';
-import { MouseEvent, useState } from 'react';
+import { addToFavorites } from 'store/api-actions';
 import { UserStatus } from 'config/UserStatus';
 import { AppRoute } from 'config/AppRoute';
 import { redirectToRouteAction } from 'store/action';
@@ -13,7 +13,6 @@ interface BookmarkProps {
   height: number;
   isFavorite: boolean;
   id: number;
-  shouldCallListUpdate?: boolean;
   isPlaceCardBookmark?: boolean;
 }
 
@@ -22,40 +21,25 @@ function Bookmark({
   height,
   isFavorite,
   id,
-  shouldCallListUpdate = false,
   isPlaceCardBookmark = true,
 }: BookmarkProps): JSX.Element {
-  const authorizationStatus = useSelector(getAuthorizationStatus);
-
-  const isAuth = authorizationStatus === UserStatus.Auth;
-
   const [isActive, setIsActive] = useState(isFavorite);
 
-  const addToFavoriteHandler = throttle(500, (event: MouseEvent) => {
-    event.preventDefault();
+  const authStatus = useSelector(getAuthorizationStatus);
 
-    if (!isAuth) {
-      setIsActive(false);
-      onNoAuthRedirect();
-    } else {
-      setIsActive(!isActive);
-      onFavoriteAction(Number(id));
-    }
-  });
+  const isAuth = authStatus === UserStatus.Auth;
 
   const dispatch = useDispatch();
 
-  const onFavoriteAction = (currentId: number | string) => {
-    dispatch(addToFavorites(Number(currentId), isActive));
+  const handleFavoriteChange = throttle(500, () => {
+    setIsActive((prevStatus) => !prevStatus);
 
-    if (shouldCallListUpdate) {
-      dispatch(fetchFavoriteList());
+    if (isAuth) {
+      dispatch(addToFavorites(Number(id), isActive));
+    } else {
+      dispatch(redirectToRouteAction(AppRoute.Login));
     }
-  };
-
-  const onNoAuthRedirect = () => {
-    dispatch(redirectToRouteAction(AppRoute.Login));
-  };
+  });
 
   return (
     <button
@@ -66,7 +50,7 @@ function Bookmark({
         'property__bookmark-button--active': !isPlaceCardBookmark && isActive,
       })}
       type="button"
-      onClick={addToFavoriteHandler}
+      onClick={handleFavoriteChange}
     >
       <svg
         className={classNames({

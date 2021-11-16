@@ -2,18 +2,16 @@ import { throttle } from 'throttle-debounce';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { LocationInfo } from 'types/location-info';
-import type { OffersProps } from 'types/card-props';
 import { DataStatus } from 'config/DataStatus';
-import { getCity, getOffersByCity, getOffers } from 'store/app-data/selectors';
+import { getCity, getOffersByCity } from 'store/app-data/selectors';
 import { getOffersStatus } from 'store/app-data-status/selectors';
-import { filterOffersList } from 'utils/sorting-utils';
 import Layout from 'components/layout/layout';
 import TabsList from 'components/tabs-list/tabs-list';
 import OfferPageForm from 'components/offer-sorting-form/offer-sorting-form';
 import Card from 'components/card/card';
 import CitiesMap from 'components/cities-map/cities-map';
 import MainPageEmpty from 'components/main-page-empty/main-page-empty';
-import { getSelectedPointAction, updateOffersListAction } from 'store/action';
+import { getSelectedPointAction } from 'store/action';
 import Spinner from 'components/spinner/spinner';
 import ErrorPage from 'components/error-page/error-page';
 
@@ -21,8 +19,6 @@ function MainPage(): JSX.Element {
   const loadingStatus = useSelector(getOffersStatus);
   const city = useSelector(getCity);
   const offersByCity = useSelector(getOffersByCity);
-  const offers = useSelector(getOffers);
-  const amountByCity = filterOffersList(city.name, offers);
 
   const [hovered, setHovered] = useState(false);
 
@@ -31,14 +27,6 @@ function MainPage(): JSX.Element {
   const onSelectedPoint = (point: LocationInfo) => {
     dispatch(getSelectedPointAction(point));
   };
-
-  const onUpdateOffers = (value: string, array: OffersProps) => {
-    dispatch(updateOffersListAction(filterOffersList(value, array)));
-  };
-
-  if (amountByCity.length !== offersByCity.length) {
-    onUpdateOffers(city.name, offers);
-  }
 
   const onListItemHover = throttle(300, (location: LocationInfo) => {
     const currentCard = offersByCity.find(

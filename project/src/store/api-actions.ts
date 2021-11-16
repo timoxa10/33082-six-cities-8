@@ -26,7 +26,6 @@ import {
   getGetSendedCommentStatusAction,
 } from 'store/action';
 import { filterOffersList } from 'utils/sorting-utils';
-import { INITIAL_CITY } from 'config/InitialCity';
 import { LOCATIONS_LIST } from 'config/LocationsList';
 import { AppRoute } from 'config/AppRoute';
 import { UserStatus } from 'config/UserStatus';
@@ -45,7 +44,7 @@ import {
   dropAvatarUrl,
 } from 'services/token';
 
-function fetchOffersList(): ThunkActionResult {
+function fetchOffersList(city: string): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
     dispatch(getOffersStatusAction(DataStatus.IsLoading));
 
@@ -55,9 +54,7 @@ function fetchOffersList(): ThunkActionResult {
       const offers = convertCamelСaseKeys(data);
 
       dispatch(getListOfOffersAction(offers));
-      dispatch(
-        updateOffersListAction(filterOffersList(INITIAL_CITY.name, offers)),
-      );
+      dispatch(updateOffersListAction(filterOffersList(city, offers)));
       dispatch(getListOfCitiesAction(LOCATIONS_LIST));
 
       if (data.length === 0) {
@@ -180,6 +177,7 @@ function addToFavorites(offerId: number, status: boolean): ThunkActionResult {
     );
 
     dispatch(updateOfferAction(convertCamelСaseKeys(data)));
+    dispatch(fetchFavoriteList());
   };
 }
 

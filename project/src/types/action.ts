@@ -14,7 +14,7 @@ export enum ActionType {
   GetListOfReviews = 'data/GetListOfReviews',
   GetCurrentOfferByIdData = 'data/cardGetCurrentOfferByIdData',
   GetNearbyOffers = 'data/GetNearbyOffers',
-  SetLoginAction = 'login/SetLoginAction',
+  SetLogin = 'login/SetLogin',
   SetAvatarUrl = 'login/SetAvatarUrl',
   RequireAuthorization = 'login/RequireAuthorization',
   RequireLogout = 'login/RequireLogout',

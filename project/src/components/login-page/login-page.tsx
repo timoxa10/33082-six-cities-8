@@ -13,6 +13,7 @@ import { UserStatus } from 'config/UserStatus';
 import { updateOffersListAction, redirectToRouteAction } from 'store/action';
 import { getCurrentCityAction } from 'store/action';
 import { filterOffersList } from 'utils/sorting-utils';
+import { LOCATIONS_LIST } from 'config/LocationsList';
 import Logo from 'components/logo/logo';
 
 function LoginPage(): JSX.Element {
@@ -63,16 +64,17 @@ function LoginPage(): JSX.Element {
   function handleUpdateCity(evt: MouseEvent<HTMLElement>) {
     evt.preventDefault();
 
-    onUpdateCity('Amsterdam', offers);
+    const randomCity = evt.currentTarget.textContent;
 
-    onCitySelected({
-      name: 'Amsterdam',
-      location: {
-        latitude: 52.37454,
-        longitude: 4.897976,
-        zoom: 13,
-      },
-    });
+    const randomCoords = LOCATIONS_LIST.filter(
+      (city) => city.name === randomCity,
+    )[0];
+
+    if (randomCity && randomCoords) {
+      onUpdateCity(randomCity, offers);
+
+      onCitySelected(randomCoords);
+    }
   }
 
   if (authStatus === UserStatus.Auth) {
@@ -155,7 +157,7 @@ function LoginPage(): JSX.Element {
                 to={AppRoute.Root}
                 onClick={(evt) => handleUpdateCity(evt)}
               >
-                <span>Amsterdam</span>
+                <span>Dusseldorf</span>
               </Link>
             </div>
           </section>

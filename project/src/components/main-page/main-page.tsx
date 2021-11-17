@@ -52,6 +52,10 @@ function MainPage(): JSX.Element {
   }
 
   if (loadingStatus === DataStatus.IsLoaded) {
+    if (offersByCity.length === 0) {
+      return <MainPageEmpty city={city.name} />;
+    }
+
     return (
       <Layout className="page--gray page--main">
         <main className="page__main page__main--index">

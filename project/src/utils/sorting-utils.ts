@@ -7,8 +7,8 @@ const filterOffersList = (city: string, offers: OffersProps): OffersProps =>
 
 const filterReviewsList = (reviews: ReviewsProps): ReviewsProps =>
   reviews
-    .slice()
-    .sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf());
+    .sort((a, b) => new Date(b.date).valueOf() - new Date(a.date).valueOf())
+    .slice(0, 10);
 
 const sortOffersByType = (type: string, offers: OffersProps): OffersProps => {
   const fetchedOffers = offers.slice();

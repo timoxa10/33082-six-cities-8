@@ -51,13 +51,16 @@ function fetchOffersList(city: string): ThunkActionResult {
     try {
       const { data } = await api.get<OffersProps>('/hotels');
 
+      const isOffersAbsent =
+        data.filter((offer) => offer.city.name === city).length === 0;
+
       const offers = convertCamelСaseKeys(data);
 
       dispatch(getListOfOffersAction(offers));
       dispatch(updateOffersListAction(filterOffersList(city, offers)));
       dispatch(getListOfCitiesAction(LOCATIONS_LIST));
 
-      if (data.length === 0) {
+      if (isOffersAbsent) {
         dispatch(getOffersStatusAction(DataStatus.IsEmpty));
       }
 
@@ -101,6 +104,7 @@ function fetchOfferData(id: number): ThunkActionResult {
 function checkAuthAction(): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
     const { data } = await api.get(AppRoute.Login);
+
     if (data) {
       dispatch(requireAuthorizationAction(UserStatus.Auth));
       dispatch(setLoginAction(getLoginName()));
@@ -159,7 +163,10 @@ function addComment(
         rating,
         comment,
       });
-      dispatch(getListOfReviewsAction(convertCamelСaseKeys(data)));
+
+      dispatch(
+        getListOfReviewsAction(filterReviewsList(convertCamelСaseKeys(data))),
+      );
 
       if (data) {
         dispatch(getGetSendedCommentStatusAction(DataStatus.IsSended));

@@ -2,7 +2,7 @@ import { configureMockStore } from '@jedmao/redux-mock-store';
 import { AnyAction } from 'redux';
 import { redirect } from 'store/redirect';
 import { redirectToRouteAction } from 'store/action';
-import { AppRoute } from 'config/AppRoute';
+import { AppRoute } from 'config/app-route';
 import { State } from 'types/state';
 
 const fakeHistory = {

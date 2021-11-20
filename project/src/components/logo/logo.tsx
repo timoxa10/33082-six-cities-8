@@ -1,6 +1,6 @@
 import { useSelector, useDispatch } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { AppRoute } from 'config/AppRoute';
+import { AppRoute } from 'config/app-route';
 import { getCity } from 'store/app-data/selectors';
 import { fetchOffersList } from 'store/api-actions';
 

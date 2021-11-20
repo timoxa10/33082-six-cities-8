@@ -1,10 +1,11 @@
 /* eslint-disable comma-dangle */
+import camelСaseKeys from 'camelcase-keys';
 import { ThunkActionResult } from 'types/action';
 import type { OfferProps, OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
 import type { AuthData } from 'types/auth-data';
 import type { CommentData } from 'types/comment-data';
-import { DataStatus } from 'config/DataStatus';
+import { DataStatus } from 'config/data-status';
 import {
   getListOfOffersAction,
   updateOffersListAction,
@@ -23,16 +24,15 @@ import {
   getOffersStatusAction,
   getOfferPageStatusAction,
   getFavoritesOffersStatusAction,
-  getGetSendedCommentStatusAction,
+  getSendedCommentStatusAction,
 } from 'store/action';
 import { filterOffersList } from 'utils/sorting-utils';
-import { LOCATIONS_LIST } from 'config/LocationsList';
-import { AppRoute } from 'config/AppRoute';
-import { UserStatus } from 'config/UserStatus';
-import { INITIAL_LOGIN } from 'config/InitialLogin';
-import { INITIAL_AVATAR_URL } from 'config/InitialAvatarUrl';
+import { LOCATIONS_LIST } from 'config/locations-list';
+import { AppRoute } from 'config/app-route';
+import { UserStatus } from 'config/user-status';
+import { INITIAL_LOGIN } from 'config/initial-login';
+import { INITIAL_AVATAR_URL } from 'config/initial-avatar-url';
 import { filterReviewsList } from 'utils/sorting-utils';
-import convertCamelСaseKeys from 'utils/convertCamelСaseKeys';
 import {
   saveToken,
   dropToken,
@@ -52,9 +52,11 @@ function fetchOffersList(city: string): ThunkActionResult {
       const { data } = await api.get<OffersProps>('/hotels');
 
       const isOffersAbsent =
-        data.filter((offer) => offer.city.name === city).length === 0;
+        data?.filter((offer) => offer?.city?.name === city).length === 0;
 
-      const offers = convertCamelСaseKeys(data);
+      const offers = camelСaseKeys(data, {
+        deep: true,
+      });
 
       dispatch(getListOfOffersAction(offers));
       dispatch(updateOffersListAction(filterOffersList(city, offers)));
@@ -82,17 +84,33 @@ function fetchOfferData(id: number): ThunkActionResult {
 
       const offersNearby = await api.get<OffersProps>(`/hotels/${id}/nearby`);
 
-      dispatch(getCurrentOfferByIdDataAction(convertCamelСaseKeys(offer.data)));
+      dispatch(
+        getCurrentOfferByIdDataAction(
+          camelСaseKeys(offer.data, {
+            deep: true,
+          }),
+        ),
+      );
       dispatch(getCurrentCityAction(offer.data.city));
       dispatch(getSelectedPointAction(offer.data.location));
 
       dispatch(
         getListOfReviewsAction(
-          filterReviewsList(convertCamelСaseKeys(comments.data)),
+          filterReviewsList(
+            camelСaseKeys(comments.data, {
+              deep: true,
+            }),
+          ),
         ),
       );
 
-      dispatch(getNearbyOffersAction(convertCamelСaseKeys(offersNearby.data)));
+      dispatch(
+        getNearbyOffersAction(
+          camelСaseKeys(offersNearby.data, {
+            deep: true,
+          }),
+        ),
+      );
 
       dispatch(getOfferPageStatusAction(DataStatus.IsLoaded));
     } catch (error) {
@@ -121,7 +139,9 @@ function loginAction({ login: email, password }: AuthData): ThunkActionResult {
         password,
       });
 
-      const result = convertCamelСaseKeys(data);
+      const result = camelСaseKeys(data, {
+        deep: true,
+      });
 
       saveToken(result.token);
       saveAvatarUrl(result.avatarUrl);
@@ -156,7 +176,7 @@ function addComment(
   id: number,
 ): ThunkActionResult {
   return async (dispatch, _, api): Promise<void> => {
-    dispatch(getGetSendedCommentStatusAction(DataStatus.IsSending));
+    dispatch(getSendedCommentStatusAction(DataStatus.IsSending));
 
     try {
       const { data } = await api.post(`${AppRoute.Сomments}${id}`, {
@@ -165,14 +185,20 @@ function addComment(
       });
 
       dispatch(
-        getListOfReviewsAction(filterReviewsList(convertCamelСaseKeys(data))),
+        getListOfReviewsAction(
+          filterReviewsList(
+            camelСaseKeys(data, {
+              deep: true,
+            }),
+          ),
+        ),
       );
 
       if (data) {
-        dispatch(getGetSendedCommentStatusAction(DataStatus.IsSended));
+        dispatch(getSendedCommentStatusAction(DataStatus.IsSended));
       }
     } catch (error) {
-      dispatch(getGetSendedCommentStatusAction(DataStatus.NotLoaded));
+      dispatch(getSendedCommentStatusAction(DataStatus.NotLoaded));
     }
   };
 }
@@ -183,7 +209,13 @@ function addToFavorites(offerId: number, status: boolean): ThunkActionResult {
       `${AppRoute.FavoriteAPI}/${offerId}/${Number(!status)}`,
     );
 
-    dispatch(updateOfferAction(convertCamelСaseKeys(data)));
+    dispatch(
+      updateOfferAction(
+        camelСaseKeys(data, {
+          deep: true,
+        }),
+      ),
+    );
     dispatch(fetchFavoriteList());
   };
 }
@@ -194,7 +226,13 @@ function fetchFavoriteList(): ThunkActionResult {
 
     try {
       const { data } = await api.get<OffersProps>(`${AppRoute.FavoriteAPI}`);
-      dispatch(getListOfFavoriteCardsAction(convertCamelСaseKeys(data)));
+      dispatch(
+        getListOfFavoriteCardsAction(
+          camelСaseKeys(data, {
+            deep: true,
+          }),
+        ),
+      );
 
       dispatch(getFavoritesOffersStatusAction(DataStatus.IsLoaded));
 

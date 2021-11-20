@@ -1,6 +1,6 @@
-import { UserStatus } from 'config/UserStatus';
-import { INITIAL_LOGIN } from 'config/InitialLogin';
-import { INITIAL_AVATAR_URL } from 'config/InitialAvatarUrl';
+import { UserStatus } from 'config/user-status';
+import { INITIAL_LOGIN } from 'config/initial-login';
+import { INITIAL_AVATAR_URL } from 'config/initial-avatar-url';
 import { AppAuth } from 'types/state';
 
 export const initialStateAppAuth: AppAuth = {

@@ -4,9 +4,9 @@ import type { OfferProps, OffersProps } from 'types/card-props';
 import { ActionType } from 'types/action';
 import type { LocationInfo } from 'types/location-info';
 import type { ReviewsProps } from 'types/review-props';
-import { UserStatus } from 'config/UserStatus';
-import { AppRoute } from 'config/AppRoute';
-import { DataStatus } from 'config/DataStatus';
+import { UserStatus } from 'config/user-status';
+import { AppRoute } from 'config/app-route';
+import { DataStatus } from 'config/data-status';
 
 export const getCurrentCityAction = createAction(
   ActionType.GetCurrentCity,
@@ -143,7 +143,7 @@ export const getFavoritesOffersStatusAction = createAction(
   }),
 );
 
-export const getGetSendedCommentStatusAction = createAction(
+export const getSendedCommentStatusAction = createAction(
   ActionType.GetSendedCommentStatus,
   (payload: DataStatus) => ({
     payload,

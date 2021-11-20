@@ -6,17 +6,21 @@ import { useState, useCallback, SyntheticEvent, MouseEvent } from 'react';
 import { Link } from 'react-router-dom';
 import { loginAction } from 'store/api-actions';
 import { AuthData } from 'types/auth-data';
-import { AppRoute } from 'config/AppRoute';
+import { AppRoute } from 'config/app-route';
 import type { OffersProps } from 'types/card-props';
 import type { CityCoordinates } from 'types/city-coordinates';
-import { UserStatus } from 'config/UserStatus';
+import { UserStatus } from 'config/user-status';
 import { updateOffersListAction, redirectToRouteAction } from 'store/action';
 import { getCurrentCityAction } from 'store/action';
 import { filterOffersList } from 'utils/sorting-utils';
-import { LOCATIONS_LIST } from 'config/LocationsList';
+import { LOCATIONS_LIST } from 'config/locations-list';
 import Logo from 'components/logo/logo';
 
-function LoginPage(): JSX.Element {
+interface LoginPageProps {
+  city: string;
+}
+
+function LoginPage({ city }: LoginPageProps): JSX.Element {
   const history = useHistory();
 
   const offers = useSelector(getOffers);
@@ -33,8 +37,8 @@ function LoginPage(): JSX.Element {
     dispatch(getCurrentCityAction(value));
   };
 
-  const onUpdateCity = (city: string, array: OffersProps) => {
-    dispatch(updateOffersListAction(filterOffersList(city, array)));
+  const onUpdateCity = (value: string, array: OffersProps) => {
+    dispatch(updateOffersListAction(filterOffersList(value, array)));
 
     dispatch(redirectToRouteAction(AppRoute.Root));
   };
@@ -64,16 +68,12 @@ function LoginPage(): JSX.Element {
   function handleUpdateCity(evt: MouseEvent<HTMLElement>) {
     evt.preventDefault();
 
-    const randomCity = evt.currentTarget.textContent;
+    const cityCoords = LOCATIONS_LIST.find((item) => item.name === city);
 
-    const randomCoords = LOCATIONS_LIST.filter(
-      (city) => city.name === randomCity,
-    )[0];
+    if (city && cityCoords) {
+      onUpdateCity(city, offers);
 
-    if (randomCity && randomCoords) {
-      onUpdateCity(randomCity, offers);
-
-      onCitySelected(randomCoords);
+      onCitySelected(cityCoords);
     }
   }
 
@@ -157,7 +157,7 @@ function LoginPage(): JSX.Element {
                 to={AppRoute.Root}
                 onClick={(evt) => handleUpdateCity(evt)}
               >
-                <span>Dusseldorf</span>
+                <span>{city}</span>
               </Link>
             </div>
           </section>

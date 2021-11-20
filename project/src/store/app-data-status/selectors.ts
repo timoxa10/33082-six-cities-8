@@ -1,6 +1,6 @@
 import { NameSpace } from 'store/root-reducer';
 import { State } from 'types/state';
-import { DataStatus } from 'config/DataStatus';
+import { DataStatus } from 'config/data-status';
 
 export const getOffersStatus = (state: State): DataStatus =>
   state[NameSpace.status].offersStatus;

@@ -1,7 +1,7 @@
 import type { OfferProps, OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
-import { UserStatus } from 'config/UserStatus';
-import { DataStatus } from 'config/DataStatus';
+import { UserStatus } from 'config/user-status';
+import { DataStatus } from 'config/data-status';
 import ReviewPageForm from 'components/review-page-form/review-page-form';
 import Card from 'components/card/card';
 import ReviewsList from 'components/reviews-list/reviews-list';

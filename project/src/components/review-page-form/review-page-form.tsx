@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useState, useEffect, ChangeEvent, SyntheticEvent } from 'react';
 import { getCurrentOfferId } from 'store/app-data/selectors';
 import { getSendedCommentStatus } from 'store/app-data-status/selectors';
-import { DataStatus } from 'config/DataStatus';
+import { DataStatus } from 'config/data-status';
 import type { CommentData } from 'types/comment-data';
 import { addComment } from 'store/api-actions';
 import Input from 'components/input/input';

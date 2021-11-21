@@ -95,7 +95,16 @@ function useMap(
         map.removeLayer(iconsGroup);
       }
     };
-  }, [map, points, selectedPoint]);
+  }, [
+    city.location.latitude,
+    city.location.longitude,
+    city.location.zoom,
+    city.name,
+    isHovered,
+    map,
+    points,
+    selectedPoint,
+  ]);
 
   return map;
 }

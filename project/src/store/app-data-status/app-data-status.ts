@@ -1,7 +1,7 @@
 import { createReducer } from '@reduxjs/toolkit';
 import { getOffersStatusAction, getOfferPageStatusAction } from 'store/action';
 import { getFavoritesOffersStatusAction } from 'store/action';
-import { getGetSendedCommentStatusAction } from 'store/action';
+import { getSendedCommentStatusAction } from 'store/action';
 import { initialStateAppDataStatus } from 'store/app-data-status/initial-state';
 
 const appDataStatus = createReducer(initialStateAppDataStatus, (builder) => {
@@ -15,7 +15,7 @@ const appDataStatus = createReducer(initialStateAppDataStatus, (builder) => {
     .addCase(getFavoritesOffersStatusAction, (state, action) => {
       state.favoritesOffersStatus = action.payload;
     })
-    .addCase(getGetSendedCommentStatusAction, (state, action) => {
+    .addCase(getSendedCommentStatusAction, (state, action) => {
       state.sendedCommentStatus = action.payload;
     });
 });

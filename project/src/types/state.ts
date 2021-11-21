@@ -2,9 +2,9 @@ import type { OfferProps, OffersProps } from 'types/card-props';
 import type { CityCoordinates } from 'types/city-coordinates';
 import type { LocationInfo } from 'types/location-info';
 import type { ReviewsProps } from 'types/review-props';
-import { UserStatus } from 'config/UserStatus';
+import { UserStatus } from 'config/user-status';
 import { RootState } from 'store/root-reducer';
-import { DataStatus } from 'config/DataStatus';
+import { DataStatus } from 'config/data-status';
 
 export type AppData = {
   city: CityCoordinates;

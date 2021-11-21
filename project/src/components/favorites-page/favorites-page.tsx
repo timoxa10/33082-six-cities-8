@@ -1,6 +1,6 @@
 import { useEffect, useCallback, useMemo } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { DataStatus } from 'config/DataStatus';
+import { DataStatus } from 'config/data-status';
 import Layout from 'components/layout/layout';
 import Card from 'components/card/card';
 import Spinner from 'components/spinner/spinner';
@@ -25,9 +25,10 @@ function FavoritesPage(): JSX.Element {
     fetchData();
   }, [fetchData]);
 
-  const uniqueCities = [
-    ...new Set(favoriteCardsList?.map((card) => card.city.name)),
-  ];
+  const uniqueCities = useMemo(
+    () => [...new Set(favoriteCardsList?.map((card) => card.city.name))],
+    [favoriteCardsList],
+  );
 
   const memoizedResult = useMemo(
     () =>

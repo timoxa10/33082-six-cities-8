@@ -2,7 +2,7 @@ import { throttle } from 'throttle-debounce';
 import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import type { LocationInfo } from 'types/location-info';
-import { DataStatus } from 'config/DataStatus';
+import { DataStatus } from 'config/data-status';
 import { getCity, getOffersByCity } from 'store/app-data/selectors';
 import { getOffersStatus } from 'store/app-data-status/selectors';
 import Layout from 'components/layout/layout';

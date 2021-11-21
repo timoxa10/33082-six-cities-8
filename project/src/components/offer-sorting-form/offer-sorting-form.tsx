@@ -1,7 +1,7 @@
 import classNames from 'classnames';
 import { useSelector, useDispatch } from 'react-redux';
 import { useState } from 'react';
-import { SortTypes } from 'config/SortTypes';
+import { SortTypes } from 'config/sort-types';
 import type { OffersProps } from 'types/card-props';
 import { getActiveSortTypeAction, updateOffersListAction } from 'store/action';
 import { getActiveSortType, getOffersByCity } from 'store/app-data/selectors';

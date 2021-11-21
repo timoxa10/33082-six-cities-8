@@ -1,5 +1,5 @@
-import { AppRoute } from 'config/AppRoute';
-import { UserStatus } from 'config/UserStatus';
+import { AppRoute } from 'config/app-route';
+import { UserStatus } from 'config/user-status';
 import Logo from 'components/logo/logo';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';

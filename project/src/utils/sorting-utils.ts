@@ -1,6 +1,6 @@
 import type { OffersProps } from 'types/card-props';
 import type { ReviewsProps } from 'types/review-props';
-import { SortTypes } from 'config/SortTypes';
+import { SortTypes } from 'config/sort-types';
 
 const filterOffersList = (city: string, offers: OffersProps): OffersProps =>
   offers.filter((offer) => offer.city.name === city);

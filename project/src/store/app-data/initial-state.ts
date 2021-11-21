@@ -1,5 +1,5 @@
-import { INITIAL_CITY } from 'config/InitialCity';
-import { DEFAULT_SORT_TYPE } from 'config/DefaultSortType';
+import { INITIAL_CITY } from 'config/initial-city';
+import { DEFAULT_SORT_TYPE } from 'config/default-sort-type';
 import { AppData } from 'types/state';
 
 export const initialStateAppData: AppData = {

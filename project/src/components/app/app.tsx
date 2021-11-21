@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { Switch, Route, Router as BrowserRouter } from 'react-router-dom';
-import { AppRoute } from 'config/AppRoute';
+import { AppRoute } from 'config/app-route';
 import { getCurrentOfferIdAction } from 'store/action';
 import CardOfferContainer from 'containers/card-offer-container/card-offer-container';
 import browserHistory from 'browser-history/browser-history';
@@ -24,7 +24,9 @@ function App(): JSX.Element {
           <MainPage />
         </Route>
 
-        <Route exact path={AppRoute.Login} component={LoginPage} />
+        <Route exact path={AppRoute.Login}>
+          <LoginPage city="Hamburg" />
+        </Route>
 
         <Route
           exact

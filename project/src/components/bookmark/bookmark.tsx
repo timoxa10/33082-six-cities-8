@@ -4,8 +4,8 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { getAuthorizationStatus } from 'store/app-auth/selectors';
 import { addToFavorites } from 'store/api-actions';
-import { UserStatus } from 'config/UserStatus';
-import { AppRoute } from 'config/AppRoute';
+import { UserStatus } from 'config/user-status';
+import { AppRoute } from 'config/app-route';
 import { redirectToRouteAction } from 'store/action';
 
 interface BookmarkProps {

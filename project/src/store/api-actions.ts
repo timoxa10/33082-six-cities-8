@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 import camelСaseKeys from 'camelcase-keys';
 import { ThunkActionResult } from 'types/action';
 import type { OfferProps, OffersProps } from 'types/card-props';
@@ -24,7 +23,7 @@ import {
   getOffersStatusAction,
   getOfferPageStatusAction,
   getFavoritesOffersStatusAction,
-  getSendedCommentStatusAction,
+  getSendedCommentStatusAction
 } from 'store/action';
 import { filterOffersList } from 'utils/sorting-utils';
 import { LOCATIONS_LIST } from 'config/locations-list';
@@ -41,7 +40,7 @@ import {
   dropLoginName,
   saveAvatarUrl,
   getAvatarUrl,
-  dropAvatarUrl,
+  dropAvatarUrl
 } from 'services/token';
 
 function fetchOffersList(city: string): ThunkActionResult {
@@ -253,5 +252,5 @@ export {
   logoutAction,
   addComment,
   addToFavorites,
-  fetchFavoriteList,
+  fetchFavoriteList
 };

@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 import { Action } from 'redux';
 import thunk, { ThunkDispatch } from 'redux-thunk';
 import MockAdapter from 'axios-mock-adapter';
@@ -19,7 +18,7 @@ import {
   logoutAction,
   fetchOfferData,
   fetchFavoriteList,
-  addComment,
+  addComment
 } from 'store/api-actions';
 import {
   requireAuthorizationAction,
@@ -38,13 +37,13 @@ import {
   getNearbyOffersAction,
   getFavoritesOffersStatusAction,
   getListOfFavoriteCardsAction,
-  getSendedCommentStatusAction,
+  getSendedCommentStatusAction
 } from 'store/action';
 import {
   fakeOffers,
   fakeReviews,
   userCommentPost,
-  userCommentResponse,
+  userCommentResponse
 } from 'mocks/mocks';
 
 describe('Async actions', () => {

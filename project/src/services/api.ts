@@ -1,9 +1,8 @@
-/* eslint-disable comma-dangle */
 import axios, {
   AxiosInstance,
   AxiosRequestConfig,
   AxiosResponse,
-  AxiosError,
+  AxiosError
 } from 'axios';
 import { getToken } from 'services/token';
 

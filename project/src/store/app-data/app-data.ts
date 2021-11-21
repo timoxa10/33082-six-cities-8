@@ -1,4 +1,3 @@
-/* eslint-disable comma-dangle */
 import { createReducer } from '@reduxjs/toolkit';
 import {
   getCurrentCityAction,
@@ -12,7 +11,7 @@ import {
   getCurrentOfferByIdDataAction,
   getNearbyOffersAction,
   updateOfferAction,
-  getListOfFavoriteCardsAction,
+  getListOfFavoriteCardsAction
 } from 'store/action';
 import { initialStateAppData } from 'store/app-data/initial-state';
 

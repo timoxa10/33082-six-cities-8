@@ -30,7 +30,9 @@ function CitiesMap({
 
   useMap(mapRef, city, points, selectedPoint, isHovered);
 
-  return <div style={{ height: '100%' }} ref={mapRef} />;
+  return (
+    <div style={{ height: '100%' }} ref={mapRef} data-testid="cities-map" />
+  );
 }
 
 export default CitiesMap;

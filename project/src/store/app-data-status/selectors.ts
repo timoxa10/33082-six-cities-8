@@ -3,13 +3,13 @@ import { State } from 'types/state';
 import { DataStatus } from 'config/data-status';
 
 export const getOffersStatus = (state: State): DataStatus =>
-  state[NameSpace.status].offersStatus;
+  state[NameSpace.Status].offersStatus;
 
 export const getOfferPageStatus = (state: State): DataStatus =>
-  state[NameSpace.status].offerPageStatus;
+  state[NameSpace.Status].offerPageStatus;
 
 export const getFavoritesOffersStatus = (state: State): DataStatus =>
-  state[NameSpace.status].favoritesOffersStatus;
+  state[NameSpace.Status].favoritesOffersStatus;
 
 export const getSendedCommentStatus = (state: State): DataStatus =>
-  state[NameSpace.status].sendedCommentStatus;
+  state[NameSpace.Status].sendedCommentStatus;

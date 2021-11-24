@@ -38,7 +38,10 @@ function CardOffer({
 
   if (loadingStatus === DataStatus.IsLoaded) {
     return (
-      <main className="page__main page__main--property">
+      <main
+        className="page__main page__main--property"
+        data-testid="offer-card"
+      >
         <section className="property">
           {offerByIdData?.images && (
             <div className="property__gallery-container container">

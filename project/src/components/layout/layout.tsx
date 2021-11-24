@@ -18,7 +18,7 @@ function Layout({
 }: LayoutProps): JSX.Element {
   return (
     <>
-      <div className={classNames([className])}>
+      <div className={classNames([className])} data-testid="layout">
         <SvgSpriteIcons />
         {shouldRenderHeader && <Header />}
         {children}

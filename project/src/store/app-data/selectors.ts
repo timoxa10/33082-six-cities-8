@@ -6,34 +6,34 @@ import type { LocationInfo } from 'types/location-info';
 import type { ReviewsProps } from 'types/review-props';
 
 export const getCity = (state: State): CityCoordinates =>
-  state[NameSpace.data].city;
+  state[NameSpace.Data].city;
 
 export const getOffersByCity = (state: State): OffersProps =>
-  state[NameSpace.data].offersByCity;
+  state[NameSpace.Data].offersByCity;
 
 export const getOffers = (state: State): OffersProps =>
-  state[NameSpace.data].offers;
+  state[NameSpace.Data].offers;
 
 export const getSelectedPoint = (state: State): LocationInfo | null =>
-  state[NameSpace.data].selectedPoint;
+  state[NameSpace.Data].selectedPoint;
 
 export const getNearbyOffers = (state: State): OffersProps =>
-  state[NameSpace.data].nearbyOffers;
+  state[NameSpace.Data].nearbyOffers;
 
 export const getCurrentOfferId = (state: State): number =>
-  state[NameSpace.data].currentOfferId;
+  state[NameSpace.Data].currentOfferId;
 
 export const getActiveSortType = (state: State): string =>
-  state[NameSpace.data].activeSortType;
+  state[NameSpace.Data].activeSortType;
 
 export const getLocationsList = (state: State): CityCoordinates[] =>
-  state[NameSpace.data].locationsList;
+  state[NameSpace.Data].locationsList;
 
 export const getReviewsList = (state: State): ReviewsProps =>
-  state[NameSpace.data].reviewsList;
+  state[NameSpace.Data].reviewsList;
 
 export const getOfferByIdData = (state: State): Partial<OfferProps> =>
-  state[NameSpace.data].offerByIdData;
+  state[NameSpace.Data].offerByIdData;
 
 export const getFavoriteCardsList = (state: State): OffersProps =>
-  state[NameSpace.data].favoriteCardsList;
+  state[NameSpace.Data].favoriteCardsList;

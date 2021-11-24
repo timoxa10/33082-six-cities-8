@@ -33,10 +33,10 @@ function useMap(
     if (mapRef.current !== null && map === null) {
       const instance = new Map(mapRef.current, {
         center: {
-          lat: city.location.latitude,
-          lng: city.location.longitude,
+          lat: city?.location?.latitude,
+          lng: city?.location?.longitude,
         },
-        zoom: city.location.zoom,
+        zoom: city?.location?.zoom,
       });
 
       const layer = new TileLayer(
@@ -59,8 +59,8 @@ function useMap(
     if (map && points?.length > 0) {
       points.forEach((point) => {
         const marker = new Marker({
-          lat: point.latitude,
-          lng: point.longitude,
+          lat: point?.latitude,
+          lng: point?.longitude,
         });
 
         marker.setIcon(defaultCustomIcon);
@@ -78,7 +78,7 @@ function useMap(
 
       iconsGroup.addTo(map);
 
-      if (prevCity !== city.name) {
+      if (prevCity !== city?.name) {
         map.flyTo(
           {
             lat: city.location.latitude,
@@ -96,10 +96,10 @@ function useMap(
       }
     };
   }, [
-    city.location.latitude,
-    city.location.longitude,
-    city.location.zoom,
-    city.name,
+    city?.location?.latitude,
+    city?.location?.longitude,
+    city?.location?.zoom,
+    city?.name,
     isHovered,
     map,
     points,

@@ -17,10 +17,11 @@ function NotFoundPage(): JSX.Element {
           >
             <section className="cities__no-places">
               <div className="cities__status-wrapper tabs__content">
-                <p className="cities__status-description">
+                <div className="cities__status-description">
                   <h1>
                     404.
-                    <h3>Page not found.</h3>
+                    <br />
+                    Page not found.
                   </h1>
                   <br />
                   <Link to={AppRoute.Root}>
@@ -28,7 +29,7 @@ function NotFoundPage(): JSX.Element {
                       Go to main page &#8594;
                     </button>
                   </Link>
-                </p>
+                </div>
               </div>
             </section>
             <div className="cities__right-section"></div>

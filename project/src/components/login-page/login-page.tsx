@@ -117,6 +117,7 @@ function LoginPage({ city }: LoginPageProps): JSX.Element {
                       ? { borderColor: 'red' }
                       : { borderColor: '#e6e6e6' }
                   }
+                  data-testid="email"
                 />
               </div>
               <div className="login__input-wrapper form__input-wrapper">
@@ -129,6 +130,7 @@ function LoginPage({ city }: LoginPageProps): JSX.Element {
                   placeholder="Password"
                   required
                   onChange={onPasswordCallback}
+                  data-testid="password"
                 />
               </div>
               <button

@@ -46,6 +46,7 @@ function ReviewPageForm(): JSX.Element {
       action="#"
       method="post"
       onSubmit={handleSubmit}
+      data-testid="reviews-form"
     >
       <label className="reviews__label form__label" htmlFor="review">
         Your review

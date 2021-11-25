@@ -51,6 +51,7 @@ function Bookmark({
       })}
       type="button"
       onClick={handleFavoriteChange}
+      data-testid="bookmark-button"
     >
       <svg
         className={classNames({

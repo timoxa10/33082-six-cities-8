@@ -32,10 +32,10 @@ function TabsList(): JSX.Element {
   };
 
   return (
-    <div className="tabs">
+    <div className="tabs" data-testid="tabs">
       <section className="locations container">
         <ul className="locations__list tabs__list">
-          {locationsList.map((item) => (
+          {locationsList?.map((item) => (
             <li
               className="locations__item"
               key={item.name}

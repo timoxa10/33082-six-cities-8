@@ -49,6 +49,7 @@ function Card({
       })}
       onMouseEnter={listItemHoverHandler}
       onMouseLeave={onListItemLeave}
+      data-testid="cities-card"
     >
       {card?.isPremium && (
         <div className="place-card__mark">

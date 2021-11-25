@@ -1,9 +1,8 @@
 import { useDispatch } from 'react-redux';
-import { Switch, Route, Router as BrowserRouter } from 'react-router-dom';
+import { Switch, Route } from 'react-router-dom';
 import { AppRoute } from 'config/app-route';
 import { getCurrentOfferIdAction } from 'store/action';
 import CardOfferContainer from 'containers/card-offer-container/card-offer-container';
-import browserHistory from 'browser-history/browser-history';
 import MainPage from 'components/main-page/main-page';
 import LoginPage from 'components/login-page/login-page';
 import FavoritesPage from 'components/favorites-page/favorites-page';
@@ -18,35 +17,33 @@ function App(): JSX.Element {
   };
 
   return (
-    <BrowserRouter history={browserHistory}>
-      <Switch>
-        <Route exact path={AppRoute.Root}>
-          <MainPage />
-        </Route>
+    <Switch>
+      <Route exact path={AppRoute.Root}>
+        <MainPage />
+      </Route>
 
-        <Route exact path={AppRoute.Login}>
-          <LoginPage city="Hamburg" />
-        </Route>
+      <Route exact path={AppRoute.Login}>
+        <LoginPage city="Hamburg" />
+      </Route>
 
-        <Route
-          exact
-          path={AppRoute.RoomOffer}
-          render={({ match }) => {
-            setActiveCardId(Number(match.params.id));
+      <Route
+        exact
+        path={AppRoute.RoomOffer}
+        render={({ match }) => {
+          setActiveCardId(Number(match.params.id));
 
-            return <CardOfferContainer />;
-          }}
-        />
+          return <CardOfferContainer />;
+        }}
+      />
 
-        <PrivateRoute
-          exact
-          path={AppRoute.Favorites}
-          component={() => <FavoritesPage />}
-        />
+      <PrivateRoute
+        exact
+        path={AppRoute.Favorites}
+        component={() => <FavoritesPage />}
+      />
 
-        <Route component={NotFoundPage} />
-      </Switch>
-    </BrowserRouter>
+      <Route component={NotFoundPage} />
+    </Switch>
   );
 }
 

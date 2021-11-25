@@ -18,6 +18,7 @@ function Input({ id, value, checked, onChange }: InputProps): JSX.Element {
         value={value}
         onChange={onChange}
         checked={checked}
+        data-testid="rating"
       />
       <label
         htmlFor={`${id}-stars`}

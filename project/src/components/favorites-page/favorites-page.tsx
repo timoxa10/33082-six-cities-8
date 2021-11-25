@@ -1,19 +1,28 @@
-import { useEffect, useCallback, useMemo } from 'react';
+import { useEffect, useCallback, useMemo, MouseEvent } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { DataStatus } from 'config/data-status';
+import { AppRoute } from 'config/app-route';
+import { LOCATIONS_LIST } from 'config/locations-list';
+import type { CityCoordinates } from 'types/city-coordinates';
+import type { OffersProps } from 'types/card-props';
 import Layout from 'components/layout/layout';
 import Card from 'components/card/card';
 import Spinner from 'components/spinner/spinner';
 import ErrorPage from 'components/error-page/error-page';
 import FavoritesPageEmpty from 'components/favorites-page-empty/favorites-page-empty';
-import { getFavoriteCardsList } from 'store/app-data/selectors';
+import { getFavoriteCardsList, getOffers } from 'store/app-data/selectors';
 import { getFavoritesOffersStatus } from 'store/app-data-status/selectors';
 import { fetchFavoriteList } from 'store/api-actions';
+import { updateOffersListAction, redirectToRouteAction } from 'store/action';
+import { getCurrentCityAction } from 'store/action';
 import getOffersByCity from 'utils/getOffersByCity';
+import { filterOffersList } from 'utils/sorting-utils';
 
 function FavoritesPage(): JSX.Element {
   const favoriteCardsList = useSelector(getFavoriteCardsList);
   const loadingStatus = useSelector(getFavoritesOffersStatus);
+  const offers = useSelector(getOffers);
 
   const dispatch = useDispatch();
 
@@ -24,6 +33,37 @@ function FavoritesPage(): JSX.Element {
   useEffect(() => {
     fetchData();
   }, [fetchData]);
+
+  const onCitySelected = useCallback(
+    (value: CityCoordinates) => {
+      dispatch(getCurrentCityAction(value));
+    },
+    [dispatch],
+  );
+
+  const onUpdateCity = useCallback(
+    (value: string, array: OffersProps) => {
+      dispatch(updateOffersListAction(filterOffersList(value, array)));
+
+      dispatch(redirectToRouteAction(AppRoute.Root));
+    },
+    [dispatch],
+  );
+
+  const handleUpdateCity = useCallback(
+    (evt: MouseEvent<HTMLElement>, value: string) => {
+      evt.preventDefault();
+
+      const cityCoords = LOCATIONS_LIST.find((item) => item.name === value);
+
+      if (value && cityCoords) {
+        onUpdateCity(value, offers);
+
+        onCitySelected(cityCoords);
+      }
+    },
+    [offers, onCitySelected, onUpdateCity],
+  );
 
   const uniqueCities = useMemo(
     () => [...new Set(favoriteCardsList?.map((card) => card.city.name))],
@@ -37,9 +77,13 @@ function FavoritesPage(): JSX.Element {
           <li className="favorites__locations-items" key={city}>
             <div className="favorites__locations locations locations--current">
               <div className="locations__item">
-                <a className="locations__item-link" href="/">
+                <Link
+                  className="locations__item-link"
+                  to={AppRoute.Root}
+                  onClick={(evt) => handleUpdateCity(evt, city)}
+                >
                   <span>{city}</span>
-                </a>
+                </Link>
               </div>
             </div>
             <div className="favorites__places">
@@ -59,7 +103,7 @@ function FavoritesPage(): JSX.Element {
           </li>
         ),
       ),
-    [favoriteCardsList, uniqueCities],
+    [favoriteCardsList, handleUpdateCity, uniqueCities],
   );
 
   if (loadingStatus === DataStatus.IsLoading) {

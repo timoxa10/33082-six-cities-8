@@ -52,7 +52,7 @@ function MainPage(): JSX.Element {
   }
 
   if (loadingStatus === DataStatus.IsLoaded) {
-    if (offersByCity.length === 0) {
+    if (offersByCity?.length === 0) {
       return <MainPageEmpty city={city.name} />;
     }
 

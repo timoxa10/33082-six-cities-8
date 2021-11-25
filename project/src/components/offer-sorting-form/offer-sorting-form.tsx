@@ -32,7 +32,12 @@ function OfferSortingForm(): JSX.Element {
   };
 
   return (
-    <form className="places__sorting" action="#" method="get">
+    <form
+      className="places__sorting"
+      action="#"
+      method="get"
+      data-testid="places-sorting-form"
+    >
       <span className="places__sorting-caption">Sort by </span>
       <span
         className="places__sorting-type"
